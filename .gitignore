@@ -1,0 +1,9 @@
+/.idea/
+/logs/
+/springboot/.idea/
+/springboot/.mvn/
+/springboot/logs/
+/springboot/target/
+/vue/.idea/
+/vue/.vscode/
+/vue/node_modules/

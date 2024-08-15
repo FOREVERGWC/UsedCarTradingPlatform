@@ -1,0 +1,31 @@
+{
+  "name": "vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@kangc/v-md-editor": "^2.3.18",
+    "axios": "^1.7.3",
+    "echarts": "^5.5.1",
+    "element-plus": "^2.7.8",
+    "highlight.js": "^11.10.0",
+    "pinia": "^2.2.1",
+    "pinia-plugin-persistedstate": "^3.2.1",
+    "prismjs": "^1.29.0",
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.2",
+    "vue3-json-excel": "^1.0.10-alpha"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "sass": "^1.77.4",
+    "sass-loader": "^14.2.1",
+    "vite": "^5.3.1"
+  }
+}

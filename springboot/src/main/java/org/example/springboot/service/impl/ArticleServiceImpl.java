@@ -1,0 +1,174 @@
+package org.example.springboot.service.impl;
+
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import org.example.springboot.common.BaseContext;
+import org.example.springboot.common.enums.ArticleStatus;
+import org.example.springboot.common.enums.ArticleVisible;
+import org.example.springboot.domain.dto.ArticleDto;
+import org.example.springboot.domain.entity.Article;
+import org.example.springboot.domain.entity.ArticleCategory;
+import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.vo.ArticleVo;
+import org.example.springboot.domain.vo.UserVo;
+import org.example.springboot.mapper.ArticleMapper;
+import org.example.springboot.service.IArticleCategoryService;
+import org.example.springboot.service.IArticleLabelLinkService;
+import org.example.springboot.service.IArticleService;
+import org.example.springboot.service.IUserService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * <p>
+ * 文章服务实现类
+ * </p>
+ */
+@Service
+public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
+    @Resource
+    private IArticleCategoryService articleCategoryService;
+    @Resource
+    private IUserService userService;
+    @Resource
+    private IArticleLabelLinkService articleLabelLinkService;
+
+    @Override
+    public boolean saveOrUpdate(Article entity) {
+        if (entity.getId() == null) {
+            UserVo user = BaseContext.getUser();
+            entity.setUserId(user.getId());
+            return super.save(entity);
+        }
+        return super.saveOrUpdate(entity);
+    }
+
+    @Transactional
+    @Override
+    public boolean removeById(Serializable id) {
+        articleLabelLinkService.removeByArticleId(id);
+        return super.removeById(id);
+    }
+
+    @Transactional
+    @Override
+    public boolean removeBatchByIds(Collection<?> list) {
+        articleLabelLinkService.removeByArticleIds(list);
+        return super.removeBatchByIds(list);
+    }
+
+    @Override
+    public List<ArticleVo> getList(ArticleDto dto) {
+        List<Article> articleList = getWrapper(dto).list();
+        if (CollectionUtil.isEmpty(articleList)) {
+            return List.of();
+        }
+        // 类别
+        List<Long> categoryIdList = articleList.stream().map(Article::getCategoryId).toList();
+        List<ArticleCategory> categoryList = articleCategoryService.listByIds(categoryIdList);
+        Map<Long, ArticleCategory> categoryMap = categoryList.stream().collect(Collectors.toMap(ArticleCategory::getId, item -> item));
+        // 作者
+        List<Long> userIdList = articleList.stream().map(Article::getUserId).toList();
+        List<User> userList = userService.listByIds(userIdList);
+        Map<Long, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, item -> item));
+        // 组装VO
+        return articleList.stream().map(item -> {
+            ArticleVo vo = new ArticleVo();
+            BeanUtils.copyProperties(item, vo);
+            vo.setCategory(categoryMap.getOrDefault(item.getCategoryId(), ArticleCategory.builder().name("已删除").build()));
+            vo.setUser(userMap.getOrDefault(item.getUserId(), User.builder().name("已删除").build()));
+            vo.setVisibleText(ArticleVisible.getByCode(item.getVisible()));
+            vo.setStatusText(ArticleStatus.getByCode(item.getStatus()));
+            return vo;
+        }).toList();
+    }
+
+    @Override
+    public IPage<ArticleVo> getPage(ArticleDto dto) {
+        Page<Article> info = getWrapper(dto).page(new Page<>(dto.getPageNo(), dto.getPageSize()));
+        if (CollectionUtil.isEmpty(info.getRecords())) {
+            return new Page<>(dto.getPageNo(), dto.getPageSize(), 0);
+        }
+        // 类别
+        List<Long> categoryIdList = info.getRecords().stream().map(Article::getCategoryId).toList();
+        List<ArticleCategory> categoryList = articleCategoryService.listByIds(categoryIdList);
+        Map<Long, ArticleCategory> categoryMap = categoryList.stream().collect(Collectors.toMap(ArticleCategory::getId, item -> item));
+        // 作者
+        List<Long> userIdList = info.getRecords().stream().map(Article::getUserId).toList();
+        List<User> userList = userService.listByIds(userIdList);
+        Map<Long, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, item -> item));
+        // 组装VO
+        return info.convert(item -> {
+            ArticleVo vo = new ArticleVo();
+            BeanUtils.copyProperties(item, vo);
+            vo.setCategory(categoryMap.getOrDefault(item.getCategoryId(), ArticleCategory.builder().name("已删除").build()));
+            vo.setUser(userMap.getOrDefault(item.getUserId(), User.builder().name("已删除").build()));
+            vo.setVisibleText(ArticleVisible.getByCode(item.getVisible()));
+            vo.setStatusText(ArticleStatus.getByCode(item.getStatus()));
+            return vo;
+        });
+    }
+
+    @Override
+    public ArticleVo getOne(ArticleDto dto) {
+        Article one = getWrapper(dto).one();
+        if (one == null) {
+            return null;
+        }
+        // 类别
+        ArticleCategory category = Optional.ofNullable(articleCategoryService.getById(one.getCategoryId())).orElse(ArticleCategory.builder().name("已删除").build());
+        // 作者
+        User user = Optional.ofNullable(userService.getById(one.getUserId())).orElse(User.builder().name("已删除").build());
+        // 组装VO
+        ArticleVo vo = new ArticleVo();
+        BeanUtils.copyProperties(one, vo);
+        vo.setCategory(category);
+        vo.setUser(user);
+        vo.setVisibleText(ArticleVisible.getByCode(one.getVisible()));
+        vo.setStatusText(ArticleStatus.getByCode(one.getStatus()));
+        return vo;
+    }
+
+    /**
+     * 组装查询包装器
+     *
+     * @param dto 文章
+     * @return 结果
+     */
+    private LambdaQueryChainWrapper<Article> getWrapper(ArticleDto dto) {
+        Map<String, Object> params = dto.getParams();
+        // 创建时间
+        Object startCreateTime = params == null ? null : params.get("startCreateTime");
+        Object endCreateTime = params == null ? null : params.get("endCreateTime");
+        return lambdaQuery()
+                .eq(dto.getId() != null, Article::getId, dto.getId())
+                .like(StrUtil.isNotBlank(dto.getTitle()), Article::getTitle, dto.getTitle())
+                .eq(dto.getCategoryId() != null, Article::getCategoryId, dto.getCategoryId())
+                .like(StrUtil.isNotBlank(dto.getContent()), Article::getContent, dto.getContent())
+                .eq(dto.getUserId() != null, Article::getUserId, dto.getUserId())
+                .eq(dto.getViewCount() != null, Article::getViewCount, dto.getViewCount())
+                .eq(dto.getLikeCount() != null, Article::getLikeCount, dto.getLikeCount())
+                .eq(dto.getDislikeCount() != null, Article::getDislikeCount, dto.getDislikeCount())
+                .eq(dto.getCommentCount() != null, Article::getCommentCount, dto.getCommentCount())
+                .eq(dto.getCollectionCount() != null, Article::getCollectionCount, dto.getCollectionCount())
+                .eq(dto.getTop() != null, Article::getTop, dto.getTop())
+                .like(StrUtil.isNotBlank(dto.getVisible()), Article::getVisible, dto.getVisible())
+                .eq(dto.getCommentable() != null, Article::getCommentable, dto.getCommentable())
+                .like(StrUtil.isNotBlank(dto.getStatus()), Article::getStatus, dto.getStatus())
+                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Article::getCreateTime, startCreateTime, endCreateTime);
+    }
+}
