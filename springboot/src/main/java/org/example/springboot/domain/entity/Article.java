@@ -3,8 +3,6 @@ package org.example.springboot.domain.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.time.LocalDateTime;
-import org.example.springboot.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +10,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.example.springboot.common.annotation.Dict;
+import org.example.springboot.common.enums.ArticleStatus;
+import org.example.springboot.common.enums.ArticleVisible;
+import org.example.springboot.domain.BaseEntity;
 
 import java.io.Serial;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -90,6 +93,7 @@ public class Article extends BaseEntity {
     /**
      * 可见性(0私有、1公开)
      */
+    @Dict(enumClass = ArticleVisible.class)
     @Schema(description = "可见性(0私有、1公开)")
     private String visible;
     /**
@@ -100,6 +104,7 @@ public class Article extends BaseEntity {
     /**
      * 状态(0未发布、1已发布、2定时发布)
      */
+    @Dict(enumClass = ArticleStatus.class)
     @Schema(description = "状态(0未发布、1已发布、2定时发布)")
     private String status;
     /**

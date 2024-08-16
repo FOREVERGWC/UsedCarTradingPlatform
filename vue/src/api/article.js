@@ -54,3 +54,27 @@ export const getArticleOne = (params) => {
         url: '/article', method: 'GET', params: params
     })
 }
+
+/**
+ * 置顶或取消置顶文章
+ * @param id 文章ID
+ * @returns {*} 结果
+ */
+export const handleTopArticle = (id) => {
+    return request({
+        url: `/article/top/${id}`,
+        method: 'PUT'
+    })
+}
+
+/**
+ * 允许或禁止文章评论
+ * @param id 文章ID
+ * @returns {*} 结果
+ */
+export const handleCommentArticle = (id) => {
+    return request({
+        url: `/article/comment/${id}`,
+        method: 'PUT'
+    })
+}

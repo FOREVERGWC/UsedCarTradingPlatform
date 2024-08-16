@@ -19,6 +19,11 @@
                   placeholder='请选择父级分类'
               />
             </el-col>
+            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+              <el-select v-model='queryParams.userId' clearable filterable placeholder='请选择作者'>
+                <el-option v-for='item in userList' :key='item.id' :label='item.name || item.username' :value='item.id'/>
+              </el-select>
+            </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
               <el-button icon="Search" plain type="info" @click="getPage">查询</el-button>
             </el-col>
@@ -71,6 +76,11 @@
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="分类名称" prop="name"/>
         <el-table-column label="父级分类ID" prop="parentId"/>
+        <el-table-column label="作者">
+          <template v-slot="{ row }">
+            {{ row.user.name || row.user.username }}
+          </template>
+        </el-table-column>
         <el-table-column label="备注" prop="remark"/>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
@@ -136,6 +146,7 @@ import {
   removeArticleCategoryBatchByIds,
   saveArticleCategory
 } from '@/api/articleCategory.js'
+import {getUserList} from "@/api/user.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -143,12 +154,14 @@ const queryParams = reactive({
   pageSize: 20,
   name: '',
   parentId: null,
+  userId: null,
   deleted: ''
 })
 const ids = ref([])
 const single = ref(true)
 const multiple = ref(true)
 const parentList = ref([])
+const userList = ref([])
 const articleCategoryList = ref([])
 const total = ref(0)
 const articleCategoryFields = {
@@ -162,7 +175,7 @@ const articleCategoryFields = {
   '主键ID': 'id',
   '分类名称': 'name',
   '父级分类ID': 'parentId',
-  '逻辑删除(0正常、1删除)': 'deleted'
+  '作者ID': 'userId'
 }
 const form = ref({
   visible: false,
@@ -172,8 +185,8 @@ const form = ref({
 const formRef = ref(null)
 const rules = {
   name: [{required: true, message: '请输入分类名称', trigger: 'blur'}],
-  parentId: [{required: true, message: '请输入父级分类ID', trigger: 'blur'}],
-  deleted: [{required: true, message: '请输入逻辑删除(0正常、1删除)', trigger: 'blur'}]
+  parentId: [{required: true, message: '请选择父级分类', trigger: 'change'}],
+  userId: [{required: true, message: '请选择作者', trigger: 'change'}]
 }
 
 const parentProps = {
@@ -186,6 +199,9 @@ const getPage = () => {
   loading.value = true
   getArticleCategoryTree({}).then(res => {
     parentList.value = res.data || []
+  })
+  getUserList({}).then(res => {
+    userList.value = res.data || []
   })
   getArticleCategoryPage(queryParams).then(res => {
     articleCategoryList.value = res.data?.records || []
@@ -205,6 +221,7 @@ const showAdd = () => {
     data: {
       name: '',
       parentId: null,
+      userId: null,
       deleted: '',
       remark: ''
     }
@@ -269,6 +286,7 @@ const resetQuery = () => {
   queryParams.pageSize = 20
   queryParams.name = ''
   queryParams.parentId = null
+  queryParams.userId = null
   getPage()
 }
 

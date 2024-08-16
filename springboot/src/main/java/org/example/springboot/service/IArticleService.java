@@ -37,4 +37,18 @@ public interface IArticleService extends IService<Article> {
      * @return 结果
      */
     ArticleVo getOne(ArticleDto dto);
+
+    /**
+     * 置顶或取消置顶文章
+     *
+     * @param id 文章ID
+     */
+    void handleTop(Long id);
+
+    /**
+     * 允许或禁止文章评论
+     *
+     * @param id 文章ID
+     */
+    void handleComment(Long id);
 }

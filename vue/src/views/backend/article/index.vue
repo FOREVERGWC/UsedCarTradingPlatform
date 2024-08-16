@@ -17,7 +17,8 @@
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model='queryParams.userId' clearable filterable placeholder='请选择作者'>
-                <el-option v-for='item in userList' :key='item.id' :label='item.name' :value='item.id'/>
+                <el-option v-for='item in userList' :key='item.id' :label='item.name || item.username'
+                           :value='item.id'/>
               </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
@@ -43,7 +44,7 @@
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-date-picker v-model='queryParams.releaseTime' clearable
                               placeholder='请选择发布时间' type='date'
-                              value-format='yyyy-MM-dd HH:mm:ss'/>
+                              value-format='YYYY-MM-DD HH:mm:ss'/>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
               <el-button icon="Search" plain type="info" @click="getPage">查询</el-button>
@@ -95,9 +96,19 @@
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
-        <el-table-column label="标题" prop="title"/>
-        <el-table-column label="类别" prop="category.name"/>
-        <el-table-column label="作者" prop="user.name"/>
+        <el-table-column label="标题">
+          <template v-slot="{ row }">
+            <el-link :href="`/detail/${row.id}`" :underline="false" target="_blank">
+              <span>{{ row.title }}</span>
+            </el-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="类别" prop="category.name" sortable/>
+        <el-table-column label="作者">
+          <template v-slot="{ row }">
+            {{ row.user.name || row.user.username }}
+          </template>
+        </el-table-column>
         <el-table-column label="浏览量" prop="viewCount" sortable/>
         <el-table-column label="点赞量" prop="likeCount" sortable/>
         <el-table-column label="点踩量" prop="dislikeCount" sortable/>
@@ -105,13 +116,13 @@
         <el-table-column label="收藏量" prop="collectionCount" sortable/>
         <el-table-column label="置顶">
           <template v-slot="{ row }">
-            <el-switch v-model="row.top"/>
+            <el-switch v-model="row.top" @change="() => handleTop(row.id)"/>
           </template>
         </el-table-column>
         <el-table-column label="可见性" prop="visibleText"/>
         <el-table-column label="允许评论">
           <template v-slot="{ row }">
-            <el-switch v-model="row.commentable"/>
+            <el-switch v-model="row.commentable" @change="() => handleComment(row.id)"/>
           </template>
         </el-table-column>
         <el-table-column label="状态" prop="statusText"/>
@@ -154,6 +165,7 @@
         <el-form-item label="内容" prop="content">
           <v-md-editor v-model="form.data.content" height="600px"/>
         </el-form-item>
+        <!-- TODO 添加鉴权功能，只有管理员才可以修改四个数量 -->
         <el-form-item v-if="form.data.id" label="浏览量" prop="viewCount">
           <el-input v-model="form.data.viewCount" autocomplete="new"/>
         </el-form-item>
@@ -189,10 +201,10 @@
             <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
           </el-select>
         </el-form-item>
-        <el-form-item label="发布时间" prop="releaseTime">
+        <el-form-item label="发布时间" prop="releaseTime" v-if="form.data.id">
           <el-date-picker v-model='form.data.releaseTime' placeholder='请选择发布时间'
                           type='date'
-                          value-format='yyyy-MM-dd HH:mm:ss'/>
+                          value-format='YYYY-MM-DD HH:mm:ss'/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
@@ -208,7 +220,14 @@
 
 <script setup>
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getArticleOne, getArticlePage, removeArticleBatchByIds, saveArticle} from '@/api/article'
+import {
+  getArticleOne,
+  getArticlePage,
+  handleCommentArticle,
+  handleTopArticle,
+  removeArticleBatchByIds,
+  saveArticle
+} from '@/api/article'
 import {getArticleCategoryList} from '@/api/articleCategory'
 import {getUserList} from '@/api/user'
 import {ElMessage} from "element-plus"
@@ -288,18 +307,18 @@ const form = ref({
 const formRef = ref(null)
 const rules = {
   title: [{required: true, message: '请输入标题', trigger: 'blur'}],
-  categoryId: [{required: true, message: '请输入类别ID', trigger: 'blur'}],
+  categoryId: [{required: true, message: '请选择类别', trigger: 'change'}],
   content: [{required: true, message: '请输入内容', trigger: 'blur'}],
-  userId: [{required: true, message: '请输入作者ID', trigger: 'blur'}],
+  userId: [{required: true, message: '请选择作者', trigger: 'change'}],
   viewCount: [{required: true, message: '请输入浏览量', trigger: 'blur'}],
   likeCount: [{required: true, message: '请输入点赞量', trigger: 'blur'}],
   dislikeCount: [{required: true, message: '请输入点踩量', trigger: 'blur'}],
   commentCount: [{required: true, message: '请输入评论量', trigger: 'blur'}],
   collectionCount: [{required: true, message: '请输入收藏量', trigger: 'blur'}],
-  top: [{required: true, message: '请输入置顶(0否、1是)', trigger: 'blur'}],
-  visible: [{required: true, message: '请输入可见性(0私有、1公开)', trigger: 'blur'}],
-  commentable: [{required: true, message: '请输入允许评论(0否、1是)', trigger: 'blur'}],
-  status: [{required: true, message: '请输入状态(0未发布、1已发布、2定时发布)', trigger: 'blur'}],
+  top: [{required: true, message: '请选择是否置顶', trigger: 'change'}],
+  visible: [{required: true, message: '请选择可见性', trigger: 'change'}],
+  commentable: [{required: true, message: '请选择是否允许评论', trigger: 'change'}],
+  status: [{required: true, message: '请选择状态', trigger: 'change'}],
   releaseTime: [{required: true, message: '请选择发布时间', trigger: 'change'}]
 }
 
@@ -336,9 +355,9 @@ const showAdd = () => {
       dislikeCount: null,
       commentCount: null,
       collectionCount: null,
-      top: null,
-      visible: '',
-      commentable: null,
+      top: false,
+      visible: '1',
+      commentable: true,
       status: '',
       releaseTime: '',
       remark: ''
@@ -390,6 +409,28 @@ const handleDelete = (id) => {
     ElMessage.success('删除成功！')
   }).finally(() => {
     getPage()
+  })
+}
+
+const handleTop = (id) => {
+  handleTopArticle(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
+  })
+}
+
+const handleComment = (id) => {
+  handleCommentArticle(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
   })
 }
 

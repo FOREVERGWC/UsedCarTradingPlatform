@@ -5,49 +5,45 @@
         <el-card>
           <el-row :gutter="20">
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.username" clearable placeholder="请输入用户名"/>
+              <el-input v-model="queryParams.username" clearable placeholder="请输入用户名"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.password" clearable placeholder="请输入密码"/>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.name" clearable placeholder="请输入姓名"/>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.avatar" clearable placeholder="请输入头像"/>
+              <el-input v-model="queryParams.name" clearable placeholder="请输入姓名"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-date-picker v-model='queryParams.birthday' clearable
                               placeholder='请选择生日' type='date'
-                              value-format='yyyy-MM-dd HH:mm:ss'/>
+                              value-format='YYYY-MM-DD HH:mm:ss'/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-select v-model='queryParams.status' clearable placeholder='请选择状态'>
-                 <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
-               </el-select>
+              <el-select v-model='queryParams.status' clearable placeholder="请选择状态">
+                <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.role" clearable placeholder="请输入角色(0管理员、1用户)"/>
+              <el-select v-model='queryParams.role' clearable placeholder="请选择角色">
+                <el-option v-for='item in roleList' :key='item.value' :label='item.label' :value='item.value'/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.phone" clearable placeholder="请输入电话"/>
+              <el-input v-model="queryParams.phone" clearable placeholder="请输入电话"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.email" clearable placeholder="请输入邮箱"/>
+              <el-input v-model="queryParams.email" clearable placeholder="请输入邮箱"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.openId" clearable placeholder="请输入微信小程序开放ID"/>
+              <el-input v-model="queryParams.openId" clearable placeholder="请输入微信小程序开放ID"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.balance" clearable placeholder="请输入余额"/>
+              <el-input v-model="queryParams.balance" clearable placeholder="请输入余额"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-               <el-input v-model="queryParams.loginIp" clearable placeholder="请输入最后登录IP"/>
+              <el-input v-model="queryParams.loginIp" clearable placeholder="请输入最后登录IP"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-date-picker v-model='queryParams.loginTime' clearable
                               placeholder='请选择最后登录时间' type='date'
-                              value-format='yyyy-MM-dd HH:mm:ss'/>
+                              value-format='YYYY-MM-DD HH:mm:ss'/>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
               <el-button icon="Search" plain type="info" @click="getPage">查询</el-button>
@@ -100,7 +96,6 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="用户名" prop="username"/>
-        <el-table-column label="密码" prop="password"/>
         <el-table-column label="姓名" prop="name"/>
         <el-table-column label="头像">
           <template v-slot="{ row }">
@@ -116,8 +111,12 @@
           </template>
         </el-table-column>
         <el-table-column label="生日" prop="birthday"/>
-        <el-table-column label="状态(0禁用、1正常)" prop="status"/>
-        <el-table-column label="角色(0管理员、1用户)" prop="role"/>
+        <el-table-column label="状态">
+          <template v-slot="{ row }">
+            <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="角色" prop="roleText"/>
         <el-table-column label="电话" prop="phone"/>
         <el-table-column label="邮箱" prop="email"/>
         <el-table-column label="微信小程序开放ID" prop="openId"/>
@@ -155,7 +154,7 @@
           <el-input v-model="form.data.username" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.data.password" autocomplete="new"/>
+          <el-input v-model="form.data.password" autocomplete="new" show-password/>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="form.data.name" autocomplete="new"/>
@@ -166,15 +165,17 @@
         <el-form-item label="生日" prop="birthday">
           <el-date-picker v-model='form.data.birthday' placeholder='请选择生日'
                           type='date'
-                          value-format='yyyy-MM-dd HH:mm:ss'/>
+                          value-format='YYYY-MM-DD HH:mm:ss'/>
         </el-form-item>
         <el-form-item v-if="form.data.id" label='状态' prop='status'>
           <el-select v-model='form.data.status' clearable placeholder='请选择状态'>
             <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色(0管理员、1用户)" prop="role">
-          <el-input v-model="form.data.role" autocomplete="new"/>
+        <el-form-item label="角色" prop="role">
+          <el-select v-model='form.data.role' clearable placeholder='请选择角色'>
+            <el-option v-for='item in roleList' :key='item.value' :label='item.label' :value='item.value'/>
+          </el-select>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
           <el-input v-model="form.data.phone" autocomplete="new"/>
@@ -185,16 +186,16 @@
         <el-form-item label="微信小程序开放ID" prop="openId">
           <el-input v-model="form.data.openId" autocomplete="new"/>
         </el-form-item>
-         <el-form-item label="余额" prop="balance">
-           <el-input v-model="form.data.balance" autocomplete="new"/>
-         </el-form-item>
+        <el-form-item label="余额" prop="balance">
+          <el-input v-model="form.data.balance" autocomplete="new"/>
+        </el-form-item>
         <el-form-item label="最后登录IP" prop="loginIp">
           <el-input v-model="form.data.loginIp" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="最后登录时间" prop="loginTime">
           <el-date-picker v-model='form.data.loginTime' placeholder='请选择最后登录时间'
                           type='date'
-                          value-format='yyyy-MM-dd HH:mm:ss'/>
+                          value-format='YYYY-MM-DD HH:mm:ss'/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
@@ -209,18 +210,18 @@
 </template>
 
 <script setup>
-  import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
+import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
+import {roleList, statusList} from "@/utils/common.js";
+import {handleTopArticle} from "@/api/article.js";
 
 const loading = ref(true)
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
   username: '',
-  password: '',
   name: '',
-  avatar: '',
   birthday: '',
   status: '',
   role: '',
@@ -246,12 +247,11 @@ const userFields = {
   },
   '主键ID': 'id',
   '用户名': 'username',
-  '密码': 'password',
   '姓名': 'name',
   '头像': 'avatar',
   '生日': 'birthday',
-  '状态(0禁用、1正常)': 'status',
-  '角色(0管理员、1用户)': 'role',
+  '状态': 'status',
+  '角色': 'role',
   '电话': 'phone',
   '邮箱': 'email',
   '微信小程序开放ID': 'openId',
@@ -259,11 +259,6 @@ const userFields = {
   '最后登录IP': 'loginIp',
   '最后登录时间': 'loginTime'
 }
-const statusList = [
-  { label: '占位符1', value: '1' },
-  { label: '占位符2', value: '2' },
-  { label: '占位符3', value: '3' }
-]
 const form = ref({
   visible: false,
   title: '',
@@ -276,8 +271,8 @@ const rules = {
   name: [{required: true, message: '请输入姓名', trigger: 'blur'}],
   avatar: [{required: true, message: '请输入头像', trigger: 'blur'}],
   birthday: [{required: true, message: '请选择生日', trigger: 'change'}],
-  status: [{required: true, message: '请输入状态(0禁用、1正常)', trigger: 'blur'}],
-  role: [{required: true, message: '请输入角色(0管理员、1用户)', trigger: 'blur'}],
+  status: [{required: true, message: '请选择状态', trigger: 'change'}],
+  role: [{required: true, message: '请选择角色', trigger: 'change'}],
   phone: [{required: true, message: '请输入电话', trigger: 'blur'}],
   email: [{required: true, message: '请输入邮箱', trigger: 'blur'}],
   openId: [{required: true, message: '请输入微信小程序开放ID', trigger: 'blur'}],
@@ -369,6 +364,10 @@ const handleDelete = (id) => {
   })
 }
 
+const handleStatus = (id) => {
+  console.log('正常、禁用', id)
+}
+
 const handleSelectionChange = (selection) => {
   ids.value = selection.map(item => toRaw(item).id)
   single.value = selection.length !== 1
@@ -379,9 +378,7 @@ const resetQuery = () => {
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.username = ''
-  queryParams.password = ''
   queryParams.name = ''
-  queryParams.avatar = ''
   queryParams.status = ''
   queryParams.role = ''
   queryParams.phone = ''

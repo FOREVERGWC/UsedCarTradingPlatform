@@ -2,6 +2,7 @@ package org.example.springboot.common.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -18,10 +19,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * 全局序列化与反序列化配置
+ * Jackson序列化、反序列化配置类
  */
 @Configuration
-public class JacksonSerializerConfig {
+public class JacksonConfig {
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     private static final String DATE_PATTERN = "yyyy-MM-dd";
     private static final String TIME_PATTERN = "HH:mm:ss";
@@ -41,6 +42,7 @@ public class JacksonSerializerConfig {
             builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
             builder.serializerByType(LocalDate.class, new LocalDateSerializer(formatter2));
             builder.serializerByType(LocalTime.class, new LocalTimeSerializer(formatter3));
+            builder.serializerByType(Long.class, new ToStringSerializer());
             // 反序列化
             builder.deserializerByType(LocalDateTime.class, new LocalDateTimeDeserializer(formatter));
             builder.deserializerByType(LocalDate.class, new LocalDateDeserializer(formatter2));

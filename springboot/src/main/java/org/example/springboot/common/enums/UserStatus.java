@@ -43,4 +43,14 @@ public enum UserStatus {
         String code = jsonNode.asText();
         return map.get(code);
     }
+
+    /**
+     * 根据键获取枚举
+     *
+     * @param code 键
+     * @return 结果
+     */
+    public static UserStatus getByCode(String code) {
+        return map.get(code);
+    }
 }

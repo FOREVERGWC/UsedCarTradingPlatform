@@ -56,7 +56,11 @@ public enum ResultCode {
     /**
      * 账户余额不足，请到个人中心充值
      */
-    ACCOUNT_LOW_ERROR(5006, "账户余额不足，请到个人中心充值");
+    ACCOUNT_LOW_ERROR(5006, "账户余额不足，请到个人中心充值"),
+    /**
+     * 操作失败！文章不存在
+     */
+    ARTICLE_NOT_FOUND_ERROR(6000, "操作失败！文章不存在");
 
     private final Integer code;
     private final String msg;

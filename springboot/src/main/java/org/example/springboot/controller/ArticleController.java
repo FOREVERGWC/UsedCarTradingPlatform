@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -88,5 +89,31 @@ public class ArticleController {
     public Result<ArticleVo> getOne(ArticleDto dto) {
         ArticleVo vo = articleService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 置顶或取消置顶文章
+     *
+     * @param id 文章ID
+     * @return 结果
+     */
+    @PutMapping("/top/{id}")
+    @Operation(summary = "置顶或取消置顶文章", description = "置顶或取消置顶文章", method = "PUT")
+    public Result<Void> handleTop(@PathVariable Long id) {
+        articleService.handleTop(id);
+        return Result.success();
+    }
+
+    /**
+     * 允许或禁止文章评论
+     *
+     * @param id 文章ID
+     * @return 结果
+     */
+    @PutMapping("/comment/{id}")
+    @Operation(summary = "允许或禁止文章评论", description = "允许或禁止文章评论", method = "PUT")
+    public Result<Void> handleComment(@PathVariable Long id) {
+        articleService.handleComment(id);
+        return Result.success();
     }
 }

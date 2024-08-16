@@ -47,6 +47,11 @@ public class ArticleCategory extends BaseEntity {
     @Schema(description = "父级分类ID")
     private Long parentId;
     /**
+     * 作者ID
+     */
+    @Schema(description = "作者ID")
+    private Long userId;
+    /**
      * 逻辑删除(0正常、1删除)
      */
     @Schema(description = "逻辑删除(0正常、1删除)")

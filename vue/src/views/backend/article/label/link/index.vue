@@ -65,8 +65,8 @@
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
-        <el-table-column label="文章ID" prop="articleId"/>
-        <el-table-column label="标签ID" prop="labelId"/>
+        <el-table-column label="文章" prop="article.title"/>
+        <el-table-column label="标签" prop="label.name"/>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>

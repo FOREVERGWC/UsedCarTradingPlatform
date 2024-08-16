@@ -1,12 +1,9 @@
 package org.example.springboot.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableField;
-import org.example.springboot.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +11,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.example.springboot.common.annotation.Dict;
+import org.example.springboot.common.enums.UserRole;
+import org.example.springboot.common.enums.UserStatus;
+import org.example.springboot.domain.BaseEntity;
 
 import java.io.Serial;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -67,11 +70,13 @@ public class User extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
+    @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
     private String status;
     /**
      * 角色(0管理员、1用户)
      */
+    @Dict(enumClass = UserRole.class)
     @Schema(description = "角色(0管理员、1用户)")
     private String role;
     /**

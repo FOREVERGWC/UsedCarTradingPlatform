@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.Inet4Address;
 
+/**
+ * Swagger文档配置类
+ */
 @Slf4j
 @Configuration
 public class SwaggerConfig implements ApplicationListener<WebServerInitializedEvent> {

@@ -4,9 +4,9 @@
       <el-col :lg="18" :md="18" :sm="24" :xl="18" :xs="24">
         <el-card v-for="item in blogList" v-if="blogList && blogList.length > 0" :key="item.id" shadow="hover">
           <template #header>
-            <router-link :to='`/detail/${item.id}`'>
+            <el-link :href="`/detail/${item.id}`" :underline="false" target="_blank">
               <span>{{ item.title }}</span>
-            </router-link>
+            </el-link>
           </template>
           <p class="fixed-height">
             <div v-if="firstImage">
@@ -38,7 +38,8 @@
                  class="comment-item">
               <el-row>
                 <el-col :span="6">
-                  <el-avatar :src="getAvatar(item.user.avatar)" shape="square" size="large" @click="handleMain(item.user.id)"/>
+                  <el-avatar :src="getAvatar(item.user.avatar)" shape="square" size="large"
+                             @click="handleMain(item.user.id)"/>
                 </el-col>
                 <el-col :span="18">
                   <span class="comment-item-info">{{ item.user.name || item.user.username }}</span>
@@ -61,7 +62,7 @@ import {getCommentList} from "@/api/comment.js";
 
 export default {
   name: "IndexView",
-  data () {
+  data() {
     return {
       blogLoading: true,
       commentLoading: true,
@@ -79,21 +80,21 @@ export default {
       commentList: []
     }
   },
-  created () {
+  created() {
     this.getList()
   },
   computed: {
-    getUrl () {
+    getUrl() {
       return (path) => {
         return import.meta.env.VITE_APP_BASE_API + path
       }
     },
-    getAvatar () {
+    getAvatar() {
       return (path) => {
         return path ? this.getUrl(path) : (path ? this.getUrl(path) : new URL('@/assets/imgs/profile.png', import.meta.url))
       }
     },
-    firstImage () {
+    firstImage() {
       return (content) => {
         const match = content.match(/!\[.*?\]\((.*?)\)/);
         console.log(match ? match[1] : null)
@@ -102,7 +103,7 @@ export default {
     }
   },
   methods: {
-    getList () {
+    getList() {
       this.blogLoading = true
       this.commentLoading = true
       getArticleList(this.blogQueryParams).then(res => {
@@ -123,7 +124,6 @@ export default {
 
 <style lang="scss" scoped>
 .background-image-container {
-  background-image: url('@/assets/imgs/bg2.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
