@@ -87,7 +87,13 @@ const info = ref({
 
 const getInfo = () => {
   getDashboardInfo().then(res => {
-    info.value = res.data || {}
+    const data = res.data || {}
+    for (const key in data) {
+      if (data.hasOwnProperty(key) && !isNaN(data[key])) {
+        data[key] = parseInt(data[key])
+      }
+    }
+    info.value = data
   })
 }
 

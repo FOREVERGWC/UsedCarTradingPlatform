@@ -67,8 +67,16 @@
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
-        <el-table-column label="发送者" prop="sender.name"/>
-        <el-table-column label="接收者" prop="receiver.name"/>
+        <el-table-column label="发送者">
+          <template v-slot="{ row }">
+            {{ row.sender.name || row.sender.username }}
+          </template>
+        </el-table-column>
+        <el-table-column label="接收者">
+          <template v-slot="{ row }">
+            {{ row.receiver.name || row.receiver.username }}
+          </template>
+        </el-table-column>
         <el-table-column label="消息内容" prop="message"/>
         <el-table-column label="发送时间" prop="createTime"/>
         <el-table-column label="操作" width="180">
@@ -100,12 +108,13 @@
       <el-form ref="formRef" :model="form.data" :rules="rules" label-width="80px">
         <el-form-item label="发送者" prop="senderId">
           <el-select v-model='form.data.senderId' clearable filterable placeholder='请选择发送者'>
-            <el-option v-for='item in senderList' :key='item.id' :label='item.name' :value='item.id'/>
+            <el-option v-for='item in senderList' :key='item.id' :label='item.name || item.username' :value='item.id'/>
           </el-select>
         </el-form-item>
         <el-form-item label="接收者" prop="receiverId">
           <el-select v-model='form.data.receiverId' clearable filterable placeholder='请选择接收者'>
-            <el-option v-for='item in receiverList' :key='item.id' :label='item.name' :value='item.id'/>
+            <el-option v-for='item in receiverList' :key='item.id' :label='item.name || item.username'
+                       :value='item.id'/>
           </el-select>
         </el-form-item>
         <el-form-item label="消息内容" prop="message">

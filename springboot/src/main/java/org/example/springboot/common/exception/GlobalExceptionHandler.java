@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result<Void> MethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
-        ObjectError error = bindingResult.getAllErrors().get(0);
+        ObjectError error = bindingResult.getAllErrors().getFirst();
         return Result.error(error.getDefaultMessage());
     }
 

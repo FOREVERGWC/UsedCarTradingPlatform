@@ -16,6 +16,7 @@ const routes = [
                 path: '/article',
                 name: 'backend-article',
                 meta: {name: '文章管理', roles: ['0', '1'], icon: 'Stopwatch', hidden: false},
+                redirect: '/article-index',
                 children: [
                     {
                         path: '/article-index',

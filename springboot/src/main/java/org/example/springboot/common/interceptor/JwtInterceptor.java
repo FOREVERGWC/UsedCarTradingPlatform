@@ -6,6 +6,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.Constants;
 import org.example.springboot.common.annotation.Anonymous;
@@ -14,7 +17,6 @@ import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.service.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -22,15 +24,11 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 /**
  * jwt拦截器
  */
-@Slf4j
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
@@ -63,7 +61,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         User user;
         try {
-            String userId = JWT.decode(token).getAudience().get(0);
+            String userId = JWT.decode(token).getAudience().getFirst();
             user = userService.getById(Long.valueOf(userId));
         } catch (Exception e) {
             throw new CustomException(ResultCode.TOKEN_CHECK_ERROR);

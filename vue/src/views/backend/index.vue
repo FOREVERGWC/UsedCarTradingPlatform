@@ -1,8 +1,15 @@
 <template>
   <el-container>
-    <el-aside class="hidden-sm-and-down">
-      <el-menu :default-active='menu' router>
-        <div class="title">{{ title }}</div>
+    <el-aside :class="['hidden-sm-and-down', isCollapse ? 'el-aside--collapse' : '']">
+      <el-menu :default-active='menu' router :collapse="isCollapse">
+        <div class="menu-header">
+          <span class="title">{{ title }}</span>
+          <el-icon>
+            <Expand v-show="isCollapse" @click.native="handleCollapse"/>
+            <Fold v-show="!isCollapse" @click.native="handleCollapse"/>
+          </el-icon>
+        </div>
+
         <menu-item v-for="(item, index) in menuList"
                    :key="index"
                    :item="item"
@@ -12,7 +19,7 @@
     </el-aside>
     <el-container>
       <el-header>
-        <Breadcrumb :itemList="breadcrumbStore.itemList"/>
+        <Breadcrumb/>
 
         <el-dropdown>
           <span class="header-dropdown">
@@ -89,11 +96,16 @@ const navigationStore = useNavigationStore()
 const title = ref(import.meta.env.VITE_APP_TITLE || '后台管理系统')
 const menu = ref(navigationStore.menu)
 const menuList = ref(router.options.routes || [])
+const isCollapse = ref(false)
 const user = reactive(userStore.getUser)
 const avatar = computed(() => import.meta.env.VITE_APP_BASE_API + user.avatar)
 
 const handleClickMenu = (item) => {
   console.log(item)
+}
+
+const handleCollapse = () => {
+  isCollapse.value = !isCollapse.value
 }
 
 const toFrontend = () => {
@@ -124,16 +136,39 @@ router.afterEach((to, from) => {
     width: 256px;
     height: 100%;
 
+    &.el-aside--collapse {
+      width: 64px;
+    }
+
     .el-menu {
       height: 100%;
+      border-right: none;
 
-      .title {
-        font-family: '微软雅黑', sans-serif;
-        font-size: 26px;
-        font-weight: bolder;
-        height: 60px;
-        line-height: 60px;
-        text-align: center;
+      &.el-menu--collapse {
+        .title {
+          display: none;
+        }
+      }
+
+      .menu-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        padding: 16px;
+        gap: 8px;
+
+        .title {
+          font-family: '微软雅黑', sans-serif;
+          font-weight: bolder;
+          height: 60px;
+          line-height: 60px;
+          text-align: center;
+        }
+
+        .el-icon:hover {
+          color: #409EFF;
+        }
       }
     }
 
