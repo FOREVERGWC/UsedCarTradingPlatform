@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.BaseContext;
+import org.example.springboot.common.enums.DeleteEnum;
 import org.example.springboot.domain.dto.ArticleCategoryDto;
 import org.example.springboot.domain.entity.ArticleCategory;
 import org.example.springboot.domain.entity.User;
@@ -41,8 +42,7 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
         if (entity.getId() == null) {
             UserVo user = BaseContext.getUser();
             entity.setUserId(user.getId());
-            // TODO 删除枚举
-            entity.setDeleted(0);
+            entity.setDeleted(DeleteEnum.NORMAL.getCode());
             return super.save(entity);
         }
         return super.saveOrUpdate(entity);

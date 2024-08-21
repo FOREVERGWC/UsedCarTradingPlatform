@@ -36,27 +36,31 @@ public enum ResultCode {
     /**
      * 用户名已存在
      */
-    USER_EXIST_ERROR(5001, "用户名已存在"),
+    USER_EXIST_ERROR(1000, "用户名已存在"),
     /**
      * 用户未登录
      */
-    USER_NOT_LOGIN(5002, "用户未登录"),
+    USER_NOT_LOGIN(1002, "用户未登录"),
     /**
      * 账号或密码错误
      */
-    USER_ACCOUNT_ERROR(5003, "账号或密码错误"),
+    USER_ACCOUNT_ERROR(1003, "账号或密码错误"),
     /**
      * 用户不存在
      */
-    USER_NOT_EXIST_ERROR(5004, "用户不存在"),
+    USER_NOT_EXIST_ERROR(1004, "用户不存在"),
     /**
      * 原密码输入错误
      */
-    PARAM_PASSWORD_ERROR(5005, "原密码输入错误"),
+    PARAM_PASSWORD_ERROR(1005, "原密码输入错误"),
     /**
      * 账户余额不足，请到个人中心充值
      */
-    ACCOUNT_LOW_ERROR(5006, "账户余额不足，请到个人中心充值"),
+    ACCOUNT_LOW_ERROR(1006, "账户余额不足，请到个人中心充值"),
+    /**
+     * 删除失败！该角色已分配用户
+     */
+    ROLE_DELETE_ERROR(2000, "删除失败！该角色已分配用户"),
     /**
      * 操作失败！文章不存在
      */

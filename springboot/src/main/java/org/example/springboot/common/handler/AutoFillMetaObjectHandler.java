@@ -17,19 +17,35 @@ public class AutoFillMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         User user = BaseContext.getUser();
         String username = user == null ? "" : user.getUsername();
+        Object create = metaObject.getValue("createBy");
+        Object update = metaObject.getValue("updateBy");
+        Object value = metaObject.getValue("remark");
+
         LocalDateTime date = LocalDateTime.now();
-        metaObject.setValue("createBy", metaObject.getValue("createBy") != null ? metaObject.getValue("createBy") : username);
+        Object createBy = create != null ? create : username;
+        Object updateBy = update != null ? update : username;
+        Object remark = value != null ? value : "";
+
+        metaObject.setValue("createBy", createBy);
         metaObject.setValue("createTime", date);
-        metaObject.setValue("updateBy", metaObject.getValue("updateBy") != null ? metaObject.getValue("updateBy") : username);
+        metaObject.setValue("updateBy", updateBy);
         metaObject.setValue("updateTime", date);
+        metaObject.setValue("remark", remark);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         User user = BaseContext.getUser();
         String username = user == null ? "" : user.getUsername();
+        Object update = metaObject.getValue("updateBy");
+        Object value = metaObject.getValue("remark");
+
         LocalDateTime date = LocalDateTime.now();
-        metaObject.setValue("updateBy", metaObject.getValue("updateBy") != null ? metaObject.getValue("updateBy") : username);
+        Object updateBy = update != null ? update : username;
+        Object remark = value != null ? value : "";
+
+        metaObject.setValue("updateBy", updateBy);
         metaObject.setValue("updateTime", date);
+        metaObject.setValue("remark", remark);
     }
 }

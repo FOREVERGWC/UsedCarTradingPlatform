@@ -11,5 +11,6 @@ spring:
 
 upload:
   path: /Users/yao/Desktop/Projects/Java/BloggingSystem/files
+
 knife4j:
   enable: true

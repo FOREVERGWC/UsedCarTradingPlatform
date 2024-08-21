@@ -3,6 +3,7 @@ package org.example.springboot.common.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.domain.Result;
 import org.mybatis.spring.MyBatisSystemException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,6 +51,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result<Void> IllegalArgumentException(IllegalArgumentException e) {
+        return Result.error(e.getMessage());
+    }
+
+    @ExceptionHandler(value = BadSqlGrammarException.class)
+    public Result<Void> BadSqlGrammarException(BadSqlGrammarException e) {
         return Result.error(e.getMessage());
     }
 }

@@ -17,6 +17,14 @@ import java.util.List;
  */
 public interface IUserService extends IService<User> {
     /**
+     * 添加或修改用户信息
+     *
+     * @param dto 用户信息
+     * @return 结果
+     */
+    boolean saveOrUpdate(UserDto dto);
+
+    /**
      * 查询用户信息列表
      *
      * @param dto 用户信息

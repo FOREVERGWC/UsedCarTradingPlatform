@@ -1,16 +1,15 @@
 package org.example.springboot.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.example.springboot.domain.vo.UserVo;
-import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.User;
-import org.example.springboot.domain.dto.UserDto;
-import org.example.springboot.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.Resource;
+import org.example.springboot.domain.Result;
+import org.example.springboot.domain.dto.UserDto;
+import org.example.springboot.domain.vo.UserVo;
+import org.example.springboot.service.IUserService;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 /**
@@ -28,13 +27,13 @@ public class UserController {
     /**
      * 添加、修改用户信息
      *
-     * @param user 用户信息
+     * @param dto 用户信息
      * @return 结果
      */
     @PostMapping
     @Operation(summary = "添加、修改用户信息", description = "添加、修改用户信息", method = "POST")
-    public Result<Void> save(@RequestBody User user) {
-        userService.saveOrUpdate(user);
+    public Result<Void> save(@RequestBody UserDto dto) {
+        userService.saveOrUpdate(dto);
         return Result.success();
     }
 

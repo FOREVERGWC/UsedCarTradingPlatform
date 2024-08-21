@@ -49,7 +49,7 @@
         <el-menu :default-active='menu' mode="horizontal" router>
           <div v-for="(item, index) in menuList" :key="index">
             <el-sub-menu v-if="item?.children?.length > 0"
-                         v-show='!item?.meta?.hidden && item.meta.roles.includes(user.role)'
+                         v-show='!item?.meta?.hidden && hasIntersection(item)'
                          :index='item.path'>
               <template #title>
                 <el-icon>
@@ -58,7 +58,7 @@
                 <span>{{ item.meta?.name }}</span>
               </template>
               <el-menu-item v-for='(item, index) in item.children'
-                            v-show='!item?.meta?.hidden && item.meta.roles.includes(user.role)'
+                            v-show='!item?.meta?.hidden && hasIntersection(item)'
                             :key='index' :index='item.path'
                             @click='handleClickMenu(item.path)'>
                 <el-icon>
@@ -67,7 +67,7 @@
                 {{ item.meta.name }}
               </el-menu-item>
             </el-sub-menu>
-            <el-menu-item v-else v-show='!item?.meta?.hidden && item.meta.roles.includes(user.role)' :index="item.path"
+            <el-menu-item v-else v-show='!item?.meta?.hidden && hasIntersection(item)' :index="item.path"
                           @click='handleClickMenu(item.path)'>
               <el-icon>
                 <component :is="item.meta?.icon"/>
@@ -82,16 +82,20 @@
 </template>
 
 <script setup>
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 import useUserStore from "@/store/modules/user.js";
 import useBreadcrumbStore from "@/store/modules/breadcrumb.js";
 import useNavigationStore from "@/store/modules/navigation.js";
+import {getRoleList} from "@/api/role.js";
+import useRoleStore from "@/store/modules/role.js";
+import {intersection} from "lodash-es";
 
 const router = useRouter()
 const userStore = useUserStore()
 const breadcrumbStore = useBreadcrumbStore()
 const navigationStore = useNavigationStore()
+const roleStore = useRoleStore();
 
 const title = ref(import.meta.env.VITE_APP_TITLE || '后台管理系统')
 const menu = ref(navigationStore.menu)
@@ -121,11 +125,24 @@ const handleLogout = () => {
   router.push('/login')
 }
 
+const getRole = () => {
+  getRoleList({}).then(res => {
+    roleStore.setRoleList(res.data)
+  })
+}
+
+const hasIntersection = (item) => {
+  return intersection(item.meta.roles, user?.roleIdList || []).length > 0;
+};
+
 router.afterEach((to, from) => {
   breadcrumbStore.setItemList(to);
   navigationStore.setMenu(to.path)
 });
 
+onMounted(() => {
+  getRole()
+})
 </script>
 
 <style lang="scss" scoped>

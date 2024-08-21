@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.entity.User;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * <p>
@@ -37,8 +39,13 @@ public class UserVo extends User {
     @Schema(description = "状态")
     private String statusText;
     /**
-     * 角色
+     * 角色ID列表
      */
-    @Schema(description = "角色")
-    private String roleText;
+    @Schema(description = "角色ID列表")
+    private List<Long> roleIdList;
+    /**
+     * 角色列表
+     */
+    @Schema(description = "角色列表")
+    private List<Role> roleList;
 }

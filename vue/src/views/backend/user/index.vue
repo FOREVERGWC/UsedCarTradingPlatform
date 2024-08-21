@@ -22,7 +22,7 @@
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model='queryParams.role' clearable placeholder="请选择角色">
-                <el-option v-for='item in roleList' :key='item.value' :label='item.label' :value='item.value'/>
+                <el-option v-for='item in roleList' :key='item.id' :label='item.name' :value='item.id'/>
               </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
@@ -116,7 +116,13 @@
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
           </template>
         </el-table-column>
-        <el-table-column label="角色" prop="roleText"/>
+        <el-table-column label="角色">
+          <template v-slot="{ row }">
+            <el-tag type="info" v-for="item in row.roleList">
+              {{ item.name }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="电话" prop="phone"/>
         <el-table-column label="邮箱" prop="email"/>
         <el-table-column label="微信小程序开放ID" prop="openId"/>
@@ -172,9 +178,9 @@
             <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色" prop="role">
-          <el-select v-model='form.data.role' clearable placeholder='请选择角色'>
-            <el-option v-for='item in roleList' :key='item.value' :label='item.label' :value='item.value'/>
+        <el-form-item label="角色" prop="roleIdList">
+          <el-select v-model='form.data.roleIdList' multiple clearable placeholder='请选择角色'>
+            <el-option v-for='item in roleList' :key='item.id' :label='item.name' :value='item.id'/>
           </el-select>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
@@ -213,8 +219,10 @@
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
-import {roleList, statusList} from "@/utils/common.js";
-import {handleTopArticle} from "@/api/article.js";
+import {statusList} from "@/utils/common.js";
+import useRoleStore from "@/store/modules/role.js";
+
+const roleStore = useRoleStore();
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -235,6 +243,7 @@ const queryParams = reactive({
 const ids = ref([])
 const single = ref(true)
 const multiple = ref(true)
+const roleList = ref(roleStore.roleList)
 const userList = ref([])
 const total = ref(0)
 const userFields = {
@@ -272,7 +281,7 @@ const rules = {
   avatar: [{required: true, message: '请输入头像', trigger: 'blur'}],
   birthday: [{required: true, message: '请选择生日', trigger: 'change'}],
   status: [{required: true, message: '请选择状态', trigger: 'change'}],
-  role: [{required: true, message: '请选择角色', trigger: 'change'}],
+  roleIdList: [{required: true, message: '请选择角色', trigger: 'change'}],
   phone: [{required: true, message: '请输入电话', trigger: 'blur'}],
   email: [{required: true, message: '请输入邮箱', trigger: 'blur'}],
   openId: [{required: true, message: '请输入微信小程序开放ID', trigger: 'blur'}],
@@ -305,7 +314,7 @@ const showAdd = () => {
       avatar: '',
       birthday: '',
       status: '',
-      role: '',
+      roleIdList: '',
       phone: '',
       email: '',
       openId: '',

@@ -68,6 +68,38 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
     }
 
     @Override
+    public List<ArticleLabelLink> listByArticleId(Serializable articleId) {
+        return Optional.ofNullable(lambdaQuery()
+                        .eq(ArticleLabelLink::getArticleId, articleId)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
+    public List<ArticleLabelLink> listByArticleIds(Collection<?> articleIds) {
+        return Optional.ofNullable(lambdaQuery()
+                        .in(ArticleLabelLink::getArticleId, articleIds)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
+    public List<ArticleLabelLink> listByLabelId(Serializable labelId) {
+        return Optional.ofNullable(lambdaQuery()
+                        .eq(ArticleLabelLink::getLabelId, labelId)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
+    public List<ArticleLabelLink> listByLabelIds(Collection<?> labelIds) {
+        return Optional.ofNullable(lambdaQuery()
+                        .in(ArticleLabelLink::getLabelId, labelIds)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
     public List<ArticleLabelLinkVo> getList(ArticleLabelLinkDto dto) {
         List<ArticleLabelLink> articleLabelLinkList = getWrapper(dto).list();
         if (CollectionUtil.isEmpty(articleLabelLinkList)) {

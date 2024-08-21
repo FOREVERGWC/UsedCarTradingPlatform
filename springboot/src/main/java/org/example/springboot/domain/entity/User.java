@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import org.example.springboot.common.annotation.Dict;
-import org.example.springboot.common.enums.UserRole;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.domain.BaseEntity;
 
@@ -73,12 +72,6 @@ public class User extends BaseEntity {
     @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
     private String status;
-    /**
-     * 角色(0管理员、1用户)
-     */
-    @Dict(enumClass = UserRole.class)
-    @Schema(description = "角色(0管理员、1用户)")
-    private String role;
     /**
      * 电话
      */

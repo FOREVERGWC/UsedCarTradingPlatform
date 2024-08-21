@@ -53,5 +53,6 @@ public class BaseEntity implements Serializable {
      * 备注
      */
     @Schema(description = "备注")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String remark;
 }
