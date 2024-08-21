@@ -1,6 +1,6 @@
 <template>
   <el-sub-menu v-if="item?.children?.length > 0"
-               v-show="!item?.meta?.hidden && item.meta.roles.includes(user.role)"
+               v-show="!item?.meta?.hidden && hasIntersection(item)"
                :index="item.path">
     <template #title>
       <el-icon>
@@ -16,7 +16,7 @@
     </menu-item>
   </el-sub-menu>
   <el-menu-item v-else
-                v-show="!item?.meta?.hidden && item.meta.roles.includes(user.role)"
+                v-show="!item?.meta?.hidden && hasIntersection(item)"
                 :index="item.path"
                 @click="handleClickMenu(item.path)">
     <el-icon>
@@ -27,7 +27,8 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {defineProps, defineEmits} from 'vue';
+import {intersection} from "lodash-es";
 
 const props = defineProps({
   item: {
@@ -39,6 +40,11 @@ const props = defineProps({
     required: true
   }
 });
+
+
+const hasIntersection = (item) => {
+  return intersection(item.meta.roles, props.user?.roleIdList || []).length > 0
+}
 
 const emit = defineEmits(['click']);
 

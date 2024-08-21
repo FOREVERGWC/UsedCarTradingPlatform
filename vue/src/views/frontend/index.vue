@@ -7,7 +7,7 @@
             <img alt="" src="@/assets/imgs/profile.png"/>
           </el-avatar>
         </template>
-        <el-menu-item v-if="user.role === '0'" index="/backend">返回后台</el-menu-item>
+        <el-menu-item v-if="user.roleIdList.includes('1')" index="/backend">返回后台</el-menu-item>
         <el-menu-item index="/center">个人中心</el-menu-item>
         <el-menu-item index="#" @click.native="handleLogout">退出登录</el-menu-item>
       </el-sub-menu>
