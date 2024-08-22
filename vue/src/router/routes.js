@@ -84,7 +84,7 @@ const routes = [
             },
             {
                 path: '/center2',
-                name: 'center',
+                name: 'center2',
                 meta: {name: '个人中心', roles: [], icon: 'Stopwatch', hidden: false},
                 component: () => import('@/views/backend/user/center/index.vue')
             },

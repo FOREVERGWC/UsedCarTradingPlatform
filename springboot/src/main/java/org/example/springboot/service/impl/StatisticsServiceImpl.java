@@ -7,6 +7,7 @@ import org.example.springboot.service.IArticleService;
 import org.example.springboot.service.ICommentService;
 import org.example.springboot.service.IStatisticsService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.service.impl.cache.IArticleCacheService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,19 +31,20 @@ public class StatisticsServiceImpl implements IStatisticsService {
     private IUserService userService;
     @Resource
     private ICommentService commentService;
-    // TODO 统计浏览量
+    @Resource
+    private IArticleCacheService articleCacheService;
 
     @Override
     public Map<String, Long> getDashboardInfo() {
-        // TODO Redis记录浏览量
         Map<String, Long> map = new LinkedHashMap<>();
         long articleCount = articleService.count();
         long userCount = userService.count();
         long commentCount = commentService.count();
+        Long viewCount = articleCacheService.getAllViewCount();
         map.put("articleCount", articleCount);
         map.put("userCount", userCount);
         map.put("commentCount", commentCount);
-        map.put("viewCount", 0L);
+        map.put("viewCount", viewCount);
         return map;
     }
 

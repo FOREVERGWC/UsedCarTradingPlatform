@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -88,5 +90,31 @@ public class FollowController {
     public Result<FollowVo> getOne(FollowDto dto) {
         FollowVo vo = followService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 查询粉丝数量和关注数量
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @GetMapping("/info/{userId}")
+    @Operation(summary = "查询粉丝数量和关注数量", description = "查询粉丝数量和关注数量", method = "GET")
+    public Result<Map<String, Object>> getInfo(@PathVariable Long userId) {
+        Map<String, Object> info = followService.getInfo(userId);
+        return Result.success(info);
+    }
+
+    /**
+     * 关注或取关用户
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @PostMapping("/to/{userId}")
+    @Operation(summary = "关注或取关用户", description = "关注或取关用户", method = "POST")
+    public Result<Map<String, Object>> followTo(@PathVariable Long userId) {
+        Map<String, Object> info = followService.followTo(userId);
+        return Result.success(info);
     }
 }

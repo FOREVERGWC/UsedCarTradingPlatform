@@ -88,4 +88,17 @@ public class UserController {
         UserVo vo = userService.getOne(dto);
         return Result.success(vo);
     }
+
+    /**
+     * 解禁或禁用用户
+     *
+     * @param id 用户ID
+     * @return 结果
+     */
+    @PutMapping("/status/{id}")
+    @Operation(summary = "解禁或禁用用户", description = "解禁或禁用用户", method = "PUT")
+    public Result<Void> handleStatus(@PathVariable Long id) {
+        userService.handleStatus(id);
+        return Result.success();
+    }
 }

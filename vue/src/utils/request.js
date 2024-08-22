@@ -3,8 +3,6 @@ import router from '@/router'
 import {ElMessage} from 'element-plus'
 import useUserStore from "@/store/modules/user.js";
 
-const userStore = useUserStore()
-
 const request = axios.create({
     baseURL: '/api', timeout: 30000
 })
@@ -13,7 +11,10 @@ const request = axios.create({
  * 请求拦截器
  */
 request.interceptors.request.use(config => {
-    config.headers['Content-Type'] = 'application/json;charset=utf-8'
+    const userStore = useUserStore()
+    if (!config.headers['Content-Type']) {
+        config.headers['Content-Type'] = 'application/json;charset=utf-8'
+    }
     const user = userStore.user
     config.headers['token'] = user.token
     if (config.method === 'get' && config.params) {

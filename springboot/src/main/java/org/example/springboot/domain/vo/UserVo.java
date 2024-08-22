@@ -36,6 +36,11 @@ public class UserVo extends User {
     /**
      * 状态
      */
+    @Schema(description = "性别")
+    private String genderText;
+    /**
+     * 状态
+     */
     @Schema(description = "状态")
     private String statusText;
     /**

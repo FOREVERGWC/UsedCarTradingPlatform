@@ -7,6 +7,7 @@ import org.example.springboot.domain.entity.Follow;
 import org.example.springboot.domain.vo.FollowVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,4 +38,20 @@ public interface IFollowService extends IService<Follow> {
      * @return 结果
      */
     FollowVo getOne(FollowDto dto);
+
+    /**
+     * 查询粉丝数量和关注数量
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    Map<String, Object> getInfo(Long userId);
+
+    /**
+     * 关注或取关用户
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    Map<String, Object> followTo(Long userId);
 }

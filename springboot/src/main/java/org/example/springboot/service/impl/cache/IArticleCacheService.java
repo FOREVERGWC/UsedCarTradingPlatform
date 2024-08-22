@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface IArticleCacheService {
-
+    // TODO 定时任务每日1凌晨点将redis同步数据库
     /**
      * 增加文章浏览量
      *
@@ -19,6 +19,13 @@ public interface IArticleCacheService {
      * @return 浏览量
      */
     Long getViewCount(Long id);
+
+    /**
+     * 获取全部文章浏览量
+     *
+     * @return 浏览量
+     */
+    Long getAllViewCount();
 
     /**
      * 记录用户的文章浏览历史

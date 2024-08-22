@@ -26,7 +26,7 @@
             </span>
           </template>
         </el-card>
-        <el-empty v-else description="暂时没有博客哦！"/>
+        <el-empty v-else description="暂时没有文章哦！"/>
       </el-col>
       <el-col :lg="6" :md="6" :sm="24" :xl="6" :xs="24">
         <el-card shadow="hover">

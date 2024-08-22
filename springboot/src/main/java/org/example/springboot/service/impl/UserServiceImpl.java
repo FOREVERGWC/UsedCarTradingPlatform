@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.BaseContext;
+import org.example.springboot.common.enums.Gender;
+import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
+import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.dto.PasswordDto;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.Role;
@@ -42,11 +45,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Resource
     private IUserRoleLinkService userRoleLinkService;
 
+    @Override
+    public boolean save(User entity) {
+        entity.setNickname(StrUtil.isNotBlank(entity.getNickname()) ? entity.getNickname() : entity.getUsername());
+        entity.setGender(StrUtil.isNotBlank(entity.getGender()) ? entity.getGender() : Gender.UNKNOWN.getCode());
+        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setBalance(BigDecimal.ZERO);
+        return super.save(entity);
+    }
+
     @Transactional
     @Override
     public boolean saveOrUpdate(UserDto dto) {
+        validateUsernameAvailable(dto.getId(), dto.getUsername());
+        validatePhoneAvailable(dto.getId(), dto.getPhone());
+        validateEmailAvailable(dto.getId(), dto.getEmail());
         if (dto.getId() == null) {
-            boolean flag = super.save(dto);
+            boolean flag = save(dto);
             userRoleLinkService.saveBatchByUserIdAndRoleIds(dto.getId(), dto.getRoleIdList());
             return flag;
         }
@@ -119,6 +134,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public User getByPhone(String phone) {
+        return lambdaQuery()
+                .eq(User::getPhone, phone)
+                .one();
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return lambdaQuery()
+                .eq(User::getEmail, email)
+                .one();
+    }
+
+    @Override
+    public void handleStatus(Long id) {
+        User user = getById(id);
+        if (user == null) {
+            throw new CustomException(ResultCode.USER_NOT_FOUND_ERROR);
+        }
+        if (Objects.equals(UserStatus.NORMAL.getCode(), user.getStatus())) {
+            user.setStatus(UserStatus.DISABLE.getCode());
+        } else {
+            user.setStatus(UserStatus.NORMAL.getCode());
+        }
+        updateById(user);
+    }
+
+    @Override
     public UserVo login(LoginBody loginBody) {
         User user = getByUsername(loginBody.getUsername());
         if (user == null) {
@@ -141,9 +184,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     @Override
     public void register(User user) {
-        validateUsernameAvailable(user.getUsername());
-        user.setStatus(UserStatus.NORMAL.getCode());
-        user.setBalance(BigDecimal.ZERO);
         save(user);
         // TODO 2L替换为枚举
         userRoleLinkService.saveBatchByUserIdAndRoleIds(user.getId(), List.of(2L));
@@ -167,12 +207,66 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 校验用户名是否重复
      *
+     * @param id       主键ID
      * @param username 用户名
      */
-    private void validateUsernameAvailable(String username) {
+    private void validateUsernameAvailable(Long id, String username) {
+        if (StrUtil.isBlank(username)) {
+            return;
+        }
         User user = getByUsername(username);
-        if (user != null) {
+        if (user == null) {
+            return;
+        }
+        if (id == null) {
             throw new RuntimeException("注册失败！用户名已存在");
+        }
+        if (!Objects.equals(id, user.getId())) {
+            throw new RuntimeException("修改失败！用户名已存在");
+        }
+    }
+
+    /**
+     * 校验电话是否重复
+     *
+     * @param id    主键ID
+     * @param phone 电话
+     */
+    private void validatePhoneAvailable(Long id, String phone) {
+        if (StrUtil.isBlank(phone)) {
+            return;
+        }
+        User user = getByPhone(phone);
+        if (user == null) {
+            return;
+        }
+        if (id == null) {
+            throw new RuntimeException("注册失败！电话已存在");
+        }
+        if (!Objects.equals(id, user.getId())) {
+            throw new RuntimeException("修改失败！电话已存在");
+        }
+    }
+
+    /**
+     * 校验邮箱是否重复
+     *
+     * @param id    主键ID
+     * @param email 邮箱
+     */
+    private void validateEmailAvailable(Long id, String email) {
+        if (StrUtil.isBlank(email)) {
+            return;
+        }
+        User user = getByEmail(email);
+        if (user == null) {
+            return;
+        }
+        if (id == null) {
+            throw new RuntimeException("注册失败！邮箱已存在");
+        }
+        if (!Objects.equals(id, user.getId())) {
+            throw new RuntimeException("修改失败！邮箱已存在");
         }
     }
 
@@ -192,9 +286,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .eq(dto.getId() != null, User::getId, dto.getId())
                 .in(CollectionUtil.isNotEmpty(userIdList), User::getId, userIdList)
                 .like(StrUtil.isNotBlank(dto.getUsername()), User::getUsername, dto.getUsername())
-                .like(StrUtil.isNotBlank(dto.getPassword()), User::getPassword, dto.getPassword())
+                .like(StrUtil.isNotBlank(dto.getNickname()), User::getNickname, dto.getNickname())
                 .like(StrUtil.isNotBlank(dto.getName()), User::getName, dto.getName())
-                .like(StrUtil.isNotBlank(dto.getAvatar()), User::getAvatar, dto.getAvatar())
+                .eq(StrUtil.isNotBlank(dto.getGender()), User::getGender, dto.getGender())
+                .eq(dto.getBirthday() != null, User::getBirthday, dto.getBirthday())
                 .like(StrUtil.isNotBlank(dto.getStatus()), User::getStatus, dto.getStatus())
                 .like(StrUtil.isNotBlank(dto.getPhone()), User::getPhone, dto.getPhone())
                 .like(StrUtil.isNotBlank(dto.getEmail()), User::getEmail, dto.getEmail())

@@ -54,3 +54,15 @@ export const getUserOne = (params) => {
         url: '/user', method: 'GET', params: params
     })
 }
+
+/**
+ * 解禁或禁用用户
+ * @param id 用户ID
+ * @returns {*} 结果
+ */
+export const handleStatusUser = (id) => {
+    return request({
+        url: `/user/status/${id}`,
+        method: 'PUT'
+    })
+}

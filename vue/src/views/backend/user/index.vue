@@ -96,13 +96,13 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="用户名" prop="username"/>
+        <el-table-column label="昵称" prop="nickname"/>
         <el-table-column label="姓名" prop="name"/>
         <el-table-column label="头像">
           <template v-slot="{ row }">
             <div style="display: flex; align-items: center; justify-content: center">
               <el-image v-if="row.avatar" :preview-src-list="[getUrl(row.avatar)]" :src="getUrl(row.avatar)"
-                        preview-teleported
-                        style="width: 40px; height: 40px; border-radius: 50%">
+                        preview-teleported>
                 <template #error>
                   <img alt="" src="@/assets/imgs/profile.png"/>
                 </template>
@@ -110,7 +110,11 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="生日" prop="birthday"/>
+        <el-table-column label="生日" >
+          <template v-slot="{ row }">
+            {{ formatDate(row.birthday) }}
+          </template>
+        </el-table-column>
         <el-table-column label="状态">
           <template v-slot="{ row }">
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
@@ -166,7 +170,7 @@
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="头像" prop="avatar">
-          <el-input v-model="form.data.avatar" autocomplete="new"/>
+          <AvatarUpload v-model="form.data.avatar"/>
         </el-form-item>
         <el-form-item label="生日" prop="birthday">
           <el-date-picker v-model='form.data.birthday' placeholder='请选择生日'
@@ -195,14 +199,6 @@
         <el-form-item label="余额" prop="balance">
           <el-input v-model="form.data.balance" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="最后登录IP" prop="loginIp">
-          <el-input v-model="form.data.loginIp" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="最后登录时间" prop="loginTime">
-          <el-date-picker v-model='form.data.loginTime' placeholder='请选择最后登录时间'
-                          type='date'
-                          value-format='YYYY-MM-DD HH:mm:ss'/>
-        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
         </el-form-item>
@@ -217,9 +213,9 @@
 
 <script setup>
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getUserOne, getUserPage, removeUserBatchByIds, saveUser} from '@/api/user'
+import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
-import {statusList} from "@/utils/common.js";
+import {formatDate, statusList} from "@/utils/common.js";
 import useRoleStore from "@/store/modules/role.js";
 
 const roleStore = useRoleStore();
@@ -285,9 +281,7 @@ const rules = {
   phone: [{required: true, message: '请输入电话', trigger: 'blur'}],
   email: [{required: true, message: '请输入邮箱', trigger: 'blur'}],
   openId: [{required: true, message: '请输入微信小程序开放ID', trigger: 'blur'}],
-  balance: [{required: true, message: '请输入余额', trigger: 'blur'}],
-  loginIp: [{required: true, message: '请输入最后登录IP', trigger: 'blur'}],
-  loginTime: [{required: true, message: '请选择最后登录时间', trigger: 'change'}]
+  balance: [{required: true, message: '请输入余额', trigger: 'blur'}]
 }
 
 const getPage = () => {
@@ -319,8 +313,6 @@ const showAdd = () => {
       email: '',
       openId: '',
       balance: null,
-      loginIp: '',
-      loginTime: '',
       remark: ''
     }
   }
@@ -374,7 +366,14 @@ const handleDelete = (id) => {
 }
 
 const handleStatus = (id) => {
-  console.log('正常、禁用', id)
+  handleStatusUser(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
+  })
 }
 
 const handleSelectionChange = (selection) => {
@@ -395,6 +394,7 @@ const resetQuery = () => {
   queryParams.openId = ''
   queryParams.balance = null
   queryParams.loginIp = ''
+  queryParams.loginTime = ''
   getPage()
 }
 
@@ -428,6 +428,12 @@ const getUrl = computed(() => (path) => {
   .el-button {
     width: 100%;
   }
+}
+
+.el-image, .el-image img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .el-pagination {

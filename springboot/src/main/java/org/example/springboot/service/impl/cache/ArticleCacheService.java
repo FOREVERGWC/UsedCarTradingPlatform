@@ -1,5 +1,6 @@
 package org.example.springboot.service.impl.cache;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import jakarta.annotation.Resource;
@@ -30,6 +31,18 @@ public class ArticleCacheService implements IArticleCacheService {
     }
 
     @Override
+    public Long getAllViewCount() {
+        String pattern = "article:view:*";
+        Set<String> keys = redisTemplate.keys(pattern);
+        if (CollectionUtil.isEmpty(keys)) {
+            return 0L;
+        }
+        return keys.stream()
+                .map(key -> Convert.toLong(redisTemplate.opsForValue().get(key), 0L))
+                .reduce(0L, Long::sum);
+    }
+
+    @Override
     public void addUserHistory(Long userId, Long id) {
         String key = "user:" + userId + ":article:" + id;
         String value = DateUtil.today();
@@ -40,11 +53,11 @@ public class ArticleCacheService implements IArticleCacheService {
 
     @Override
     public List<Map<Object, Object>> getUserHistory(Long userId, Integer pageNo, Integer pageSize) {
-        String keyPattern = "user:" + userId + ":article:*";
-        Set<String> keys = redisTemplate.keys(keyPattern);
+        String pattern = "user:" + userId + ":article:*";
+        Set<String> keys = redisTemplate.keys(pattern);
         int start = (pageNo - 1) * pageSize;
 
-        if (keys == null || start >= keys.size()) {
+        if (CollectionUtil.isEmpty(keys) || start >= keys.size()) {
             return new LinkedList<>();
         }
 

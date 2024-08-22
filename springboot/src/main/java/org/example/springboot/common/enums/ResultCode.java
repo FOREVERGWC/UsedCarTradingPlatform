@@ -34,9 +34,13 @@ public enum ResultCode {
      */
     SYSTEM_ERROR(500, "系统异常"),
     /**
+     * 操作失败！用户不存在
+     */
+    USER_NOT_FOUND_ERROR(1000, "操作失败！用户不存在"),
+    /**
      * 用户名已存在
      */
-    USER_EXIST_ERROR(1000, "用户名已存在"),
+    USER_EXIST_ERROR(1001, "用户名已存在"),
     /**
      * 用户未登录
      */

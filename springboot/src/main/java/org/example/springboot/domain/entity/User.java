@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import org.example.springboot.common.annotation.Dict;
+import org.example.springboot.common.enums.Gender;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.domain.BaseEntity;
 
@@ -52,6 +53,11 @@ public class User extends BaseEntity {
     @Schema(description = "密码")
     private String password;
     /**
+     * 昵称
+     */
+    @Schema(description = "昵称")
+    private String nickname;
+    /**
      * 姓名
      */
     @Schema(description = "姓名")
@@ -61,6 +67,12 @@ public class User extends BaseEntity {
      */
     @Schema(description = "头像")
     private String avatar;
+    /**
+     * 性别(0女、1男、2未知)
+     */
+    @Dict(enumClass = Gender.class)
+    @Schema(description = "性别(0女、1男、2未知)")
+    private String gender;
     /**
      * 生日
      */

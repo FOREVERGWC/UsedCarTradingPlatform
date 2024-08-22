@@ -2,6 +2,7 @@ package org.example.springboot.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -110,21 +112,58 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         return vo;
     }
 
+    @Override
+    public Map<String, Object> getInfo(Long userId) {
+        Long id = Optional.ofNullable(BaseContext.getUser()).orElse(UserVo.builder().build()).getId();
+        long followerCount = count(new LambdaQueryWrapper<Follow>().eq(Follow::getFollowedId, userId));
+        long followedCount = count(new LambdaQueryWrapper<Follow>().eq(Follow::getFollowerId, userId));
+        boolean isFollowing = id != null && lambdaQuery()
+                .eq(Follow::getFollowerId, id)
+                .eq(Follow::getFollowedId, userId)
+                .exists();
+        return Map.of("followerCount", followerCount, "followedCount", followedCount, "isFollowing", isFollowing);
+    }
+
+    @Override
+    public Map<String, Object> followTo(Long userId) {
+        UserVo user = BaseContext.getUser();
+        if (Objects.equals(user.getId(), userId)) {
+            throw new RuntimeException("操作失败！不能对自己进行此操作");
+        }
+        Follow follow = Follow.builder()
+                .followerId(user.getId())
+                .followedId(userId)
+                .build();
+        Follow one = getWrapper(follow).one();
+        if (one != null) {
+            removeById(one);
+        } else {
+            save(follow);
+        }
+        return getInfo(userId);
+    }
+
     /**
      * 组装查询包装器
      *
-     * @param dto 关注
+     * @param entity 关注
      * @return 结果
      */
-    private LambdaQueryChainWrapper<Follow> getWrapper(FollowDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, Follow::getId, dto.getId())
-                .eq(dto.getFollowerId() != null, Follow::getFollowerId, dto.getFollowerId())
-                .eq(dto.getFollowedId() != null, Follow::getFollowedId, dto.getFollowedId())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Follow::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<Follow> getWrapper(Follow entity) {
+        LambdaQueryChainWrapper<Follow> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, Follow::getId, entity.getId())
+                .eq(entity.getFollowerId() != null, Follow::getFollowerId, entity.getFollowerId())
+                .eq(entity.getFollowedId() != null, Follow::getFollowedId, entity.getFollowedId());
+        if (entity instanceof FollowDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    Follow::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

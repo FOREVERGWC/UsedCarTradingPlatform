@@ -117,7 +117,7 @@ const toFrontend = () => {
 }
 
 const toCenter = () => {
-  router.push('/center')
+  router.push('/center2')
 }
 
 const handleLogout = () => {

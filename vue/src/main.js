@@ -29,6 +29,8 @@ import hljs from 'highlight.js'
 import MenuItem from '@/components/MenuItem/index.js'
 // 面包屑导航组件
 import Breadcrumb from '@/components/Breadcrumb/index.js'
+// 头像上传组件
+import AvatarUpload from "@/components/AvatarUpload/index.js";
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -51,4 +53,5 @@ app.use(VueMarkdownEditor)
 app.use(VMdPreview)
 app.component('MenuItem', MenuItem)
 app.component('Breadcrumb', Breadcrumb)
+app.component('AvatarUpload', AvatarUpload)
 app.mount('#app')

@@ -57,6 +57,29 @@ public interface IUserService extends IService<User> {
     User getByUsername(String username);
 
     /**
+     * 根据电话查询用户信息
+     *
+     * @param phone 电话
+     * @return 结果
+     */
+    User getByPhone(String phone);
+
+    /**
+     * 根据邮箱查询用户信息
+     *
+     * @param email 邮箱
+     * @return 结果
+     */
+    User getByEmail(String email);
+
+    /**
+     * 解禁或禁用用户
+     *
+     * @param id 用户ID
+     */
+    void handleStatus(Long id);
+
+    /**
      * PC端登录
      *
      * @param loginBody 端登录请求体
