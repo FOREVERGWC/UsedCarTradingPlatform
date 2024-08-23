@@ -149,21 +149,27 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     /**
      * 组装查询包装器
      *
-     * @param dto 角色
+     * @param entity 角色
      * @return 结果
      */
-    private LambdaQueryChainWrapper<Role> getWrapper(RoleDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, Role::getId, dto.getId())
-                .like(StrUtil.isNotBlank(dto.getName()), Role::getName, dto.getName())
-                .eq(dto.getSort() != null, Role::getSort, dto.getSort())
-                .like(StrUtil.isNotBlank(dto.getStatus()), Role::getStatus, dto.getStatus())
-                .eq(dto.getDeleted() != null, Role::getDeleted, dto.getDeleted())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Role::getCreateTime, startCreateTime, endCreateTime)
+    private LambdaQueryChainWrapper<Role> getWrapper(Role entity) {
+        LambdaQueryChainWrapper<Role> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, Role::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getName()), Role::getName, entity.getName())
+                .eq(entity.getSort() != null, Role::getSort, entity.getSort())
+                .like(StrUtil.isNotBlank(entity.getStatus()), Role::getStatus, entity.getStatus())
+                .eq(entity.getDeleted() != null, Role::getDeleted, entity.getDeleted())
                 .orderByAsc(Role::getSort);
+        if (entity instanceof RoleDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    Role::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

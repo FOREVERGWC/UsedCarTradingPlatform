@@ -117,24 +117,33 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     /**
      * 组装查询包装器
      *
-     * @param dto 评论
+     * @param entity 评论
      * @return 结果
      */
-    private LambdaQueryChainWrapper<Comment> getWrapper(CommentDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, Comment::getId, dto.getId())
-                .eq(dto.getBizId() != null, Comment::getBizId, dto.getBizId())
-                .like(StrUtil.isNotBlank(dto.getBizKey()), Comment::getBizKey, dto.getBizKey())
-                .like(StrUtil.isNotBlank(dto.getContent()), Comment::getContent, dto.getContent())
-                .eq(dto.getReplyId() != null, Comment::getReplyId, dto.getReplyId())
-                .eq(dto.getUserId() != null, Comment::getUserId, dto.getUserId())
-                .like(StrUtil.isNotBlank(dto.getOs()), Comment::getOs, dto.getOs())
-                .like(StrUtil.isNotBlank(dto.getIp()), Comment::getIp, dto.getIp())
-                .like(StrUtil.isNotBlank(dto.getLocation()), Comment::getLocation, dto.getLocation())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Comment::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<Comment> getWrapper(Comment entity) {
+        LambdaQueryChainWrapper<Comment> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, Comment::getId, entity.getId())
+                .eq(entity.getBizId() != null, Comment::getBizId, entity.getBizId())
+                .like(StrUtil.isNotBlank(entity.getBizKey()), Comment::getBizKey, entity.getBizKey())
+                .like(StrUtil.isNotBlank(entity.getContent()), Comment::getContent, entity.getContent())
+                .eq(entity.getReplyId() != null, Comment::getReplyId, entity.getReplyId())
+                .eq(entity.getUserId() != null, Comment::getUserId, entity.getUserId())
+                .like(StrUtil.isNotBlank(entity.getOs()), Comment::getOs, entity.getOs())
+                .like(StrUtil.isNotBlank(entity.getIp()), Comment::getIp, entity.getIp())
+                .like(StrUtil.isNotBlank(entity.getLocation()), Comment::getLocation, entity.getLocation());
+        if (entity instanceof CommentDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(
+                    ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    Comment::getCreateTime,
+                    startCreateTime, endCreateTime
+            );
+        }
+        return wrapper;
     }
+
 }

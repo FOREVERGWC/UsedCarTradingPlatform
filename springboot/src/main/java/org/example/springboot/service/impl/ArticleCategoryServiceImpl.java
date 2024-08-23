@@ -111,20 +111,26 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
     /**
      * 组装查询包装器
      *
-     * @param dto 文章类别
+     * @param entity 文章类别
      * @return 结果
      */
-    private LambdaQueryChainWrapper<ArticleCategory> getWrapper(ArticleCategoryDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, ArticleCategory::getId, dto.getId())
-                .like(StrUtil.isNotBlank(dto.getName()), ArticleCategory::getName, dto.getName())
-                .eq(dto.getParentId() != null, ArticleCategory::getParentId, dto.getParentId())
-                .eq(dto.getUserId() != null, ArticleCategory::getUserId, dto.getUserId())
-                .eq(dto.getDeleted() != null, ArticleCategory::getDeleted, dto.getDeleted())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), ArticleCategory::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<ArticleCategory> getWrapper(ArticleCategoryDto entity) {
+        LambdaQueryChainWrapper<ArticleCategory> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, ArticleCategory::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getName()), ArticleCategory::getName, entity.getName())
+                .eq(entity.getParentId() != null, ArticleCategory::getParentId, entity.getParentId())
+                .eq(entity.getUserId() != null, ArticleCategory::getUserId, entity.getUserId())
+                .eq(entity.getDeleted() != null, ArticleCategory::getDeleted, entity.getDeleted());
+        if (entity instanceof ArticleCategoryDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    ArticleCategory::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

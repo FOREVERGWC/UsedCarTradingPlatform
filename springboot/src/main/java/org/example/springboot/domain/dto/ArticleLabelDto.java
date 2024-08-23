@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +28,11 @@ import java.util.Map;
 public class ArticleLabelDto extends ArticleLabel {
     @Serial
     private static final long serialVersionUID = 1L;
+    /**
+     * 作者ID
+     */
+    @Schema(description = "作者ID")
+    private Long userId;
     /**
      * 页码
      */

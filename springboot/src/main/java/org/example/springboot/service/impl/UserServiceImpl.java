@@ -273,29 +273,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     /**
      * 组装查询包装器
      *
-     * @param dto 用户信息
+     * @param entity 用户信息
      * @return 结果
      */
-    private LambdaQueryChainWrapper<User> getWrapper(UserDto dto) {
-        List<Long> userIdList = userRoleLinkService.listUserIdsByRoleIds(dto.getRoleIdList());
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, User::getId, dto.getId())
-                .in(CollectionUtil.isNotEmpty(userIdList), User::getId, userIdList)
-                .like(StrUtil.isNotBlank(dto.getUsername()), User::getUsername, dto.getUsername())
-                .like(StrUtil.isNotBlank(dto.getNickname()), User::getNickname, dto.getNickname())
-                .like(StrUtil.isNotBlank(dto.getName()), User::getName, dto.getName())
-                .eq(StrUtil.isNotBlank(dto.getGender()), User::getGender, dto.getGender())
-                .eq(dto.getBirthday() != null, User::getBirthday, dto.getBirthday())
-                .like(StrUtil.isNotBlank(dto.getStatus()), User::getStatus, dto.getStatus())
-                .like(StrUtil.isNotBlank(dto.getPhone()), User::getPhone, dto.getPhone())
-                .like(StrUtil.isNotBlank(dto.getEmail()), User::getEmail, dto.getEmail())
-                .like(StrUtil.isNotBlank(dto.getOpenId()), User::getOpenId, dto.getOpenId())
-                .eq(dto.getBalance() != null, User::getBalance, dto.getBalance())
-                .like(StrUtil.isNotBlank(dto.getLoginIp()), User::getLoginIp, dto.getLoginIp())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), User::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<User> getWrapper(User entity) {
+        LambdaQueryChainWrapper<User> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, User::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getUsername()), User::getUsername, entity.getUsername())
+                .like(StrUtil.isNotBlank(entity.getNickname()), User::getNickname, entity.getNickname())
+                .like(StrUtil.isNotBlank(entity.getName()), User::getName, entity.getName())
+                .eq(StrUtil.isNotBlank(entity.getGender()), User::getGender, entity.getGender())
+                .eq(entity.getBirthday() != null, User::getBirthday, entity.getBirthday())
+                .like(StrUtil.isNotBlank(entity.getStatus()), User::getStatus, entity.getStatus())
+                .like(StrUtil.isNotBlank(entity.getPhone()), User::getPhone, entity.getPhone())
+                .like(StrUtil.isNotBlank(entity.getEmail()), User::getEmail, entity.getEmail())
+                .like(StrUtil.isNotBlank(entity.getOpenId()), User::getOpenId, entity.getOpenId())
+                .eq(entity.getBalance() != null, User::getBalance, entity.getBalance())
+                .like(StrUtil.isNotBlank(entity.getLoginIp()), User::getLoginIp, entity.getLoginIp());
+        if (entity instanceof UserDto dto) {
+            List<Long> userIdList = userRoleLinkService.listUserIdsByRoleIds(dto.getRoleIdList());
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.in(CollectionUtil.isNotEmpty(userIdList), User::getId, userIdList)
+                    .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                            User::getCreateTime,
+                            startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

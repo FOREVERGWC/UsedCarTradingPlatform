@@ -46,4 +46,9 @@ public class ArticleLabelLink extends BaseEntity {
      */
     @Schema(description = "标签ID")
     private Long labelId;
+    /**
+     * 作者ID
+     */
+    @Schema(description = "作者ID")
+    private Long userId;
 }

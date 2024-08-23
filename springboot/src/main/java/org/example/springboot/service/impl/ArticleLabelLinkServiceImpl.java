@@ -68,6 +68,20 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
     }
 
     @Override
+    public void removeByUserId(Serializable userId) {
+        lambdaUpdate()
+                .eq(ArticleLabelLink::getUserId, userId)
+                .remove();
+    }
+
+    @Override
+    public void removeByUserIds(Collection<?> userIds) {
+        lambdaUpdate()
+                .in(ArticleLabelLink::getUserId, userIds)
+                .remove();
+    }
+
+    @Override
     public List<ArticleLabelLink> listByArticleId(Serializable articleId) {
         return Optional.ofNullable(lambdaQuery()
                         .eq(ArticleLabelLink::getArticleId, articleId)
@@ -97,6 +111,97 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
                         .in(ArticleLabelLink::getLabelId, labelIds)
                         .list())
                 .orElse(List.of());
+    }
+
+    @Override
+    public List<ArticleLabelLink> listByUserId(Serializable userId) {
+        return Optional.ofNullable(lambdaQuery()
+                        .eq(ArticleLabelLink::getUserId, userId)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
+    public List<ArticleLabelLink> listByUserIds(Collection<?> userIds) {
+        return Optional.ofNullable(lambdaQuery()
+                        .in(ArticleLabelLink::getUserId, userIds)
+                        .list())
+                .orElse(List.of());
+    }
+
+    @Override
+    public List<Long> listLabelIdsByArticleId(Long articleId) {
+        List<ArticleLabelLink> linkList = listByArticleId(articleId);
+        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+    }
+
+    @Override
+    public List<Long> listLabelIdsByArticleIds(List<Long> articleIds) {
+        if (CollectionUtil.isEmpty(articleIds)) {
+            return List.of();
+        }
+        List<ArticleLabelLink> linkList = listByArticleIds(articleIds);
+        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+    }
+
+    @Override
+    public List<Long> listUserIdsByArticleId(Long articleId) {
+        List<ArticleLabelLink> linkList = listByArticleId(articleId);
+        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+    }
+
+    @Override
+    public List<Long> listUserIdsByArticleIds(List<Long> articleIds) {
+        if (CollectionUtil.isEmpty(articleIds)) {
+            return List.of();
+        }
+        List<ArticleLabelLink> linkList = listByArticleIds(articleIds);
+        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+    }
+
+    @Override
+    public List<Long> listArticleIdsByLabelId(Long labelId) {
+        List<ArticleLabelLink> linkList = listByLabelId(labelId);
+        return linkList.stream().map(ArticleLabelLink::getArticleId).toList();
+    }
+
+    @Override
+    public List<Long> listArticleIdsByLabelIds(List<Long> labelIds) {
+        if (CollectionUtil.isEmpty(labelIds)) {
+            return List.of();
+        }
+        List<ArticleLabelLink> linkList = listByLabelIds(labelIds);
+        return linkList.stream().map(ArticleLabelLink::getArticleId).toList();
+    }
+
+    @Override
+    public List<Long> listUserIdsByLabelId(Long labelId) {
+        List<ArticleLabelLink> linkList = listByLabelId(labelId);
+        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+    }
+
+    @Override
+    public List<Long> listUserIdsByLabelIds(List<Long> labelIds) {
+        if (CollectionUtil.isEmpty(labelIds)) {
+            return List.of();
+        }
+        List<ArticleLabelLink> linkList = listByLabelIds(labelIds);
+        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+    }
+
+    @Override
+    public List<Long> listLabelIdsByUserId(Long userId) {
+        List<ArticleLabelLink> linkList = listByUserId(userId);
+        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+    }
+
+    @Override
+    public List<Long> listLabelIdsByUserIds(List<Long> userIds) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return List.of();
+        }
+        List<ArticleLabelLink> linkList = listByUserIds(userIds);
+        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
     }
 
     @Override
@@ -168,18 +273,25 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
     /**
      * 组装查询包装器
      *
-     * @param dto 文章、文章标签关系
+     * @param entity 文章、文章标签关系
      * @return 结果
      */
-    private LambdaQueryChainWrapper<ArticleLabelLink> getWrapper(ArticleLabelLinkDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, ArticleLabelLink::getId, dto.getId())
-                .eq(dto.getArticleId() != null, ArticleLabelLink::getArticleId, dto.getArticleId())
-                .eq(dto.getLabelId() != null, ArticleLabelLink::getLabelId, dto.getLabelId())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), ArticleLabelLink::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<ArticleLabelLink> getWrapper(ArticleLabelLink entity) {
+        LambdaQueryChainWrapper<ArticleLabelLink> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, ArticleLabelLink::getId, entity.getId())
+                .eq(entity.getArticleId() != null, ArticleLabelLink::getArticleId, entity.getArticleId())
+                .eq(entity.getLabelId() != null, ArticleLabelLink::getLabelId, entity.getLabelId())
+                .eq(entity.getUserId() != null, ArticleLabelLink::getUserId, entity.getUserId());
+        if (entity instanceof ArticleLabelLinkDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    ArticleLabelLink::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

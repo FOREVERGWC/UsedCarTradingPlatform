@@ -180,6 +180,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param article 文章
      */
     private void handleArticleLabelList(Article article) {
+        UserVo user = BaseContext.getUser();
         List<String> labelList = LabelUtils.generateLabelList(article.getContent());
         if (CollectionUtil.isEmpty(labelList)) {
             return;
@@ -204,6 +205,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 ArticleLabelLink link = ArticleLabelLink.builder()
                         .articleId(article.getId())
                         .labelId(labelId)
+                        .userId(user.getId())
                         .build();
                 labelLinks.add(link);
             }
@@ -213,6 +215,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             newLabels.forEach(newLabel -> labelLinks.add(ArticleLabelLink.builder()
                     .articleId(article.getId())
                     .labelId(newLabel.getId())
+                    .userId(user.getId())
                     .build()));
         }
         if (CollectionUtil.isNotEmpty(labelLinks)) {
@@ -223,30 +226,36 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     /**
      * 组装查询包装器
      *
-     * @param dto 文章
+     * @param entity 文章
      * @return 结果
      */
-    private LambdaQueryChainWrapper<Article> getWrapper(ArticleDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, Article::getId, dto.getId())
-                .like(StrUtil.isNotBlank(dto.getTitle()), Article::getTitle, dto.getTitle())
-                .eq(dto.getCategoryId() != null, Article::getCategoryId, dto.getCategoryId())
-                .like(StrUtil.isNotBlank(dto.getContent()), Article::getContent, dto.getContent())
-                .eq(dto.getUserId() != null, Article::getUserId, dto.getUserId())
-                .eq(dto.getViewCount() != null, Article::getViewCount, dto.getViewCount())
-                .eq(dto.getLikeCount() != null, Article::getLikeCount, dto.getLikeCount())
-                .eq(dto.getDislikeCount() != null, Article::getDislikeCount, dto.getDislikeCount())
-                .eq(dto.getCommentCount() != null, Article::getCommentCount, dto.getCommentCount())
-                .eq(dto.getCollectionCount() != null, Article::getCollectionCount, dto.getCollectionCount())
-                .eq(dto.getTop() != null, Article::getTop, dto.getTop())
-                .like(StrUtil.isNotBlank(dto.getVisible()), Article::getVisible, dto.getVisible())
-                .eq(dto.getCommentable() != null, Article::getCommentable, dto.getCommentable())
-                .like(StrUtil.isNotBlank(dto.getStatus()), Article::getStatus, dto.getStatus())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Article::getCreateTime, startCreateTime, endCreateTime)
+    private LambdaQueryChainWrapper<Article> getWrapper(Article entity) {
+        LambdaQueryChainWrapper<Article> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, Article::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getTitle()), Article::getTitle, entity.getTitle())
+                .eq(entity.getCategoryId() != null, Article::getCategoryId, entity.getCategoryId())
+                .like(StrUtil.isNotBlank(entity.getContent()), Article::getContent, entity.getContent())
+                .eq(entity.getUserId() != null, Article::getUserId, entity.getUserId())
+                .eq(entity.getViewCount() != null, Article::getViewCount, entity.getViewCount())
+                .eq(entity.getLikeCount() != null, Article::getLikeCount, entity.getLikeCount())
+                .eq(entity.getDislikeCount() != null, Article::getDislikeCount, entity.getDislikeCount())
+                .eq(entity.getCommentCount() != null, Article::getCommentCount, entity.getCommentCount())
+                .eq(entity.getCollectionCount() != null, Article::getCollectionCount, entity.getCollectionCount())
+                .eq(entity.getTop() != null, Article::getTop, entity.getTop())
+                .like(StrUtil.isNotBlank(entity.getVisible()), Article::getVisible, entity.getVisible())
+                .eq(entity.getCommentable() != null, Article::getCommentable, entity.getCommentable())
+                .like(StrUtil.isNotBlank(entity.getStatus()), Article::getStatus, entity.getStatus())
                 .orderByDesc(Article::getTop);
+        if (entity instanceof ArticleDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    Article::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

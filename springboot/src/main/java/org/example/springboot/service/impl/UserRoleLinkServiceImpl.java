@@ -229,18 +229,24 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
     /**
      * 组装查询包装器
      *
-     * @param dto 用户、角色关系
+     * @param entity 用户、角色关系
      * @return 结果
      */
-    private LambdaQueryChainWrapper<UserRoleLink> getWrapper(UserRoleLinkDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, UserRoleLink::getId, dto.getId())
-                .eq(dto.getUserId() != null, UserRoleLink::getUserId, dto.getUserId())
-                .eq(dto.getRoleId() != null, UserRoleLink::getRoleId, dto.getRoleId())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), UserRoleLink::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<UserRoleLink> getWrapper(UserRoleLink entity) {
+        LambdaQueryChainWrapper<UserRoleLink> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, UserRoleLink::getId, entity.getId())
+                .eq(entity.getUserId() != null, UserRoleLink::getUserId, entity.getUserId())
+                .eq(entity.getRoleId() != null, UserRoleLink::getRoleId, entity.getRoleId());
+        if (entity instanceof UserRoleLinkDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    UserRoleLink::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

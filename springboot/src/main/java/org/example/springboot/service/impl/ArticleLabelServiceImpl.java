@@ -90,17 +90,29 @@ public class ArticleLabelServiceImpl extends ServiceImpl<ArticleLabelMapper, Art
     /**
      * 组装查询包装器
      *
-     * @param dto 文章标签
+     * @param entity 文章标签
      * @return 结果
      */
-    private LambdaQueryChainWrapper<ArticleLabel> getWrapper(ArticleLabelDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, ArticleLabel::getId, dto.getId())
-                .like(StrUtil.isNotBlank(dto.getName()), ArticleLabel::getName, dto.getName())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), ArticleLabel::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<ArticleLabel> getWrapper(ArticleLabel entity) {
+        LambdaQueryChainWrapper<ArticleLabel> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, ArticleLabel::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getName()), ArticleLabel::getName, entity.getName());
+        if (entity instanceof ArticleLabelDto dto) {
+            Long userId = dto.getUserId();
+            List<Long> labelIdList = articleLabelLinkService.listLabelIdsByUserId(userId);
+            if (CollectionUtil.isEmpty(labelIdList)) {
+                labelIdList.add(-1L);
+            }
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.in(CollectionUtil.isNotEmpty(labelIdList), ArticleLabel::getId, labelIdList)
+                    .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                            ArticleLabel::getCreateTime,
+                            startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }

@@ -114,19 +114,25 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements IC
     /**
      * 组装查询包装器
      *
-     * @param dto 聊天
+     * @param entity 聊天
      * @return 结果
      */
-    private LambdaQueryChainWrapper<Chat> getWrapper(ChatDto dto) {
-        Map<String, Object> params = dto.getParams();
-        // 创建时间
-        Object startCreateTime = params == null ? null : params.get("startCreateTime");
-        Object endCreateTime = params == null ? null : params.get("endCreateTime");
-        return lambdaQuery()
-                .eq(dto.getId() != null, Chat::getId, dto.getId())
-                .eq(dto.getSenderId() != null, Chat::getSenderId, dto.getSenderId())
-                .eq(dto.getReceiverId() != null, Chat::getReceiverId, dto.getReceiverId())
-                .like(StrUtil.isNotBlank(dto.getMessage()), Chat::getMessage, dto.getMessage())
-                .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime), Chat::getCreateTime, startCreateTime, endCreateTime);
+    private LambdaQueryChainWrapper<Chat> getWrapper(Chat entity) {
+        LambdaQueryChainWrapper<Chat> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, Chat::getId, entity.getId())
+                .eq(entity.getSenderId() != null, Chat::getSenderId, entity.getSenderId())
+                .eq(entity.getReceiverId() != null, Chat::getReceiverId, entity.getReceiverId())
+                .like(StrUtil.isNotBlank(entity.getMessage()), Chat::getMessage, entity.getMessage());
+        if (entity instanceof ChatDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    Chat::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 }
