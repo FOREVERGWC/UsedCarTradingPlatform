@@ -66,3 +66,14 @@ export const handleStatusUser = (id) => {
         method: 'PUT'
     })
 }
+
+/**
+ * 用户分配角色
+ * @param data 角色分配信息
+ * @returns {*} 结果
+ */
+export const handleUserRole = (data) => {
+    return request({
+        url: '/user/role', method: 'POST', data: data
+    })
+}

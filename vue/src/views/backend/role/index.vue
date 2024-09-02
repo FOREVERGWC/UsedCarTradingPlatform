@@ -69,8 +69,17 @@
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="用户数">
           <template v-slot="{ row }">
+            <span>{{ row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" prop="createTime"/>
+        <el-table-column label="修改时间" prop="updateTime"/>
+        <el-table-column label="备注" prop="remark"/>
+        <el-table-column label="操作" width="280">
+          <template v-slot="{ row }">
+            <el-button icon="EditPen" @click="showAssign(row)">分配菜单</el-button>
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
             <el-popconfirm title="确认删除该行吗？" @confirm="handleDelete(row.id)">
               <template #reference>
@@ -111,18 +120,22 @@
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template #footer>
         <el-button @click="form.visible = false">取 消</el-button>
         <el-button type="primary" @click="handleSave">确 定</el-button>
-      </div>
+      </template>
     </el-dialog>
+
+    <MenuAssign :id="assignForm.roleId" :visible="assignForm.visible" @update:visible="assignForm.visible = $event"
+                @refresh="getPage"/>
   </div>
 </template>
 
 <script setup>
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getRoleOne, getRolePage, removeRoleBatchByIds, saveRole} from '@/api/role.js'
+import {getRoleOne, getRolePage, handleStatusRole, removeRoleBatchByIds, saveRole} from '@/api/role.js'
 import {ElMessage} from "element-plus"
+import MenuAssign from "./components/MenuAssign.vue";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -157,6 +170,10 @@ const form = ref({
   visible: false,
   title: '',
   data: {}
+})
+const assignForm = ref({
+  roleId: '',
+  visible: false
 })
 const formRef = ref(null)
 const rules = {
@@ -209,6 +226,11 @@ const showEdit = (row) => {
   })
 }
 
+const showAssign = (row) => {
+  assignForm.value.roleId = row.id;
+  assignForm.value.visible = true;
+};
+
 const handleSave = () => {
   formRef.value.validate(valid => {
     if (!valid) return
@@ -239,7 +261,14 @@ const handleDelete = (id) => {
 }
 
 const handleStatus = (id) => {
-  console.log('正常、禁用', id)
+  handleStatusRole(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
+  })
 }
 
 const handleSelectionChange = (selection) => {

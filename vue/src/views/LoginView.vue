@@ -1,142 +1,173 @@
 <template>
-  <div class='container'>
-    <div class='main'>
-      <div class='header'>{{ title }}</div>
-      <el-form ref='formRef' :model='loginForm' :rules='rules'>
-        <el-form-item prop='username'>
-          <el-input v-model='loginForm.username' placeholder='请输入账号' prefix-icon='User'/>
+  <div class="main-container">
+    <el-card class="main-card">
+      <h2 class="title">{{ title }}</h2>
+      <el-form :model="form" :rules="rules" ref="formRef" size="default">
+        <el-form-item prop="username">
+          <el-input v-model="form.username" placeholder="用户名" prefix-icon="User"/>
         </el-form-item>
-        <el-form-item prop='password'>
-          <el-input v-model='loginForm.password' placeholder='请输入密码' prefix-icon='Lock' show-password/>
+        <el-form-item prop="password">
+          <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="Lock" show-password/>
         </el-form-item>
-        <el-form-item>
-          <div class='tip'>
-            <el-checkbox v-model='loginForm.remember'>记住我</el-checkbox>
-            <span class='forgot-password' @click='showRetrieve'>忘记密码</span>
+        <el-form-item prop="code" class="code" v-if="enabled">
+          <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message"/>
+          <img :src="captcha" @click="handleCaptcha" alt="验证码"/>
+        </el-form-item>
+        <el-form-item class="remember-forgot">
+          <div class="remember-me">
+            <el-checkbox v-model="form.rememberMe">记住我</el-checkbox>
+          </div>
+          <div class="forgot-password">
+            <el-link href="/reset-password" type="primary" :underline="false">忘记密码</el-link>
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button class='btn-login' @click='handleLogin'>登 录</el-button>
+          <el-button type="primary" @click="handleLogin">登录</el-button>
         </el-form-item>
-        <div style='display: flex; align-items: center'>
-          <div style='flex: 1; text-align: right'>
-            还没有账号？请 <a href='/register'>注册</a>
-          </div>
-        </div>
       </el-form>
-    </div>
+      <div class="register-link">
+        <span>还没有账号？请</span>
+        <el-link type="primary" :underline="false" href="/register">注册</el-link>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {login} from '@/api/web.js'
-import {ElMessage} from 'element-plus'
+import {onMounted, ref} from 'vue';
+import {useRouter} from 'vue-router';
+import {login, getCaptcha} from "@/api/auth.js";
+import {ElMessage} from "element-plus";
 import useUserStore from "@/store/modules/user.js";
+import {getMenuAuthTree} from "@/api/menu.js";
+import useMenuListStore from "@/store/modules/menu.js";
 
+const router = useRouter();
 const userStore = useUserStore()
+const menuListStore = useMenuListStore();
 
-// 组件名称
-const title = ref(import.meta.env.VITE_APP_TITLE)
-
-// 表单数据
-const loginForm = ref({
+const title = ref(import.meta.env.VITE_APP_TITLE);
+const enabled = ref(true)
+const captcha = ref('')
+const form = ref({
   username: '',
   password: '',
-  remember: false
-})
-
-// 表单验证规则
+  code: '',
+  rememberMe: true,
+  uuid: ''
+});
 const rules = {
-  username: [{required: true, message: '请输入账号', trigger: 'blur'}],
-  password: [{required: true, message: '请输入密码', trigger: 'blur'}]
-}
-
-// 路由和消息提示
-const router = useRouter()
-
-// 表单引用
+  username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+  password: [{required: true, message: '请输入密码', trigger: 'blur'}],
+  code: [{required: true, message: '请输入验证码', trigger: 'blur'}]
+};
 const formRef = ref(null)
 
-// 登录处理函数
+const handleCaptcha = () => {
+  getCaptcha().then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg);
+      return
+    }
+    enabled.value = res.data.enabled
+    form.value.uuid = res.data.uuid
+    captcha.value = res.data.img
+  })
+}
+
 const handleLogin = () => {
-  formRef.value.validate((valid) => {
+  formRef.value.validate(valid => {
     if (!valid) return
-    login(loginForm.value).then(res => {
+    login(form.value).then(res => {
       if (res.code !== 200) {
         ElMessage.error(res.msg)
         return
       }
+      getMenuAuthTree().then(res => {
+        if (res.code !== 200) return
+        menuListStore.setMenuList(res.data || [])
+        // TODO 生成动态路由
+      })
+      ElMessage.success('登录成功！')
       userStore.setUser(res.data)
-      // localStorage.setItem('user', JSON.stringify(res.data))
-      if (res.data.role === '0') {
-        router.push('/backend')
-      } else {
-        router.push('/')
-      }
-      ElMessage.success('登录成功')
+      router.replace('/')
     })
-  })
-}
+  });
+};
 
-// 找回密码处理函数
-const showRetrieve = () => {
-  console.log('找回密码')
-}
+onMounted(() => {
+  handleCaptcha()
+})
 </script>
 
-<style lang='scss' scoped>
-.container {
-  height: 100vh;
-  overflow: hidden;
-  background-size: 100%;
+<style scoped lang="scss">
+.main-container {
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: #666;
-  user-select: none;
+  align-items: center;
+  height: 100vh;
+  background-color: #F3F8FF;
+  padding: 20px;
 
-  .main {
-    width: 400px;
-    padding: 30px;
-    background-color: white;
-    border-radius: 5px;
+  .main-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
 
-    .header {
+    .title {
       text-align: center;
       font-weight: bold;
-      font-size: 20px;
       margin-bottom: 20px;
-      color: #333
     }
 
-    .tip {
+    .code {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 13px;
 
-      .forgot-password {
-        color: #889aa4;
+      .el-input {
+        flex: 1;
+        margin-right: 10px;
+      }
 
-        &:hover {
-          text-decoration: underline;
-          cursor: pointer;
-        }
+      img {
+        cursor: pointer;
+        width: 100px;
+        height: 32px;
+        flex-shrink: 0;
       }
     }
 
-    .btn-login {
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .remember-me {
+        flex: 1;
+        text-align: left;
+      }
+
+      .forgot-password {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    .el-button {
       width: 100%;
-      background-color: #817a70;
-      border-color: #817a70;
-      color: white;
+    }
+
+    .register-link {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+
+      span {
+        margin-right: 2px;
+      }
     }
   }
-}
-
-a {
-  color: #2a60c9;
 }
 </style>

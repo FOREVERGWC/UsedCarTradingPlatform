@@ -1,10 +1,10 @@
-package org.example.springboot.domain.dto;
+package org.example.springboot.domain.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import jakarta.validation.constraints.NotBlank;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -21,25 +21,31 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(name = "密码信息实体", description = "密码信息")
-public class PasswordDto implements Serializable {
+public class ResetBody implements Serializable {
     @Serial
-    private static final long serialVersionUID = -9053124098866924237L;
+    private static final long serialVersionUID = 5415182666248540807L;
     /**
-     * 原密码
+     * 密码
      */
-    @Schema(description = "原密码")
+    @Schema(description = "密码")
     @NotBlank(message = "{password.password.NotBlank}")
     private String password;
-    /**
-     * 新密码
-     */
-    @Schema(description = "新密码")
-    @NotBlank(message = "{password.newPassword.NotBlank}")
-    private String newPassword;
     /**
      * 确认密码
      */
     @Schema(description = "确认密码")
     @NotBlank(message = "{password.confirmPassword.NotBlank}")
-    private String confirmPassword;
+    private String confirmPwd;
+    /**
+     * 邮箱
+     */
+    @Schema(description = "邮箱")
+    @NotBlank(message = "{password.newPassword.NotBlank}")
+    private String email;
+    /**
+     * 验证码
+     */
+    @Schema(description = "验证码")
+    @NotBlank(message = "{password.newPassword.NotBlank}")
+    private String code;
 }

@@ -54,3 +54,27 @@ export const getRoleOne = (params) => {
         url: '/role', method: 'GET', params: params
     })
 }
+
+/**
+ * 恢复或停用角色
+ * @param id 角色ID
+ * @returns {*} 结果
+ */
+export const handleStatusRole = (id) => {
+    return request({
+        url: `/role/status/${id}`,
+        method: 'PUT'
+    })
+}
+
+
+/**
+ * 角色分配菜单
+ * @param data 菜单分配信息
+ * @returns {*} 结果
+ */
+export const handleRoleMenu = (data) => {
+    return request({
+        url: '/role/menu', method: 'POST', data: data
+    })
+}

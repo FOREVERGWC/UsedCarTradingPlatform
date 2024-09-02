@@ -27,11 +27,6 @@ public class ArticleLabelLinkVo extends ArticleLabelLink {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
-     * 占位符
-     */
-    @Schema(description = "占位符")
-    private String placeholder;
-    /**
      * 文章
      */
     @Schema(description = "文章")

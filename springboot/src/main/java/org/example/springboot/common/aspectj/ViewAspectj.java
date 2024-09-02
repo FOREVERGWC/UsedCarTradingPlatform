@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.dto.ArticleDto;
 import org.example.springboot.domain.vo.UserVo;
-import org.example.springboot.service.impl.cache.IArticleCacheService;
+import org.example.springboot.service.cache.IArticleCacheService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

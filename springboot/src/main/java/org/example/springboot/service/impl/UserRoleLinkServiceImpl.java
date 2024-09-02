@@ -53,6 +53,7 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
                 .<UserRoleLink>map(item -> UserRoleLink.builder()
                         .userId(userId)
                         .roleId(item)
+                        .remark("")
                         .build())
                 .toList();
         saveBatch(linkList);
@@ -133,7 +134,7 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
     @Override
     public List<Long> listRoleIdsByUserId(Long userId) {
         List<UserRoleLink> linkList = listByUserId(userId);
-        return linkList.stream().map(UserRoleLink::getRoleId).toList();
+        return linkList.stream().map(UserRoleLink::getRoleId).distinct().toList();
     }
 
     @Override
@@ -142,13 +143,13 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
             return List.of();
         }
         List<UserRoleLink> linkList = listByUserIds(userIds);
-        return linkList.stream().map(UserRoleLink::getRoleId).toList();
+        return linkList.stream().map(UserRoleLink::getRoleId).distinct().toList();
     }
 
     @Override
     public List<Long> listUserIdsByRoleId(Long roleId) {
         List<UserRoleLink> linkList = listByRoleId(roleId);
-        return linkList.stream().map(UserRoleLink::getUserId).toList();
+        return linkList.stream().map(UserRoleLink::getUserId).distinct().toList();
     }
 
     @Override
@@ -157,7 +158,7 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
             return List.of();
         }
         List<UserRoleLink> linkList = listByRoleIds(roleIds);
-        return linkList.stream().map(UserRoleLink::getUserId).toList();
+        return linkList.stream().map(UserRoleLink::getUserId).distinct().toList();
     }
 
     @Override

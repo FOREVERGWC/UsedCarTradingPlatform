@@ -146,6 +146,20 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         return vo;
     }
 
+    @Override
+    public void handleStatus(Long id) {
+        Role role = getById(id);
+        if (role == null) {
+            throw new CustomException(ResultCode.ROLE_NOT_FOUND_ERROR);
+        }
+        if (Objects.equals(UserStatus.NORMAL.getCode(), role.getStatus())) {
+            role.setStatus(UserStatus.DISABLE.getCode());
+        } else {
+            role.setStatus(UserStatus.NORMAL.getCode());
+        }
+        updateById(role);
+    }
+
     /**
      * 组装查询包装器
      *

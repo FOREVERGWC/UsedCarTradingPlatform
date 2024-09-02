@@ -6,8 +6,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.dto.UserDto;
+import org.example.springboot.domain.model.AssignRoleBody;
 import org.example.springboot.domain.vo.UserVo;
+import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.service.IUserService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +26,8 @@ import java.util.List;
 public class UserController {
     @Resource
     private IUserService userService;
+    @Resource
+    private IUserRoleLinkService userRoleLinkService;
 
     /**
      * 添加、修改用户信息
@@ -99,6 +104,19 @@ public class UserController {
     @Operation(summary = "解禁或禁用用户", description = "解禁或禁用用户", method = "PUT")
     public Result<Void> handleStatus(@PathVariable Long id) {
         userService.handleStatus(id);
+        return Result.success();
+    }
+
+    /**
+     * 用户分配角色
+     *
+     * @param body 角色分配信息
+     * @return 结果
+     */
+    @PostMapping("/role")
+    @Operation(summary = "用户分配角色", description = "用户分配角色", method = "POST")
+    public Result<Void> handleRole(@Validated @RequestBody AssignRoleBody body) {
+        userRoleLinkService.saveBatchByUserIdAndRoleIds(body.getUserId(), body.getRoleIdList());
         return Result.success();
     }
 }

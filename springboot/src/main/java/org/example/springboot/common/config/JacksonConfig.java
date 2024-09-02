@@ -3,6 +3,7 @@ package org.example.springboot.common.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -35,6 +36,7 @@ public class JacksonConfig {
         return builder -> {
             // 反序列化时未知属性不抛出异常
             ObjectMapper objectMapper = builder.createXmlMapper(false).build();
+            objectMapper.registerModule(new JavaTimeModule());
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             // 日期
             builder.simpleDateFormat(DATE_TIME_PATTERN);

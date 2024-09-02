@@ -132,7 +132,7 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
     @Override
     public List<Long> listLabelIdsByArticleId(Long articleId) {
         List<ArticleLabelLink> linkList = listByArticleId(articleId);
-        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+        return linkList.stream().map(ArticleLabelLink::getLabelId).distinct().toList();
     }
 
     @Override
@@ -141,13 +141,13 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
             return List.of();
         }
         List<ArticleLabelLink> linkList = listByArticleIds(articleIds);
-        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+        return linkList.stream().map(ArticleLabelLink::getLabelId).distinct().toList();
     }
 
     @Override
     public List<Long> listUserIdsByArticleId(Long articleId) {
         List<ArticleLabelLink> linkList = listByArticleId(articleId);
-        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+        return linkList.stream().map(ArticleLabelLink::getUserId).distinct().toList();
     }
 
     @Override
@@ -156,13 +156,13 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
             return List.of();
         }
         List<ArticleLabelLink> linkList = listByArticleIds(articleIds);
-        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+        return linkList.stream().map(ArticleLabelLink::getUserId).distinct().toList();
     }
 
     @Override
     public List<Long> listArticleIdsByLabelId(Long labelId) {
         List<ArticleLabelLink> linkList = listByLabelId(labelId);
-        return linkList.stream().map(ArticleLabelLink::getArticleId).toList();
+        return linkList.stream().map(ArticleLabelLink::getArticleId).distinct().toList();
     }
 
     @Override
@@ -171,13 +171,13 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
             return List.of();
         }
         List<ArticleLabelLink> linkList = listByLabelIds(labelIds);
-        return linkList.stream().map(ArticleLabelLink::getArticleId).toList();
+        return linkList.stream().map(ArticleLabelLink::getArticleId).distinct().toList();
     }
 
     @Override
     public List<Long> listUserIdsByLabelId(Long labelId) {
         List<ArticleLabelLink> linkList = listByLabelId(labelId);
-        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+        return linkList.stream().map(ArticleLabelLink::getUserId).distinct().toList();
     }
 
     @Override
@@ -186,13 +186,13 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
             return List.of();
         }
         List<ArticleLabelLink> linkList = listByLabelIds(labelIds);
-        return linkList.stream().map(ArticleLabelLink::getUserId).toList();
+        return linkList.stream().map(ArticleLabelLink::getUserId).distinct().toList();
     }
 
     @Override
     public List<Long> listLabelIdsByUserId(Long userId) {
         List<ArticleLabelLink> linkList = listByUserId(userId);
-        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+        return linkList.stream().map(ArticleLabelLink::getLabelId).distinct().toList();
     }
 
     @Override
@@ -201,7 +201,7 @@ public class ArticleLabelLinkServiceImpl extends ServiceImpl<ArticleLabelLinkMap
             return List.of();
         }
         List<ArticleLabelLink> linkList = listByUserIds(userIds);
-        return linkList.stream().map(ArticleLabelLink::getLabelId).toList();
+        return linkList.stream().map(ArticleLabelLink::getLabelId).distinct().toList();
     }
 
     @Override

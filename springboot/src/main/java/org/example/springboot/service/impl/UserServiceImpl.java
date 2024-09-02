@@ -8,21 +8,22 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.enums.Gender;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
-import org.example.springboot.domain.dto.PasswordDto;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.model.LoginBody;
+import org.example.springboot.domain.model.RegisterBody;
+import org.example.springboot.domain.model.ResetBody;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.UserMapper;
 import org.example.springboot.service.IRoleService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.service.cache.ICaptchaService;
 import org.example.springboot.utils.TokenUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -44,13 +45,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private IRoleService roleService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
+    @Resource
+    private ICaptchaService captchaService;
 
     @Override
     public boolean save(User entity) {
         entity.setNickname(StrUtil.isNotBlank(entity.getNickname()) ? entity.getNickname() : entity.getUsername());
+        entity.setName(StrUtil.isNotBlank(entity.getName()) ? entity.getName() : "");
+        entity.setAvatar(StrUtil.isNotBlank(entity.getAvatar()) ? entity.getAvatar() : "");
         entity.setGender(StrUtil.isNotBlank(entity.getGender()) ? entity.getGender() : Gender.UNKNOWN.getCode());
         entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setPhone(StrUtil.isNotBlank(entity.getPhone()) ? entity.getPhone() : "");
+        entity.setOpenId(StrUtil.isNotBlank(entity.getOpenId()) ? entity.getOpenId() : "");
         entity.setBalance(BigDecimal.ZERO);
+        entity.setLoginIp("");
+        entity.setRemark("");
         return super.save(entity);
     }
 
@@ -65,8 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userRoleLinkService.saveBatchByUserIdAndRoleIds(dto.getId(), dto.getRoleIdList());
             return flag;
         }
-        userRoleLinkService.saveBatchByUserIdAndRoleIds(dto.getId(), dto.getRoleIdList());
-        return super.saveOrUpdate(dto);
+        return super.updateById(dto);
     }
 
     @Override
@@ -173,6 +181,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (Objects.equals(user.getStatus(), UserStatus.DISABLE.getCode())) {
             throw new RuntimeException("该用户已被禁用！请联系管理员");
         }
+        captchaService.validateLoginCode(loginBody.getUuid(), loginBody.getCode());
         // 生成token
         String token = TokenUtils.createToken(user.getId(), user.getPassword());
         UserVo vo = getOne(UserDto.builder().id(user.getId()).build());
@@ -183,24 +192,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Transactional
     @Override
-    public void register(User user) {
+    public void register(RegisterBody body) {
+        if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
+            throw new CustomException(ResultCode.REGISTER_CONFIRM_ERROR);
+        }
+        validateUsernameAvailable(null, body.getUsername());
+        validateEmailAvailable(null, body.getEmail());
+        captchaService.validateCode(body.getEmail(), body.getCode());
+        User user = User.builder().build();
+        BeanUtils.copyProperties(body, user);
         save(user);
         // TODO 2L替换为枚举
         userRoleLinkService.saveBatchByUserIdAndRoleIds(user.getId(), List.of(2L));
     }
 
     @Override
-    public void updatePassword(PasswordDto dto) {
-        User user = BaseContext.getUser();
-        Long userId = user.getId();
-        user = getById(user.getId());
-        if (!Objects.equals(user.getPassword(), dto.getPassword())) {
-            throw new RuntimeException("密码错误！修改失败");
+    public void resetPassword(ResetBody body) {
+        if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
+            throw new CustomException(ResultCode.RESET_CONFIRM_ERROR);
         }
-        if (!Objects.equals(dto.getNewPassword(), dto.getConfirmPassword())) {
-            throw new RuntimeException("确认密码不一致！修改失败");
-        }
-        user = User.builder().id(userId).password(dto.getNewPassword()).build();
+        captchaService.validateCode(body.getEmail(), body.getCode());
+        User user = getByEmail(body.getEmail());
+        user.setPassword(body.getPassword());
         updateById(user);
     }
 

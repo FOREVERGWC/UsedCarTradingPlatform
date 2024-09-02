@@ -115,6 +115,11 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
      * @return 结果
      */
     private LambdaQueryChainWrapper<ArticleCategory> getWrapper(ArticleCategoryDto entity) {
+        // TODO 这是后台接口，判断用户权限，若非管理员则只能查看自己的文章，添加一个前台接口只允许查看已发布、公开状态的文章
+        UserVo user = BaseContext.getUser();
+        if (!user.getRoleIdList().contains(1L)) {
+            entity.setUserId(user.getId());
+        }
         LambdaQueryChainWrapper<ArticleCategory> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, ArticleCategory::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), ArticleCategory::getName, entity.getName())

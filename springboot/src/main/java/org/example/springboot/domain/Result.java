@@ -1,10 +1,7 @@
 package org.example.springboot.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.example.springboot.common.enums.ResultCode;
 
@@ -22,6 +19,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class Result<T> implements Serializable {
     @Serial
     private static final long serialVersionUID = 3709531800279000172L;

@@ -42,6 +42,11 @@ spring:
   web:
     resources:
       static-locations: file:${upload.path}
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 916586595@qq.com
+    password: qjjzsjumncrwbefg
   devtools:
     restart:
       enabled: true
@@ -89,3 +94,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - org.example.springboot.controller
+
+captcha:
+  enabled: false

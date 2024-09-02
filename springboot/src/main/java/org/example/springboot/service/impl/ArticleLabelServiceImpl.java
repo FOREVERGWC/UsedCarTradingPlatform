@@ -8,9 +8,11 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.dto.ArticleLabelDto;
 import org.example.springboot.domain.entity.ArticleLabel;
 import org.example.springboot.domain.vo.ArticleLabelVo;
+import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.ArticleLabelMapper;
 import org.example.springboot.service.IArticleLabelLinkService;
 import org.example.springboot.service.IArticleLabelService;
@@ -94,10 +96,15 @@ public class ArticleLabelServiceImpl extends ServiceImpl<ArticleLabelMapper, Art
      * @return 结果
      */
     private LambdaQueryChainWrapper<ArticleLabel> getWrapper(ArticleLabel entity) {
+        // TODO 这是后台接口，判断用户权限，若非管理员则只能查看自己的文章，添加一个前台接口只允许查看已发布、公开状态的文章
         LambdaQueryChainWrapper<ArticleLabel> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, ArticleLabel::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), ArticleLabel::getName, entity.getName());
         if (entity instanceof ArticleLabelDto dto) {
+            UserVo user = BaseContext.getUser();
+            if (!user.getRoleIdList().contains(1L)) {
+                dto.setUserId(user.getId());
+            }
             Long userId = dto.getUserId();
             List<Long> labelIdList = articleLabelLinkService.listLabelIdsByUserId(userId);
             if (CollectionUtil.isEmpty(labelIdList)) {

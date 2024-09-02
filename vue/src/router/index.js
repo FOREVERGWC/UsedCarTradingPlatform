@@ -27,4 +27,8 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
+router.afterEach((to) => {
+    document.title = to.meta?.title || import.meta.env.VITE_APP_TITLE;
+});
+
 export default router

@@ -14,10 +14,10 @@ import org.example.springboot.common.Constants;
 import org.example.springboot.common.annotation.Anonymous;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
+import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.service.IUserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -76,8 +76,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         } catch (JWTVerificationException e) {
             throw new CustomException(ResultCode.TOKEN_CHECK_ERROR);
         }
-        UserVo vo = UserVo.builder().build();
-        BeanUtils.copyProperties(user, vo);
+        UserVo vo = userService.getOne(UserDto.builder().id(user.getId()).build());
         vo.setToken(token);
         BaseContext.setUser(vo);
         return true;

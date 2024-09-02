@@ -44,23 +44,44 @@ export const getByToken = () => {
 }
 
 /**
- * 根据邮箱发送注册验证码邮件
- * @param params 邮箱
+ * 获取验证码图片
  * @returns {*} 结果
  */
-export const getRegisterCodeByEmail = (params) => {
+export const getCaptcha = () => {
     return request({
-        url: '/register/email/code', method: 'GET', params: params
+        url: '/captcha', method: 'GET'
     })
 }
 
 /**
- * 根据邮箱发送找回验证码邮件
- * @param params 邮箱
+ * 根据邮箱发送注册验证码邮件
+ * @param data 注册邮箱
  * @returns {*} 结果
  */
-export const getRetrieveCodeByEmail = (params) => {
+export const sendRegisterCodeByEmail = (data) => {
     return request({
-        url: '/retrieve/email/code', method: 'GET', params: params
+        url: '/register/code', method: 'POST', data: data
+    })
+}
+
+/**
+ * 根据邮箱发送改密验证码邮件
+ * @param data 注册邮箱
+ * @returns {*} 结果
+ */
+export const sendResetCodeByEmail = (data) => {
+    return request({
+        url: '/reset/code', method: 'POST', data: data
+    })
+}
+
+/**
+ * 重置密码
+ * @param data 密码信息
+ * @returns {*} 结果
+ */
+export const resetPassword = (data) => {
+    return request({
+        url: '/password/reset', method: 'PUT', data: data
     })
 }

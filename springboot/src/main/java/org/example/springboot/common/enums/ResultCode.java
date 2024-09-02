@@ -26,6 +26,26 @@ public enum ResultCode {
      */
     TOKEN_CHECK_ERROR(401, "token验证失败，请重新登录"),
     /**
+     * 登录失败！验证码错误
+     */
+    LOGIN_CODE_ERROR(700, "登录失败！验证码错误"),
+    /**
+     * 注册失败！验证码错误
+     */
+    REGISTER_CODE_ERROR(800, "注册失败！验证码错误"),
+    /**
+     * 注册失败！确认密码不一致
+     */
+    REGISTER_CONFIRM_ERROR(801, "注册失败！确认密码不一致"),
+    /**
+     * 重置失败！验证码错误
+     */
+    RESET_CODE_ERROR(900, "重置失败！验证码错误"),
+    /**
+     * 重置失败！确认密码不一致
+     */
+    RESET_CONFIRM_ERROR(901, "重置失败！确认密码不一致"),
+    /**
      * 参数缺失
      */
     PARAM_LOST_ERROR(4001, "参数缺失"),
@@ -62,9 +82,17 @@ public enum ResultCode {
      */
     ACCOUNT_LOW_ERROR(1006, "账户余额不足，请到个人中心充值"),
     /**
+     * 操作失败！角色不存在
+     */
+    ROLE_NOT_FOUND_ERROR(2000, "操作失败！角色不存在"),
+    /**
      * 删除失败！该角色已分配用户
      */
-    ROLE_DELETE_ERROR(2000, "删除失败！该角色已分配用户"),
+    ROLE_DELETE_ERROR(2001, "删除失败！该角色已分配用户"),
+    /**
+     * 操作失败！菜单不存在
+     */
+    MENU_NOT_FOUND_ERROR(3000, "操作失败！菜单不存在"),
     /**
      * 操作失败！文章不存在
      */

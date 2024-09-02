@@ -1,120 +1,165 @@
 <template>
-	<div class='container'>
-		<div class='main'>
-			<div class='header'>{{ title }}</div>
-			<el-form ref='formRef' :model='form' :rules='rules'>
-				<el-form-item prop='username'>
-					<el-input v-model='form.username' placeholder='请输入账号' prefix-icon='User'></el-input>
-				</el-form-item>
-				<el-form-item prop='password'>
-					<el-input v-model='form.password' placeholder='请输入密码' prefix-icon='Lock'
-										show-password></el-input>
-				</el-form-item>
-				<el-form-item prop='confirmPass'>
-					<el-input v-model='form.confirmPass' placeholder='请确认密码' prefix-icon='Lock'
-										show-password></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button class='btn-register' @click='register'>注 册</el-button>
-				</el-form-item>
-				<div style='display: flex; align-items: center'>
-					<div style='flex: 1'></div>
-					<div style='flex: 1; text-align: right'>
-						已有账号？请 <a href='/login'>登录</a>
-					</div>
-				</div>
-			</el-form>
-		</div>
-	</div>
+  <div class="main-container">
+    <el-card class="main-card">
+      <h2 class="title">{{ title }}</h2>
+      <el-form :model="form" :rules="rules" ref="formRef" size="default">
+        <el-form-item prop="username">
+          <el-input v-model="form.username" placeholder="用户名" prefix-icon="User" autocomplete="new"/>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="Lock"
+                    autocomplete="new"
+                    show-password/>
+        </el-form-item>
+        <el-form-item prop="confirmPwd">
+          <el-input v-model="form.confirmPwd" type="password" placeholder="确认密码" prefix-icon="Lock"
+                    autocomplete="new"
+                    show-password/>
+        </el-form-item>
+        <el-form-item class="email" prop="email">
+          <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
+          <el-button @click="handleCaptcha" :disabled="isSending">{{ isSending ? `${timer}s` : '发送' }}</el-button>
+        </el-form-item>
+        <el-form-item v-if="enabled" prop="code">
+          <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleRegister">注册</el-button>
+        </el-form-item>
+      </el-form>
+      <div class="login-link">
+        <span>已有账号？请</span>
+        <el-link type="primary" :underline="false" href="/login">登录</el-link>
+      </div>
+    </el-card>
+  </div>
 </template>
 
-<script>
-import { register } from '@/api/web'
+<script setup>
+import {ref} from 'vue';
+import {register, sendRegisterCodeByEmail} from "@/api/auth.js";
+import {ElMessage} from "element-plus";
+import {useRouter} from "vue-router";
 
-export default {
-	name: 'RegisterView',
-	data() {
-		// 验证码校验
-		const validatePassword = (rule, confirmPass, callback) => {
-			if (confirmPass === '') {
-				callback(new Error('请确认密码'))
-			} else if (confirmPass !== this.form.password) {
-				callback(new Error('两次输入的密码不一致'))
-			} else {
-				callback()
-			}
-		}
-		return {
-			title: import.meta.env.VITE_APP_TITLE,
-			form: {
-				username: '',
-				password: '',
-				confirmPass: '',
-				role: 'USER'
-			},
-			rules: {
-				username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
-				password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-				confirmPass: [{ required: true, validator: validatePassword, trigger: 'blur' }]
-			}
-		}
-	},
-	created() {
+const router = useRouter()
 
-	},
-	methods: {
-		register() {
-			this.$refs.formRef.validate(valid => {
-				if (!valid) return
-				register(this.form).then(res => {
-					if (res.code === 200) {
-						this.$router.push('/login')
-						this.$message.success('注册成功')
-					} else {
-						this.$message.error(res.msg)
-					}
-				})
-			})
-		}
-	}
+const title = ref(import.meta.env.VITE_APP_TITLE);
+const enabled = ref(true)
+const form = ref({
+  username: '',
+  password: '',
+  confirmPwd: '',
+  email: '',
+  code: ''
+});
+const rules = {
+  username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+  password: [{required: true, message: '请输入密码', trigger: 'blur'}],
+  confirmPwd: [{required: true, message: '请输入确认密码', trigger: 'blur'}],
+  email: [
+    {required: true, message: '请输入邮箱', trigger: 'blur'},
+    {type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur'}
+  ],
+  code: [{required: true, message: '请输入验证码', trigger: 'blur'}]
+};
+const formRef = ref(null)
+const isSending = ref(false);
+const timer = ref(60);
+
+const handleCaptcha = () => {
+  formRef.value.validateField('email', (valid) => {
+    if (!valid) return;
+    const data = {email: form.value.email};
+    sendRegisterCodeByEmail(data).then(res => {
+      if (res.code !== 200) {
+        ElMessage.error(res.msg);
+        return;
+      }
+      ElMessage.success('发送成功！请注意查收');
+      startTimer();
+    });
+  });
 }
+
+const handleRegister = () => {
+  formRef.value.validate(valid => {
+    if (!valid) return
+    register(form.value).then(res => {
+      if (res.code !== 200) {
+        ElMessage.error(res.msg);
+        return;
+      }
+      ElMessage.success('注册成功！3秒后跳转到登录页面');
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+    });
+  });
+};
+
+const startTimer = () => {
+  isSending.value = true;
+  timer.value = 60;
+  const countdown = setInterval(() => {
+    timer.value -= 1;
+    if (timer.value <= 0) {
+      clearInterval(countdown);
+      isSending.value = false;
+    }
+  }, 1000);
+};
 </script>
 
-<style lang='scss' scoped>
-.container {
-	height: 100vh;
-	overflow: hidden;
-	background-size: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: #666;
-	user-select: none;
+<style scoped lang="scss">
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #F3F8FF;
+  padding: 20px;
 
-	.main {
-		width: 400px;
-		padding: 30px;
-		background-color: white;
-		border-radius: 5px;
+  .main-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
 
-		.header {
-			text-align: center;
-			font-weight: bold;
-			font-size: 20px;
-			margin-bottom: 20px;
-			color: #333
-		}
+    .title {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
 
-		.btn-register {
-			width: 100%;
-			background-color: #333;
-			border-color: #333;
-			color: white;
-		}
-	}
-}
+    .email {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-a {
-	color: #2a60c9;
+      .el-input {
+        flex: 1;
+        margin-right: 10px;
+      }
+
+      .el-button {
+        width: 100px;
+        flex-shrink: 0;
+      }
+    }
+
+    .el-button {
+      width: 100%;
+    }
+
+    .login-link {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+
+      span {
+        margin-right: 2px;
+      }
+    }
+  }
 }
 </style>

@@ -21,10 +21,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/login/wechat")
-                .excludePathPatterns("/register")
-                .excludePathPatterns("/files/**")
+                .excludePathPatterns("/captcha", "/register/code")
+                .excludePathPatterns("/login", "/login/wechat", "/register", "/password/reset")
+                .excludePathPatterns("/file/**")
                 .excludePathPatterns("/static/**")
                 .excludePathPatterns("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**");
     }
@@ -36,6 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }

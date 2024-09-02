@@ -30,6 +30,12 @@ const routes = [
                         meta: {name: '角色管理', roles: ['1'], icon: 'User', hidden: false},
                         component: () => import('@/views/backend/role/index.vue')
                     },
+                    {
+                        path: '/menu',
+                        name: 'menu',
+                        meta: {name: '菜单管理', roles: ['1'], icon: 'User', hidden: false},
+                        component: () => import('@/views/backend/menu/index.vue')
+                    }
                 ]
             },
             {
@@ -146,6 +152,12 @@ const routes = [
         name: 'Register',
         meta: {name: '注册', roles: [], icon: 'Stopwatch', hidden: true},
         component: () => import('@/views/RegisterView.vue')
+    },
+    {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        meta: {name: '找回密码', roles: [], icon: 'Stopwatch', hidden: true},
+        component: () => import('@/views/ResetPasswordView.vue')
     },
     {
         path: '/:pathMatch(.*)*',

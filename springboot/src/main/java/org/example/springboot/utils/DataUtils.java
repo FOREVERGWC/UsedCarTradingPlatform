@@ -1,5 +1,7 @@
 package org.example.springboot.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -19,8 +21,8 @@ public class DataUtils {
      * @return 子级列表
      */
     public static <T, U> List<T> listToTree(List<T> list, Function<T, U> parentIdField, Setter<T, List<T>> childrenField, Function<T, U> idField, U parentId) {
-        if (Objects.isNull(list)) {
-            return null;
+        if (CollectionUtil.isEmpty(list)) {
+            return List.of();
         }
         List<T> children = list.stream().filter(data -> Objects.equals(parentIdField.apply(data), parentId)).collect(Collectors.toList());
         children.forEach(child -> childrenField.accept(child, listToTree(list, parentIdField, childrenField, idField, idField.apply(child))));

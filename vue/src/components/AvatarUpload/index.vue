@@ -25,8 +25,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
-
+const emit = defineEmits(['update:modelValue', 'success'])
 const url = ref('')
 
 const updateUrl = () => {
@@ -35,19 +34,21 @@ const updateUrl = () => {
   }
 }
 
-watch(() => props.modelValue, updateUrl)
-
-onMounted(updateUrl)
-
 const beforeUpload = (file) => {
-  if (file.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (file.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+
+  if (!allowedTypes.includes(file.type)) {
+    ElMessage.error('头像只能为 JPG, PNG, GIF, WEBP 或 BMP 格式！');
+    return false;
   }
-}
+
+  if (file.size / 1024 / 1024 > 2) {
+    ElMessage.error('头像最大不能超过 2MB！');
+    return false;
+  }
+
+  return true;
+};
 
 const customUpload = (params) => {
   uploadFile(params.file).then(res => {
@@ -60,8 +61,13 @@ const customUpload = (params) => {
     url.value = `${import.meta.env.VITE_APP_BASE_API}${res.data}`
     ElMessage.success('上传成功！')
     params.onSuccess()
+    emit('success', res.data)
   })
 }
+
+watch(() => props.modelValue, updateUrl)
+
+onMounted(updateUrl)
 </script>
 
 <style lang="scss" scoped>

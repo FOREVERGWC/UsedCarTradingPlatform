@@ -1,4 +1,4 @@
-package org.example.springboot.service.impl.cache;
+package org.example.springboot.service.cache;
 
 import java.util.List;
 import java.util.Map;

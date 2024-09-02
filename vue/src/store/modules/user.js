@@ -7,6 +7,9 @@ const useUserStore = defineStore('user', {
     getters: {
         getUser: (state) => {
             return state.user
+        },
+        isAdmin: (state) => {
+            return state.user?.roleIdList?.includes('1')
         }
     },
     actions: {

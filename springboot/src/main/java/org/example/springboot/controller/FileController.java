@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  * </p>
  */
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/file")
 @Tag(name = "文件", description = "文件")
 public class FileController {
     @Value("${upload.path}")

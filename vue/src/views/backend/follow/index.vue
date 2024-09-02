@@ -107,10 +107,10 @@
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template #footer>
         <el-button @click="form.visible = false">取 消</el-button>
         <el-button type="primary" @click="handleSave">确 定</el-button>
-      </div>
+      </template>
     </el-dialog>
   </div>
 </template>

@@ -70,4 +70,11 @@ public interface IRoleService extends IService<Role> {
      * @return 结果
      */
     RoleVo getOne(RoleDto dto);
+
+    /**
+     * 恢复或停用角色
+     *
+     * @param id 角色ID
+     */
+    void handleStatus(Long id);
 }

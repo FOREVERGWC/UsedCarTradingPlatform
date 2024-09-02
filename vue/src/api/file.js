@@ -10,7 +10,7 @@ export const uploadFile = (file) => {
     form.append('file', file);
 
     return request({
-        url: '/files/upload',
+        url: '/file/upload',
         method: 'POST',
         data: form,
         headers: {

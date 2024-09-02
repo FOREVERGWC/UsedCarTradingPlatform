@@ -7,7 +7,7 @@ import org.example.springboot.service.IArticleService;
 import org.example.springboot.service.ICommentService;
 import org.example.springboot.service.IStatisticsService;
 import org.example.springboot.service.IUserService;
-import org.example.springboot.service.impl.cache.IArticleCacheService;
+import org.example.springboot.service.cache.IArticleCacheService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

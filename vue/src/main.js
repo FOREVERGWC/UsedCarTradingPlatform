@@ -31,6 +31,8 @@ import MenuItem from '@/components/MenuItem/index.js'
 import Breadcrumb from '@/components/Breadcrumb/index.js'
 // 头像上传组件
 import AvatarUpload from "@/components/AvatarUpload/index.js";
+// 图标选择组件
+import IconPicker from "@/components/IconPicker/index.js";
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -54,4 +56,5 @@ app.use(VMdPreview)
 app.component('MenuItem', MenuItem)
 app.component('Breadcrumb', Breadcrumb)
 app.component('AvatarUpload', AvatarUpload)
+app.component('IconPicker', IconPicker)
 app.mount('#app')

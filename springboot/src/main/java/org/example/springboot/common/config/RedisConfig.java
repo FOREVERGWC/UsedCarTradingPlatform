@@ -1,6 +1,14 @@
 package org.example.springboot.common.config;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -23,17 +31,32 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
     /**
-     * Redis缓存管理器
+     * ObjectMapper配置
      *
-     * @param redisConnectionFactory Redis连接工厂
-     * @param cacheProperties        缓存配置
-     * @return Redis缓存管理器
+     * @return 结果
      */
-    @Bean
-    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties, ObjectMapper objectMapper) {
-        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisCacheConfiguration(cacheProperties, objectMapper))
-                .build();
+    private ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.activateDefaultTyping(
+                BasicPolymorphicTypeValidator.builder()
+                        .allowIfSubType(Object.class)
+                        .build(),
+                ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.registerModule(new JavaTimeModule());
+        return objectMapper;
+    }
+
+    /**
+     * Jackson2JsonRedisSerializer配置
+     *
+     * @return 结果
+     */
+    private Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+        return new Jackson2JsonRedisSerializer<>(objectMapper(), Object.class);
     }
 
     /**
@@ -43,12 +66,10 @@ public class RedisConfig {
      * @return Redis缓存配置
      */
     @Bean
-    RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties, ObjectMapper objectMapper) {
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
-
+    RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties) {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer));
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer()));
 
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
         if (redisProperties.getTimeToLive() != null) {
@@ -64,8 +85,29 @@ public class RedisConfig {
         return config;
     }
 
+    /**
+     * Redis缓存管理器
+     *
+     * @param connectionFactory Redis连接工厂
+     * @param cacheProperties   缓存配置
+     * @return Redis缓存管理器
+     */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper objectMapper) {
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory, CacheProperties cacheProperties) {
+        return RedisCacheManager.builder()
+                .cacheWriter(RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory))
+                .cacheDefaults(redisCacheConfiguration(cacheProperties))
+                .build();
+    }
+
+    /**
+     * 配置RedisTemplate
+     *
+     * @param redisConnectionFactory Redis连接工厂
+     * @return RedisTemplate<String, Object>
+     */
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
@@ -73,7 +115,7 @@ public class RedisConfig {
         template.setKeySerializer(stringRedisSerializer);
         template.setHashKeySerializer(stringRedisSerializer);
 
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = jackson2JsonRedisSerializer();
         template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
 

@@ -1,4 +1,4 @@
-package org.example.springboot.service.impl.cache;
+package org.example.springboot.service.cache;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;

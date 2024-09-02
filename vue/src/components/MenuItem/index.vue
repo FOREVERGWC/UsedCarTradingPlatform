@@ -1,12 +1,12 @@
 <template>
   <el-sub-menu v-if="item?.children?.length > 0"
-               v-show="!item?.meta?.hidden && hasIntersection(item)"
+               v-show="item.visible"
                :index="item.path">
     <template #title>
       <el-icon>
-        <component :is="item.meta?.icon"/>
+        <component :is="item.icon"/>
       </el-icon>
-      <span>{{ item.meta?.name }}</span>
+      <span>{{ item.name }}</span>
     </template>
     <menu-item v-for="(child, index) in item.children"
                :key="index"
@@ -16,19 +16,18 @@
     </menu-item>
   </el-sub-menu>
   <el-menu-item v-else
-                v-show="!item?.meta?.hidden && hasIntersection(item)"
+                v-show="item.visible"
                 :index="item.path"
                 @click="handleClickMenu(item.path)">
     <el-icon>
-      <component :is="item.meta?.icon"/>
+      <component :is="item.icon"/>
     </el-icon>
-    <span>{{ item.meta?.name }}</span>
+    <span>{{ item.name }}</span>
   </el-menu-item>
 </template>
 
 <script setup>
 import {defineProps, defineEmits} from 'vue';
-import {intersection} from "lodash-es";
 
 const props = defineProps({
   item: {
@@ -40,11 +39,6 @@ const props = defineProps({
     required: true
   }
 });
-
-
-const hasIntersection = (item) => {
-  return intersection(item.meta.roles, props.user?.roleIdList || []).length > 0
-}
 
 const emit = defineEmits(['click']);
 

@@ -1,15 +1,12 @@
 package org.example.springboot.domain.vo;
 
-import org.example.springboot.domain.entity.UserRoleLink;
-import org.example.springboot.domain.entity.User;
-import org.example.springboot.domain.entity.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.example.springboot.domain.entity.Role;
+import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.UserRoleLink;
 
 import java.io.Serial;
 
@@ -23,6 +20,7 @@ import java.io.Serial;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = false)
 @Schema(name = "用户、角色关系实体", description = "用户、角色关系")
 public class UserRoleLinkVo extends UserRoleLink {

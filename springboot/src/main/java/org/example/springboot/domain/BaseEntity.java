@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-@ToString(callSuper = true)
+@ToString
 @EqualsAndHashCode(callSuper = false)
 public class BaseEntity implements Serializable {
     @Serial

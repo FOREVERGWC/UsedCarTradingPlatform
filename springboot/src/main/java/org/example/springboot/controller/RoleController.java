@@ -1,16 +1,21 @@
 package org.example.springboot.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.example.springboot.domain.dto.UserDto;
+import org.example.springboot.domain.model.AssignMenuBody;
 import org.example.springboot.domain.vo.RoleVo;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.dto.RoleDto;
+import org.example.springboot.service.IRoleMenuLinkService;
 import org.example.springboot.service.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -24,6 +29,8 @@ import java.util.List;
 public class RoleController {
     @Resource
     private IRoleService roleService;
+    @Resource
+    private IRoleMenuLinkService roleMenuLinkService;
 
     /**
      * 添加、修改角色
@@ -88,5 +95,32 @@ public class RoleController {
     public Result<RoleVo> getOne(RoleDto dto) {
         RoleVo vo = roleService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 恢复或停用角色
+     *
+     * @param id 角色ID
+     * @return 结果
+     */
+    @PutMapping("/status/{id}")
+    @Operation(summary = "恢复或停用角色", description = "恢复或停用角色", method = "PUT")
+    public Result<Void> handleStatus(@PathVariable Long id) {
+        roleService.handleStatus(id);
+        return Result.success();
+    }
+
+
+    /**
+     * 角色分配菜单
+     *
+     * @param body 菜单分配信息
+     * @return 结果
+     */
+    @PostMapping("/menu")
+    @Operation(summary = "角色分配菜单", description = "角色分配菜单", method = "POST")
+    public Result<Void> handleMenu(@Validated @RequestBody AssignMenuBody body) {
+        roleMenuLinkService.saveBatchByRoleIdAndMenuIds(body.getRoleId(), body.getMenuIdList());
+        return Result.success();
     }
 }

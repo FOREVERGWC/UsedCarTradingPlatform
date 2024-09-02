@@ -38,14 +38,11 @@ public class AutoFillMetaObjectHandler implements MetaObjectHandler {
         User user = BaseContext.getUser();
         String username = user == null ? "" : user.getUsername();
         Object update = metaObject.getValue("updateBy");
-        Object value = metaObject.getValue("remark");
 
         LocalDateTime date = LocalDateTime.now();
         Object updateBy = update != null ? update : username;
-        Object remark = value != null ? value : "";
 
         metaObject.setValue("updateBy", updateBy);
         metaObject.setValue("updateTime", date);
-        metaObject.setValue("remark", remark);
     }
 }

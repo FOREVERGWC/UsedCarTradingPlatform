@@ -35,9 +35,6 @@
               <el-input v-model="queryParams.openId" clearable placeholder="请输入微信小程序开放ID"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.balance" clearable placeholder="请输入余额"/>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.loginIp" clearable placeholder="请输入最后登录IP"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
@@ -94,6 +91,11 @@
                 :header-cell-style="{ textAlign: 'center' }" stripe
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
+        <el-table-column type="expand">
+          <template v-slot="{ row }">
+            <span>{{ row }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="用户名" prop="username"/>
         <el-table-column label="昵称" prop="nickname"/>
@@ -133,8 +135,9 @@
         <el-table-column label="余额" prop="balance"/>
         <el-table-column label="最后登录IP" prop="loginIp"/>
         <el-table-column label="最后登录时间" prop="loginTime"/>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="280">
           <template v-slot="{ row }">
+            <el-button icon="EditPen" @click="showAssign(row)">分配角色</el-button>
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
             <el-popconfirm title="确认删除该行吗？" @confirm="handleDelete(row.id)">
               <template #reference>
@@ -164,27 +167,22 @@
           <el-input v-model="form.data.username" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.data.password" autocomplete="new" show-password/>
+          <el-input v-model="form.data.password" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="姓名">
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="头像" prop="avatar">
+        <el-form-item label="头像">
           <AvatarUpload v-model="form.data.avatar"/>
         </el-form-item>
-        <el-form-item label="生日" prop="birthday">
+        <el-form-item label="生日">
           <el-date-picker v-model='form.data.birthday' placeholder='请选择生日'
                           type='date'
                           value-format='YYYY-MM-DD HH:mm:ss'/>
         </el-form-item>
-        <el-form-item v-if="form.data.id" label='状态' prop='status'>
-          <el-select v-model='form.data.status' clearable placeholder='请选择状态'>
-            <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="角色" prop="roleIdList">
-          <el-select v-model='form.data.roleIdList' multiple clearable placeholder='请选择角色'>
-            <el-option v-for='item in roleList' :key='item.id' :label='item.name' :value='item.id'/>
+        <el-form-item v-if="form.data.id" label="状态" prop="status">
+          <el-select v-model="form.data.status" clearable placeholder="请选择状态">
+            <el-option v-for="item in statusList" :key="item.value" :label='item.label' :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="电话" prop="phone">
@@ -193,7 +191,7 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.data.email" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="微信小程序开放ID" prop="openId">
+        <el-form-item label="微信小程序开放ID">
           <el-input v-model="form.data.openId" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="余额" prop="balance">
@@ -203,15 +201,18 @@
           <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template #footer>
         <el-button @click="form.visible = false">取 消</el-button>
         <el-button type="primary" @click="handleSave">确 定</el-button>
-      </div>
+      </template>
     </el-dialog>
+
+    <RoleAssign :id="assignForm.userId" :visible="assignForm.visible" @update:visible="assignForm.visible = $event" @refresh="getPage" />
   </div>
 </template>
 
 <script setup>
+import RoleAssign from './components/RoleAssign.vue';
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
@@ -269,18 +270,17 @@ const form = ref({
   title: '',
   data: {}
 })
+const assignForm = ref({
+  userId: '',
+  visible: false
+})
 const formRef = ref(null)
 const rules = {
   username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
   password: [{required: true, message: '请输入密码', trigger: 'blur'}],
-  name: [{required: true, message: '请输入姓名', trigger: 'blur'}],
-  avatar: [{required: true, message: '请输入头像', trigger: 'blur'}],
-  birthday: [{required: true, message: '请选择生日', trigger: 'change'}],
   status: [{required: true, message: '请选择状态', trigger: 'change'}],
-  roleIdList: [{required: true, message: '请选择角色', trigger: 'change'}],
   phone: [{required: true, message: '请输入电话', trigger: 'blur'}],
   email: [{required: true, message: '请输入邮箱', trigger: 'blur'}],
-  openId: [{required: true, message: '请输入微信小程序开放ID', trigger: 'blur'}],
   balance: [{required: true, message: '请输入余额', trigger: 'blur'}]
 }
 
@@ -308,7 +308,6 @@ const showAdd = () => {
       avatar: '',
       birthday: '',
       status: '',
-      roleIdList: '',
       phone: '',
       email: '',
       openId: '',
@@ -335,6 +334,11 @@ const showEdit = (row) => {
     }
   })
 }
+
+const showAssign = (row) => {
+  assignForm.value.userId = row.id;
+  assignForm.value.visible = true;
+};
 
 const handleSave = () => {
   formRef.value.validate(valid => {

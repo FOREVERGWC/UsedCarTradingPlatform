@@ -18,7 +18,7 @@ import org.example.springboot.domain.vo.ArticleVo;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.ArticleMapper;
 import org.example.springboot.service.*;
-import org.example.springboot.service.impl.cache.IArticleCacheService;
+import org.example.springboot.service.cache.IArticleCacheService;
 import org.example.springboot.utils.LabelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -230,6 +230,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @return 结果
      */
     private LambdaQueryChainWrapper<Article> getWrapper(Article entity) {
+        // TODO 这是后台接口，判断用户权限，若非管理员则只能查看自己的文章，添加一个前台接口只允许查看已发布、公开状态的文章
+        UserVo user = BaseContext.getUser();
+        if (!user.getRoleIdList().contains(1L)) {
+            entity.setUserId(user.getId());
+        }
         LambdaQueryChainWrapper<Article> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Article::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getTitle()), Article::getTitle, entity.getTitle())

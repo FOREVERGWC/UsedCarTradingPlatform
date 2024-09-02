@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.model.LoginBody;
-import org.example.springboot.domain.dto.PasswordDto;
+import org.example.springboot.domain.model.RegisterBody;
+import org.example.springboot.domain.model.ResetBody;
 import org.example.springboot.domain.vo.UserVo;
 
 import java.util.List;
@@ -90,14 +91,14 @@ public interface IUserService extends IService<User> {
     /**
      * 注册用户
      *
-     * @param user 用户信息
+     * @param body PC端注册请求体
      */
-    void register(User user);
+    void register(RegisterBody body);
 
     /**
-     * 修改密码
+     * 重置密码
      *
-     * @param dto 修改密码
+     * @param body 密码信息
      */
-    void updatePassword(PasswordDto dto);
+    void resetPassword(ResetBody body);
 }
