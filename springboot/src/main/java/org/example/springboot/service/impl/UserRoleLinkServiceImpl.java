@@ -53,7 +53,6 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
                 .<UserRoleLink>map(item -> UserRoleLink.builder()
                         .userId(userId)
                         .roleId(item)
-                        .remark("")
                         .build())
                 .toList();
         saveBatch(linkList);

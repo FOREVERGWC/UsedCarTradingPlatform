@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
@@ -14,8 +16,11 @@ import org.example.springboot.domain.entity.Menu;
 import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.vo.MenuVo;
+import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.MenuMapper;
 import org.example.springboot.service.IMenuService;
+import org.example.springboot.service.IRoleMenuLinkService;
+import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.utils.DataUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -31,6 +36,11 @@ import java.util.Objects;
  */
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+    @Resource
+    private IUserRoleLinkService userRoleLinkService;
+    @Resource
+    private IRoleMenuLinkService roleMenuLinkService;
+
     @Override
     public boolean save(Menu entity) {
         entity.setStatus(UserStatus.NORMAL.getCode());
@@ -67,6 +77,51 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public List<MenuVo> getTree(MenuDto dto) {
         List<MenuVo> vos = getList(dto);
+        // 树
+        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
+    }
+
+    @Override
+    public List<MenuVo> getAuthTree() {
+        UserVo user = BaseContext.getUser();
+        List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(user.getId());
+        if (CollectionUtil.isEmpty(roleIdList)) {
+            return List.of();
+        }
+        List<Long> menuIdList = roleMenuLinkService.listMenuIdsByRoleIds(roleIdList);
+        if (CollectionUtil.isEmpty(menuIdList)) {
+            return List.of();
+        }
+        List<Menu> menuList = listByIds(menuIdList);
+        if (CollectionUtil.isEmpty(menuIdList)) {
+            return List.of();
+        }
+        List<MenuVo> vos = menuList.stream().map(item -> {
+            MenuVo vo = new MenuVo();
+            BeanUtils.copyProperties(item, vo);
+//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
+            return vo;
+        }).toList();
+        // 树
+        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
+    }
+
+    @Override
+    public List<MenuVo> getRoleTree(Long roleId) {
+        List<Long> menuIdList = roleMenuLinkService.listMenuIdsByRoleId(roleId);
+        if (CollectionUtil.isEmpty(menuIdList)) {
+            return List.of();
+        }
+        List<Menu> menuList = listByIds(menuIdList);
+        if (CollectionUtil.isEmpty(menuIdList)) {
+            return List.of();
+        }
+        List<MenuVo> vos = menuList.stream().map(item -> {
+            MenuVo vo = new MenuVo();
+            BeanUtils.copyProperties(item, vo);
+//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
+            return vo;
+        }).toList();
         // 树
         return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
     }

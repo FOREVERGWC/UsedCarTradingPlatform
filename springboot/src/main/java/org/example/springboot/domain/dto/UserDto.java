@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 import org.example.springboot.domain.entity.User;
 
 import java.io.Serial;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,11 +27,6 @@ import java.util.Map;
 public class UserDto extends User {
     @Serial
     private static final long serialVersionUID = 1L;
-    /**
-     * 角色ID列表
-     */
-    @Schema(description = "角色ID列表")
-    private List<Long> roleIdList;
     /**
      * 页码
      */

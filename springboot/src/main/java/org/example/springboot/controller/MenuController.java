@@ -79,6 +79,31 @@ public class MenuController {
     }
 
     /**
+     * 查询用户菜单树
+     *
+     * @return 结果
+     */
+    @GetMapping("/auth/tree")
+    @Operation(summary = "查询用户菜单树", description = "查询用户菜单树", method = "GET")
+    public Result<List<MenuVo>> getAuthTree() {
+        List<MenuVo> list = menuService.getAuthTree();
+        return Result.success(list);
+    }
+
+    /**
+     * 查询角色菜单树
+     *
+     * @param roleId 角色ID
+     * @return 结果
+     */
+    @GetMapping("/role/{roleId}")
+    @Operation(summary = "查询角色菜单树", description = "查询角色菜单树", method = "GET")
+    public Result<List<MenuVo>> getRoleTree(@PathVariable Long roleId) {
+        List<MenuVo> list = menuService.getRoleTree(roleId);
+        return Result.success(list);
+    }
+
+    /**
      * 查询菜单分页
      *
      * @param dto 菜单

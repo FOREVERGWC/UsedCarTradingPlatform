@@ -28,27 +28,30 @@ public class RegisterBody implements Serializable {
      * 用户名
      */
     @Schema(description = "用户名")
-    @NotBlank(message = "{account.username.NotBlank}")
+    @NotBlank(message = "{username.NotBlank}")
     private String username;
     /**
      * 密码
      */
     @Schema(description = "密码")
-    @NotBlank(message = "{account.password.NotBlank}")
+    @NotBlank(message = "{password.NotBlank}")
     private String password;
     /**
      * 确认密码
      */
     @Schema(description = "确认密码")
+    @NotBlank(message = "{confirmPwd.NotBlank}")
     private String confirmPwd;
     /**
      * 邮箱
      */
     @Schema(description = "邮箱")
+    @NotBlank(message = "{email.NotBlank}")
     private String email;
     /**
      * 验证码
      */
     @Schema(description = "验证码")
+    @NotBlank(message = "{code.NotBlank}")
     private String code;
 }

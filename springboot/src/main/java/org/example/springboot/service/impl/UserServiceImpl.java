@@ -70,9 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         validatePhoneAvailable(dto.getId(), dto.getPhone());
         validateEmailAvailable(dto.getId(), dto.getEmail());
         if (dto.getId() == null) {
-            boolean flag = save(dto);
-            userRoleLinkService.saveBatchByUserIdAndRoleIds(dto.getId(), dto.getRoleIdList());
-            return flag;
+            return save(dto);
         }
         return super.updateById(dto);
     }
@@ -170,18 +168,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public UserVo login(LoginBody loginBody) {
-        User user = getByUsername(loginBody.getUsername());
+    public UserVo login(LoginBody body) {
+        User user = getByUsername(body.getUsername());
         if (user == null) {
             throw new RuntimeException("用户不存在！");
         }
-        if (!Objects.equals(loginBody.getPassword(), user.getPassword())) {
+        if (!Objects.equals(body.getPassword(), user.getPassword())) {
             throw new RuntimeException("用户名或密码错误！");
         }
         if (Objects.equals(user.getStatus(), UserStatus.DISABLE.getCode())) {
             throw new RuntimeException("该用户已被禁用！请联系管理员");
         }
-        captchaService.validateLoginCode(loginBody.getUuid(), loginBody.getCode());
+        captchaService.validateLoginCode(body.getUuid(), body.getCode());
         // 生成token
         String token = TokenUtils.createToken(user.getId(), user.getPassword());
         UserVo vo = getOne(UserDto.builder().id(user.getId()).build());
@@ -304,16 +302,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .eq(entity.getBalance() != null, User::getBalance, entity.getBalance())
                 .like(StrUtil.isNotBlank(entity.getLoginIp()), User::getLoginIp, entity.getLoginIp());
         if (entity instanceof UserDto dto) {
-            List<Long> userIdList = userRoleLinkService.listUserIdsByRoleIds(dto.getRoleIdList());
             Map<String, Object> params = dto.getParams();
             // 创建时间
             Object startCreateTime = params == null ? null : params.get("startCreateTime");
             Object endCreateTime = params == null ? null : params.get("endCreateTime");
 
-            wrapper.in(CollectionUtil.isNotEmpty(userIdList), User::getId, userIdList)
-                    .between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
-                            User::getCreateTime,
-                            startCreateTime, endCreateTime);
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    User::getCreateTime,
+                    startCreateTime, endCreateTime);
         }
         return wrapper;
     }

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Tag(name = "网站服务", description = "网站服务")
-public class WebController {
+public class AuthController {
     @Resource
     private IUserService userService;
     @Resource
@@ -37,13 +37,13 @@ public class WebController {
     /**
      * PC端登录
      *
-     * @param loginBody PC端登录请求体
+     * @param body PC端登录请求体
      * @return 结果
      */
     @PostMapping("/login")
     @Operation(summary = "PC端登录", description = "PC端登录", method = "POST")
-    public Result<User> login(@Validated @RequestBody LoginBody loginBody) {
-        User user = userService.login(loginBody);
+    public Result<User> login(@Validated @RequestBody LoginBody body) {
+        User user = userService.login(body);
         return Result.success(user);
     }
 

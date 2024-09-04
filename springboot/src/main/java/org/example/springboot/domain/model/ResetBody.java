@@ -28,24 +28,24 @@ public class ResetBody implements Serializable {
      * 密码
      */
     @Schema(description = "密码")
-    @NotBlank(message = "{password.password.NotBlank}")
+    @NotBlank(message = "{password.NotBlank}")
     private String password;
     /**
      * 确认密码
      */
     @Schema(description = "确认密码")
-    @NotBlank(message = "{password.confirmPassword.NotBlank}")
+    @NotBlank(message = "{confirmPwd.NotBlank}")
     private String confirmPwd;
     /**
      * 邮箱
      */
     @Schema(description = "邮箱")
-    @NotBlank(message = "{password.newPassword.NotBlank}")
+    @NotBlank(message = "{email.NotBlank}")
     private String email;
     /**
      * 验证码
      */
     @Schema(description = "验证码")
-    @NotBlank(message = "{password.newPassword.NotBlank}")
+    @NotBlank(message = "{code.NotBlank}")
     private String code;
 }

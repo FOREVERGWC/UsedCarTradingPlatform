@@ -83,10 +83,10 @@ public interface IUserService extends IService<User> {
     /**
      * PC端登录
      *
-     * @param loginBody 端登录请求体
+     * @param body PC端登录请求体
      * @return 结果
      */
-    UserVo login(LoginBody loginBody);
+    UserVo login(LoginBody body);
 
     /**
      * 注册用户
