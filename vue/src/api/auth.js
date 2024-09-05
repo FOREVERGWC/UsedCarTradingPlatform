@@ -23,6 +23,16 @@ export const register = (data) => {
 }
 
 /**
+ * 退出登录
+ * @returns {*} 结果
+ */
+export const logout = () => {
+    return request({
+        url: '/logout', method: 'POST'
+    })
+}
+
+/**
  * 修改密码
  * @param data 密码信息
  * @returns {*} 结果

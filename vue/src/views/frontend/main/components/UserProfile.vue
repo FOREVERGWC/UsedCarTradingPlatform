@@ -69,7 +69,7 @@ const getInfo = () => {
 
 const handleFollow = () => {
   const operation = info.isFollowing ? '取关' : '关注';
-  if (userStore.user.id === props.user.id) {
+  if (userStore.id === props.user.id) {
     ElMessage.error(`${operation}失败！不能对自己进行此操作`)
     return
   }

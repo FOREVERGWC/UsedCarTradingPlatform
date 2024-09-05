@@ -1,6 +1,7 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
+import '@/router/permission.js'
 // 状态存储
 import pinia from './store'
 // 饿了么UI

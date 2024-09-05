@@ -159,16 +159,16 @@
               placeholder='请选择父级菜单'
           />
         </el-form-item>
-        <el-form-item label="路由地址" prop="path">
-          <el-input v-model="form.data.path" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="组件路径" prop="component">
-          <el-input v-model="form.data.component" autocomplete="new"/>
-        </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-select v-model="form.data.type" clearable filterable placeholder="请选择类型">
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="路由地址" prop="path">
+          <el-input v-model="form.data.path" autocomplete="new"/>
+        </el-form-item>
+        <el-form-item label="组件路径" prop="component" v-if="form.data.type === '2'">
+          <el-input v-model="form.data.component" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.data.sort" autocomplete="new"/>
@@ -285,7 +285,8 @@ const parentProps = {
 const getPage = () => {
   loading.value = true
   getMenuTree({}).then(res => {
-    parentList.value = res.data || [{id: '0', name: '父类'}]
+    parentList.value = res.data || []
+    parentList.value.unshift({id: '0', name: '根结点'})
   })
   getMenuTree(queryParams).then(res => {
     menuList.value = res.data || []
@@ -316,7 +317,7 @@ const showAdd = () => {
       type: '',
       sort: null,
       status: '',
-      visible: null,
+      visible: true,
       remark: ''
     }
   }

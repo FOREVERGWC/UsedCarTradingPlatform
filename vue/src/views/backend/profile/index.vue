@@ -35,12 +35,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { getByToken, updatePassword, getRetrieveCodeByEmail } from "@/api/web.js";
-import { ElMessage } from "element-plus";
+import {ref, onMounted} from "vue";
+import {ElMessage} from "element-plus";
 import UserInfoCard from "./components/UserInfoCard.vue";
 import useUserStore from "@/store/modules/user.js";
-import {sendResetCodeByEmail} from "@/api/auth.js";
+import {getByToken, resetPassword, sendResetCodeByEmail} from "@/api/auth.js";
 
 const user = ref({
   id: '',
@@ -82,7 +81,7 @@ const loadUserInfo = () => {
 // 发送验证码
 const sendCode = async () => {
   codeButtonDisabled.value = true
-  const res = await sendResetCodeByEmail({ email: user.value.email })
+  const res = await sendResetCodeByEmail({email: user.value.email})
   if (res.code !== 200) {
     ElMessage.error(res.msg || '验证码发送失败')
     codeButtonDisabled.value = false
@@ -114,22 +113,21 @@ const handleUpdatePassword = () => {
     ElMessage.error('新密码和确认密码不一致');
     return;
   }
-  updatePassword({
+  const data = {
     email: user.value.email,
     code: passwordForm.value.code,
     newPassword: passwordForm.value.newPassword
-  }).then(res => {
+  }
+  resetPassword(data).then(res => {
     if (res.code !== 200) {
       ElMessage.error(res.msg);
       return;
     }
-    ElMessage.success('密码修改成功');
+    ElMessage.success('修改成功！');
     passwordForm.value.code = '';
     passwordForm.value.newPassword = '';
     passwordForm.value.confirmPassword = '';
-  }).catch(err => {
-    ElMessage.error('密码修改失败');
-  });
+  })
 };
 
 // 加载用户信息

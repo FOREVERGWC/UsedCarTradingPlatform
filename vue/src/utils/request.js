@@ -15,8 +15,7 @@ request.interceptors.request.use(config => {
     if (!config.headers['Content-Type']) {
         config.headers['Content-Type'] = 'application/json;charset=utf-8'
     }
-    const user = userStore.user
-    config.headers['token'] = user.token
+    config.headers['token'] = userStore.token
     if (config.method === 'get' && config.params) {
         let url = config.url + '?' + tansParams(config.params)
         url = url.slice(0, -1)
@@ -36,8 +35,7 @@ request.interceptors.response.use(response => {
     const res = response.data
     if (res.code === 401) {
         ElMessage.error(res.msg)
-        localStorage.removeItem('user')
-        router.push('/login')
+        // router.push('/login')
     }
     return res
 }, error => {

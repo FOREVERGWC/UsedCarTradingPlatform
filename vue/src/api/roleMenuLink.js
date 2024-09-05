@@ -7,7 +7,7 @@ import request from '@/utils/request';
  */
 export const saveRoleMenuLink = (data) => {
     return request({
-        url: '/roleMenuLink', method: 'POST', data: data
+        url: '/role/menu/link', method: 'POST', data: data
     })
 }
 
@@ -18,7 +18,7 @@ export const saveRoleMenuLink = (data) => {
  */
 export const removeRoleMenuLinkBatchByIds = (ids) => {
     return request({
-        url: `/roleMenuLink/${ids}`, method: 'DELETE'
+        url: `/role/menu/link/${ids}`, method: 'DELETE'
     })
 }
 
@@ -29,7 +29,7 @@ export const removeRoleMenuLinkBatchByIds = (ids) => {
  */
 export const getRoleMenuLinkList = (params) => {
     return request({
-        url: '/roleMenuLink/list', method: 'GET', params: params
+        url: '/role/menu/link/list', method: 'GET', params: params
     })
 }
 
@@ -40,7 +40,7 @@ export const getRoleMenuLinkList = (params) => {
  */
 export const getRoleMenuLinkPage = (params) => {
     return request({
-        url: '/roleMenuLink/page', method: 'GET', params: params
+        url: '/role/menu/link/page', method: 'GET', params: params
     })
 }
 
@@ -51,6 +51,6 @@ export const getRoleMenuLinkPage = (params) => {
  */
 export const getRoleMenuLinkOne = (params) => {
     return request({
-        url: '/roleMenuLink', method: 'GET', params: params
+        url: '/role/menu/link', method: 'GET', params: params
     })
 }

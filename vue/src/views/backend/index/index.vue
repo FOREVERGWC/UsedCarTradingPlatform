@@ -1,12 +1,12 @@
-<script>
-export default {
-name: "index"
-}
-</script>
-
 <template>
-  $END$
+<div>
+  嘛也没有
+</div>
 </template>
+
+<script setup>
+
+</script>
 
 <style scoped lang="scss">
 

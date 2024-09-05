@@ -1,13 +1,8 @@
 <template>
   <el-dialog :title="form.title" v-model="form.visible" @update:visible="handleVisible" destroy-on-close
              width="40%" @close="handleClose">
-    <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="角色" prop="roleIdList">
-        <el-select v-model="form.roleIdList" multiple clearable filterable placeholder="请选择角色">
-          <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"/>
-        </el-select>
-      </el-form-item>
-    </el-form>
+    <el-tree-v2 ref="treeRef" :data="menuList" :props="node" :default-checked-keys="form.menuIdList" show-checkbox
+                :height="600"/>
     <template #footer>
       <el-button @click="handleClose">取 消</el-button>
       <el-button type="primary" @click="handleSave">确 定</el-button>
@@ -17,39 +12,44 @@
 
 <script setup>
 import {ref, reactive, onMounted, watch} from 'vue';
-import useRoleStore from '@/store/modules/role.js';
-import {getUserOne, handleUserRole} from '@/api/user.js';
 import {ElMessage} from 'element-plus';
+import {getMenuListByRoleId, getMenuTree} from "@/api/menu.js";
+import {handleRoleMenu} from "@/api/role.js";
 
 const props = defineProps({
   id: String,
   visible: Boolean
 });
 
+const node = ref({
+  value: 'id',
+  label: 'name',
+  children: 'children'
+})
+
 const emit = defineEmits(['update:visible', 'refresh']);
 
-const roleStore = useRoleStore();
-const roleList = ref(roleStore.roleList);
+const menuList = ref([])
 
 const form = reactive({
   visible: props.visible,
-  title: '分配角色',
-  roleIdList: []
+  title: '分配菜单',
+  menuIdList: []
 });
-const formRef = ref(null);
-const rules = {
-  roleIdList: [{required: true, message: '请选择角色', trigger: 'change'}]
-};
+const treeRef = ref(null);
 
-const getUserInfo = () => {
-  getUserOne({id: props.id}).then(res => {
+const getMenuInfo = () => {
+  getMenuTree({}).then(res => {
     if (res.code !== 200) {
       ElMessage.error(res.msg);
       return
     }
-    form.roleIdList = res.data.roleIdList;
-  });
-};
+    menuList.value = res.data || [];
+  })
+  getMenuListByRoleId(props.id).then(res => {
+    form.menuIdList = res.data?.map(item => item.id) || []
+  })
+}
 
 const handleClose = () => {
   emit('update:visible', false);
@@ -61,31 +61,29 @@ const handleVisible = (value) => {
 }
 
 const handleSave = () => {
-  formRef.value.validate(valid => {
-    if (!valid) return;
-    handleUserRole({id: props.id, roleIdList: form.roleIdList}).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg);
-        return
-      }
-      ElMessage.success('保存成功！');
-      handleClose();
-      emit('refresh');
-    });
-  });
+  const data = {roleId: props.id, menuIdList: treeRef.value.getCheckedKeys()}
+  handleRoleMenu(data).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg);
+      return
+    }
+    ElMessage.success('保存成功！');
+    handleClose();
+    emit('refresh');
+  })
 };
 
 
 onMounted(() => {
   if (props.visible) {
-    getUserInfo();
+    getMenuInfo();
   }
 });
 
 watch(() => props.visible, (value) => {
   form.visible = value
   if (value) {
-    getUserInfo();
+    getMenuInfo();
   }
 });
 </script>

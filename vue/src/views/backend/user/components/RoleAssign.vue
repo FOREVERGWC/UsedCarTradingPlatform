@@ -63,7 +63,8 @@ const handleVisible = (value) => {
 const handleSave = () => {
   formRef.value.validate(valid => {
     if (!valid) return;
-    handleUserRole({id: props.id, roleIdList: form.roleIdList}).then(res => {
+    const data = {userId: props.id, roleIdList: form.roleIdList}
+    handleUserRole(data).then(res => {
       if (res.code !== 200) {
         ElMessage.error(res.msg);
         return

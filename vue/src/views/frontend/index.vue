@@ -42,9 +42,9 @@ const toCenter = () => {
   router.push('/center')
 }
 const handleLogout = () => {
-  localStorage.clear()
-  userStore.clearUser()
-  router.replace('/')
+  userStore.handleLogout().then(() => {
+    location.href = router.resolve('/index').href;
+  })
 }
 </script>
 

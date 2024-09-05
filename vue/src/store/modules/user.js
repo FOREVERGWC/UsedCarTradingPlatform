@@ -1,8 +1,26 @@
 import {defineStore} from 'pinia'
+import {getByToken, login, logout} from "@/api/auth.js";
+import _ from "lodash-es";
+import {ElMessage} from "element-plus";
 
 const useUserStore = defineStore('user', {
     state: () => ({
-        user: JSON.parse(localStorage.getItem('user') || '{}')
+        user: JSON.parse(localStorage.getItem('user') || '{}'),
+        id: '',
+        username: '',
+        nickname: '',
+        name: '',
+        avatar: '',
+        gender: '',
+        birthday: '',
+        status: '',
+        phone: '',
+        email: '',
+        openId: '',
+        loginIp: '',
+        loginTime: '',
+        token: '',
+        roleIdList: [],
     }),
     getters: {
         getUser: (state) => {
@@ -13,11 +31,52 @@ const useUserStore = defineStore('user', {
         }
     },
     actions: {
-        setUser (user) {
+        setUser(user) {
             this.user = user
         },
-        clearUser () {
-            this.user = {}
+        handleLogin(data) {
+            return new Promise((resolve, reject) => {
+                login(data).then(res => {
+                    if (res.code !== 200) {
+                        ElMessage.error(res.msg)
+                        return
+                    }
+                    ElMessage.success('登录成功！')
+                    this.token = res.data.token
+                    resolve()
+                })
+            })
+        },
+        getInfo() {
+            return new Promise((resolve, reject) => {
+                getByToken().then(res => {
+                    const user = res.data
+                    this.id = user.id
+                    this.username = user.username
+                    this.nickname = user.nickname
+                    this.name = user.name
+                    this.token = user.token
+                    this.roleIdList = _.isEmpty(user.roleIdList) ? [] : user.roleIdList
+                    resolve(res)
+                }).catch(() => {
+                    reject()
+                })
+            })
+        },
+        handleLogout() {
+            return new Promise((resolve, reject) => {
+                logout().then(() => {
+                    this.id = ''
+                    this.username = ''
+                    this.nickname = ''
+                    this.name = ''
+                    this.token = ''
+                    this.roleIdList = []
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            })
         }
     },
     persist: true

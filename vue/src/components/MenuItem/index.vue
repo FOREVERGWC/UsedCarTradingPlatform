@@ -11,7 +11,6 @@
     <menu-item v-for="(child, index) in item.children"
                :key="index"
                :item="child"
-               :user="user"
                @click="handleClickMenu(child.path)">
     </menu-item>
   </el-sub-menu>
@@ -31,10 +30,6 @@ import {defineProps, defineEmits} from 'vue';
 
 const props = defineProps({
   item: {
-    type: Object,
-    required: true
-  },
-  user: {
     type: Object,
     required: true
   }

@@ -45,6 +45,16 @@ export const getMenuTree = (params) => {
 }
 
 /**
+ * 查询用户菜单树
+ * @returns {*} 结果
+ */
+export const getMenuAuthTree = () => {
+    return request({
+        url: '/menu/auth/tree', method: 'GET'
+    })
+}
+
+/**
  * 查询菜单分页
  * @param params 菜单
  * @returns {*} 结果
@@ -87,5 +97,17 @@ export const handleVisibleMenu = (id) => {
     return request({
         url: `/menu/visible/${id}`,
         method: 'PUT'
+    })
+}
+
+/**
+ * 查询角色菜单树
+ * @param roleId 角色ID
+ * @returns {*} 结果
+ */
+export const getMenuListByRoleId = (roleId) => {
+    return request({
+        url: `/menu/role/${roleId}`,
+        method: 'GET'
     })
 }

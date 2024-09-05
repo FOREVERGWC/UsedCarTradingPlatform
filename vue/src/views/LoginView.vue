@@ -36,15 +36,12 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
-import {login, getCaptcha} from "@/api/auth.js";
+import {getCaptcha} from "@/api/auth.js";
 import {ElMessage} from "element-plus";
 import useUserStore from "@/store/modules/user.js";
-import {getMenuAuthTree} from "@/api/menu.js";
-import useMenuListStore from "@/store/modules/menu.js";
 
 const router = useRouter();
 const userStore = useUserStore()
-const menuListStore = useMenuListStore();
 
 const title = ref(import.meta.env.VITE_APP_TITLE);
 const enabled = ref(true)
@@ -78,18 +75,7 @@ const handleCaptcha = () => {
 const handleLogin = () => {
   formRef.value.validate(valid => {
     if (!valid) return
-    login(form.value).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg)
-        return
-      }
-      getMenuAuthTree().then(res => {
-        if (res.code !== 200) return
-        menuListStore.setMenuList(res.data || [])
-        // TODO 生成动态路由
-      })
-      ElMessage.success('登录成功！')
-      userStore.setUser(res.data)
+    userStore.handleLogin(form.value).then(() => {
       router.replace('/')
     })
   });

@@ -13,7 +13,6 @@
         <menu-item v-for="(item, index) in menuList"
                    :key="index"
                    :item="item"
-                   :user="user"
                    @click="handleClickMenu"/>
       </el-menu>
     </el-aside>
@@ -21,12 +20,12 @@
       <el-header>
         <Breadcrumb/>
 
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <span class="header-dropdown">
             <el-avatar :src="avatar" alt="" @error="() => true">
               <img alt="" src="@/assets/imgs/profile.png"/>
             </el-avatar>
-            <span class="header-username">{{ user.username }}</span>
+            <span class="header-username">{{ username }}</span>
             <el-icon class="el-icon--right">
               <ArrowDown/>
             </el-icon>
@@ -34,8 +33,12 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click.native.prevent='toFrontend'><span>前台</span></el-dropdown-item>
-              <el-dropdown-item @click.native.prevent='toCenter'><span>个人中心</span></el-dropdown-item>
-              <el-dropdown-item @click.native.prevent='handleLogout'><span>退出登录</span></el-dropdown-item>
+              <el-dropdown-item divided command="profile">
+                <span>个人中心</span>
+              </el-dropdown-item>
+              <el-dropdown-item divided command="logout">
+                <span>退出登录</span>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -82,28 +85,29 @@
 </template>
 
 <script setup>
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 import useUserStore from "@/store/modules/user.js";
 import useBreadcrumbStore from "@/store/modules/breadcrumb.js";
 import useNavigationStore from "@/store/modules/navigation.js";
 import {getRoleList} from "@/api/role.js";
 import useRoleStore from "@/store/modules/role.js";
-import useMenuListStore from "@/store/modules/menu.js";
+import {ElMessageBox} from "element-plus";
+import usePermissionStore from "@/store/modules/permission.js";
 
 const router = useRouter()
 const userStore = useUserStore()
 const breadcrumbStore = useBreadcrumbStore()
 const navigationStore = useNavigationStore()
 const roleStore = useRoleStore();
-const menuListStore = useMenuListStore();
+const permissionStore = usePermissionStore();
 
 const title = ref(import.meta.env.VITE_APP_TITLE || '后台管理系统')
 const menu = ref(navigationStore.menu)
-const menuList = ref(menuListStore.menuList || [])
+const menuList =  computed(() => permissionStore.sidebarRouters);
 const isCollapse = ref(false)
-const user = reactive(userStore.getUser)
-const avatar = computed(() => import.meta.env.VITE_APP_BASE_API + user.avatar)
+const username = ref(userStore.username)
+const avatar = computed(() => import.meta.env.VITE_APP_BASE_API + userStore.avatar)
 
 const handleClickMenu = (item) => {
   console.log(item)
@@ -117,13 +121,25 @@ const toFrontend = () => {
   router.push('/')
 }
 
-const toCenter = () => {
-  router.push('/center2')
-}
-
-const handleLogout = () => {
-  localStorage.clear()
-  router.push('/login')
+const handleCommand = (value) => {
+  switch (value) {
+    case 'profile':
+      console.log('个人中心')
+      break;
+    case 'logout':
+      ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        userStore.handleLogout().then(() => {
+          location.href = router.resolve('/index').href;
+        })
+      })
+      break;
+    default:
+      break;
+  }
 }
 
 const getRole = () => {
