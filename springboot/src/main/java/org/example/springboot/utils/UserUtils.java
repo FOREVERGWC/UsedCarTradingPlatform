@@ -13,7 +13,11 @@ public class UserUtils {
      * @return 授权信息
      */
     public static Authentication getAuthentication() {
-        return SecurityContextHolder.getContext().getAuthentication();
+        try {
+            return SecurityContextHolder.getContext().getAuthentication();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -24,7 +28,7 @@ public class UserUtils {
     public static LoginUser getLoginUser() {
         try {
             return (LoginUser) getAuthentication().getPrincipal();
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -37,7 +41,7 @@ public class UserUtils {
     public static Long getLoginUserId() {
         try {
             return getLoginUser().getId();
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             return null;
         }
     }

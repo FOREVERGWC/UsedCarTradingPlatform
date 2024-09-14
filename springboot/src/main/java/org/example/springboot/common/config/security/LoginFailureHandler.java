@@ -30,9 +30,8 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-//        LoginBody body = objectMapper.readValue(request.getInputStream(), LoginBody.class);
+        LoginBody body = objectMapper.readValue(request.getInputStream(), LoginBody.class);
         String msg;
-        response.setStatus(HttpServletResponse.SC_OK);
         switch (exception) {
             case AccountExpiredException ignored -> msg = ResultCode.LOGIN_ACCOUNT_EXPIRED_ERROR.getMsg();
             case CredentialsExpiredException ignored -> msg = ResultCode.LOGIN_CREDENTIALS_EXPIRED_ERROR.getMsg();
@@ -43,8 +42,13 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             case null, default -> msg = ResultCode.LOGIN_USERNAME_OR_PASSWORD_ERROR.getMsg();
 
         }
+
+        // TODO 重写登录逻辑，弃用默认的登录流程
+//        // TODO 异步记录登录信息
+        logLoginService.record(0L, body.getUsername(), false, msg);
+
+        response.setStatus(HttpServletResponse.SC_OK);
         ServletUtils.write(response, objectMapper.writeValueAsString(Result.error(msg)));
-        // TODO 异步记录登录信息
-//        logLoginService.record(0L, body.getUsername(), false, msg);
+
     }
 }

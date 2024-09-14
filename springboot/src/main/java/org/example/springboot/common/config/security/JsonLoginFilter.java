@@ -1,14 +1,12 @@
 package org.example.springboot.common.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import org.example.springboot.common.Constants;
 import org.example.springboot.common.instance.ObjectMapperInstance;
 import org.example.springboot.domain.model.LoginBody;
-import org.example.springboot.service.cache.ICaptchaService;
-import org.example.springboot.utils.ValidateUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +17,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -27,15 +24,13 @@ import java.util.Objects;
  */
 @Component
 public class JsonLoginFilter extends UsernamePasswordAuthenticationFilter {
-    @Resource
-    private ICaptchaService captchaService;
-
     ObjectMapper objectMapper = ObjectMapperInstance.INSTANCE.getObjectMapper();
 
     public JsonLoginFilter(AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
     }
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String contentType = request.getContentType();
@@ -48,14 +43,7 @@ public class JsonLoginFilter extends UsernamePasswordAuthenticationFilter {
             return super.attemptAuthentication(request, response);
         }
 
-        LoginBody body;
-        try {
-            body = objectMapper.readValue(request.getInputStream(), LoginBody.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ValidateUtils.valid(body);
-        captchaService.validateLoginCode(body.getUuid(), body.getCode());
+        LoginBody body = objectMapper.readValue(request.getInputStream(), LoginBody.class);
         UsernamePasswordAuthenticationToken authenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(body.getUsername(), body.getPassword());
         setDetails(request, authenticationToken);
         return this.getAuthenticationManager().authenticate(authenticationToken);

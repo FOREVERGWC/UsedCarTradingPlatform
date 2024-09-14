@@ -2,6 +2,7 @@ package org.example.springboot.common.config;
 
 import jakarta.annotation.Resource;
 import org.example.springboot.common.config.security.*;
+import org.example.springboot.common.config.security.filter.UsernamePasswordValidateCodeFilter;
 import org.example.springboot.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,8 @@ public class SecurityConfig {
     private AuthenticationManagerBuilder authenticationManagerBuilder;
     @Resource
     private UserDetailsServiceImpl userDetailsService;
+    @Resource
+    private UsernamePasswordValidateCodeFilter usernamePasswordValidateCodeFilter;
 
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -70,8 +73,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(usernamePasswordValidateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(usernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
