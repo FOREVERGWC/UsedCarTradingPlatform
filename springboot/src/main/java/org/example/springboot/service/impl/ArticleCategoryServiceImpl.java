@@ -8,17 +8,16 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.enums.DeleteEnum;
 import org.example.springboot.domain.dto.ArticleCategoryDto;
 import org.example.springboot.domain.entity.ArticleCategory;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.vo.ArticleCategoryVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.ArticleCategoryMapper;
 import org.example.springboot.service.IArticleCategoryService;
 import org.example.springboot.service.IUserService;
 import org.example.springboot.utils.DataUtils;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +37,19 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
     private IUserService userService;
 
     @Override
+    public boolean save(ArticleCategory entity) {
+        Long userId = UserUtils.getLoginUserId();
+        entity.setUserId(userId);
+        entity.setDeleted(DeleteEnum.NORMAL.getCode());
+        return super.save(entity);
+    }
+
+    @Override
     public boolean saveOrUpdate(ArticleCategory entity) {
         if (entity.getId() == null) {
-            UserVo user = BaseContext.getUser();
-            entity.setUserId(user.getId());
-            entity.setDeleted(DeleteEnum.NORMAL.getCode());
-            return super.save(entity);
+            return save(entity);
         }
-        return super.saveOrUpdate(entity);
+        return super.updateById(entity);
     }
 
     @Override
@@ -71,7 +75,7 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
     public List<ArticleCategoryVo> getTree(ArticleCategoryDto dto) {
         List<ArticleCategoryVo> vos = getList(dto);
         // 树
-        return DataUtils.listToTree(vos, ArticleCategoryVo::getParentId, ArticleCategoryVo::setChildren, ArticleCategoryVo::getId, 0L);
+        return DataUtils.listToTree(vos, ArticleCategoryVo::getParentId, ArticleCategoryVo::setChildren, ArticleCategoryVo::getId, 0L, null, null);
     }
 
     @Override
@@ -116,10 +120,6 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
      */
     private LambdaQueryChainWrapper<ArticleCategory> getWrapper(ArticleCategoryDto entity) {
         // TODO 这是后台接口，判断用户权限，若非管理员则只能查看自己的文章，添加一个前台接口只允许查看已发布、公开状态的文章
-        UserVo user = BaseContext.getUser();
-        if (!user.getRoleIdList().contains(1L)) {
-            entity.setUserId(user.getId());
-        }
         LambdaQueryChainWrapper<ArticleCategory> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, ArticleCategory::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), ArticleCategory::getName, entity.getName())

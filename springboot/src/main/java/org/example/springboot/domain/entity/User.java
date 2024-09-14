@@ -1,7 +1,6 @@
 package org.example.springboot.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -112,10 +111,23 @@ public class User extends BaseEntity {
      */
     @Schema(description = "最后登录时间")
     private LocalDateTime loginTime;
-    /**
-     * 令牌
-     */
-    @Schema(description = "令牌")
-    @TableField(exist = false)
-    private String token;
+
+    public User(Long id, String username, String password, String nickname, String name, String avatar, String gender, LocalDateTime birthday, String status, String phone, String email, String openId, BigDecimal balance, String loginIp, LocalDateTime loginTime, String createBy, LocalDateTime createTime, String updateBy, LocalDateTime updateTime, String remark) {
+        super(createBy, createTime, updateBy, updateTime, remark);
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.name = name;
+        this.avatar = avatar;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.status = status;
+        this.phone = phone;
+        this.email = email;
+        this.openId = openId;
+        this.balance = balance;
+        this.loginIp = loginIp;
+        this.loginTime = loginTime;
+    }
 }

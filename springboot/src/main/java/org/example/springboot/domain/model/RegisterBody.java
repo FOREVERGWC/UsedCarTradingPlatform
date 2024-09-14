@@ -1,6 +1,7 @@
 package org.example.springboot.domain.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -47,6 +48,7 @@ public class RegisterBody implements Serializable {
      */
     @Schema(description = "邮箱")
     @NotBlank(message = "{email.NotBlank}")
+    @Email(message = "{email.Invalid}")
     private String email;
     /**
      * 验证码

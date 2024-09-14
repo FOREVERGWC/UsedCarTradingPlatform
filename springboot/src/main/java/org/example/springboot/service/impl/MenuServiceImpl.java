@@ -8,26 +8,22 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.entity.Menu;
 import org.example.springboot.domain.dto.MenuDto;
-import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.vo.MenuVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.MenuMapper;
 import org.example.springboot.service.IMenuService;
 import org.example.springboot.service.IRoleMenuLinkService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.utils.DataUtils;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * <p>
@@ -44,15 +40,45 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public boolean save(Menu entity) {
         entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setVisible(true);
         return super.save(entity);
     }
 
     @Override
+    public boolean saveBatch(Collection<Menu> entityList) {
+        entityList.forEach(item -> {
+            item.setStatus(UserStatus.NORMAL.getCode());
+            item.setVisible(true);
+        });
+        return super.saveBatch(entityList);
+    }
+
+    @Override
     public boolean saveOrUpdate(Menu entity) {
+        // 祖级菜单ID
+        if (entity.getParentId() == 0L) {
+            entity.setAncestorId(0L);
+        } else {
+            Long ancestorId = DataUtils.getAncestorId(entity.getParentId(), this::getById, Menu::getParentId);
+            entity.setAncestorId(ancestorId);
+        }
         if (entity.getId() == null) {
             return save(entity);
         }
         return super.updateById(entity);
+    }
+
+    @Override
+    public List<Menu> listByUserId(Long userId) {
+        List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(userId);
+        if (CollectionUtil.isEmpty(roleIdList)) {
+            return List.of();
+        }
+        List<Long> menuIdList = roleMenuLinkService.listMenuIdsByRoleIds(roleIdList);
+        if (CollectionUtil.isEmpty(menuIdList)) {
+            return List.of();
+        }
+        return Optional.ofNullable(listByIds(menuIdList)).orElse(List.of());
     }
 
     @Override
@@ -61,15 +87,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (CollectionUtil.isEmpty(menuList)) {
             return List.of();
         }
-//        // 父级菜单
-//        List<Long> parentIdList = menuList.stream().map(Menu::getParentId).toList();
-//        List<Parent> parentList = parentService.listByIds(parentIdList);
-//        Map<Long, Parent> parentMap = parentList.stream().collect(Collectors.toMap(Parent::getId, item -> item));
         // 组装VO
         return menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
-//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
             return vo;
         }).toList();
     }
@@ -78,13 +99,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public List<MenuVo> getTree(MenuDto dto) {
         List<MenuVo> vos = getList(dto);
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
+        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
     }
 
     @Override
     public List<MenuVo> getAuthTree() {
-        UserVo user = BaseContext.getUser();
-        List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(user.getId());
+        Long userId = UserUtils.getLoginUserId();
+        List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(userId);
         if (CollectionUtil.isEmpty(roleIdList)) {
             return List.of();
         }
@@ -99,11 +120,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         List<MenuVo> vos = menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
-//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
             return vo;
         }).toList();
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
+        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
     }
 
     @Override
@@ -119,30 +139,50 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         List<MenuVo> vos = menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
-//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
             return vo;
         }).toList();
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L);
+        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
     }
 
     @Override
     public IPage<MenuVo> getPage(MenuDto dto) {
-        Page<Menu> info = getWrapper(dto).page(new Page<>(dto.getPageNo(), dto.getPageSize()));
+        // 祖级
+        dto.setAncestorId(0L);
+        Page<Menu> page = new Page<>(dto.getPageNo(), dto.getPageSize());
+        Page<Menu> info = getWrapper(dto)
+                .select(Menu::getId)
+                .page(page);
         if (CollectionUtil.isEmpty(info.getRecords())) {
             return new Page<>(dto.getPageNo(), dto.getPageSize(), 0);
         }
-//        // 父级菜单
-//        List<Long> parentIdList = info.getRecords().stream().map(Menu::getParentId).toList();
-//        List<Parent> parentList = parentService.listByIds(parentIdList);
-//        Map<Long, Parent> parentMap = parentList.stream().collect(Collectors.toMap(Parent::getId, item -> item));
+        // 子级
+        List<Long> idList = info.getRecords().stream().map(Menu::getId).toList();
+        List<Menu> menuList = lambdaQuery()
+                .in(Menu::getId, idList)
+                .or()
+                .in(Menu::getAncestorId, idList)
+                .list();
         // 组装VO
-        return info.convert(item -> {
+        List<MenuVo> vos = menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
-//            vo.setParent(parentMap.getOrDefault(item.getParentId(), Parent.builder().name("已删除").build()));
             return vo;
-        });
+        }).toList();
+        // 树
+        List<MenuVo> tree = DataUtils.listToTree(
+                vos,
+                MenuVo::getParentId,
+                MenuVo::setChildren,
+                MenuVo::getId,
+                0L,
+                MenuVo::getSort,
+                Comparator.naturalOrder()
+        );
+        // 组装VO
+        IPage<MenuVo> convert = new Page<>(page.getCurrent(), page.getSize(), page.getTotal());
+        convert.setRecords(tree);
+        return convert;
     }
 
     @Override
@@ -151,12 +191,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (one == null) {
             return null;
         }
-//        // 父级菜单
-//        Parent parent = Optional.ofNullable(parentService.getById(one.getParentId())).orElse(Parent.builder().name("已删除").build());
         // 组装VO
         MenuVo vo = new MenuVo();
         BeanUtils.copyProperties(one, vo);
-//        vo.setParent(parent);
         return vo;
     }
 

@@ -1,4 +1,4 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.UserRoleLinkVo;

@@ -1,16 +1,18 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.model.AssignMenuBody;
+import org.example.springboot.domain.model.AssignPermissionBody;
 import org.example.springboot.domain.vo.RoleVo;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.dto.RoleDto;
 import org.example.springboot.service.IRoleMenuLinkService;
+import org.example.springboot.service.IRolePermissionLinkService;
 import org.example.springboot.service.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,8 @@ public class RoleController {
     private IRoleService roleService;
     @Resource
     private IRoleMenuLinkService roleMenuLinkService;
+    @Resource
+    private IRolePermissionLinkService rolePermissionLinkService;
 
     /**
      * 添加、修改角色
@@ -38,6 +42,7 @@ public class RoleController {
      * @param role 角色
      * @return 结果
      */
+    @PreAuthorize("hasAnyAuthority('system:role:add', 'system:role:edit')")
     @PostMapping
     @Operation(summary = "添加、修改角色", description = "添加、修改角色", method = "POST")
     public Result<Void> save(@RequestBody Role role) {
@@ -51,6 +56,7 @@ public class RoleController {
      * @param ids ID列表
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:delete')")
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除角色", description = "删除角色", method = "DELETE")
     public Result<Void> removeBatchByIds(@PathVariable List<Long> ids) {
@@ -64,6 +70,7 @@ public class RoleController {
      * @param dto 角色
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:list')")
     @GetMapping("/list")
     @Operation(summary = "查询角色列表", description = "查询角色列表", method = "GET")
     public Result<List<RoleVo>> getList(RoleDto dto) {
@@ -77,6 +84,7 @@ public class RoleController {
      * @param dto 角色
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:list')")
     @GetMapping("/page")
     @Operation(summary = "查询角色分页", description = "查询角色分页", method = "GET")
     public Result<IPage<RoleVo>> getPage(RoleDto dto) {
@@ -90,6 +98,7 @@ public class RoleController {
      * @param dto 角色
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:query')")
     @GetMapping
     @Operation(summary = "查询角色", description = "查询角色", method = "GET")
     public Result<RoleVo> getOne(RoleDto dto) {
@@ -103,6 +112,7 @@ public class RoleController {
      * @param id 角色ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:edit')")
     @PutMapping("/status/{id}")
     @Operation(summary = "恢复或停用角色", description = "恢复或停用角色", method = "PUT")
     public Result<Void> handleStatus(@PathVariable Long id) {
@@ -110,17 +120,31 @@ public class RoleController {
         return Result.success();
     }
 
-
     /**
      * 角色分配菜单
      *
      * @param body 菜单分配信息
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:role:assign:menu')")
     @PostMapping("/menu")
     @Operation(summary = "角色分配菜单", description = "角色分配菜单", method = "POST")
     public Result<Void> handleMenu(@Validated @RequestBody AssignMenuBody body) {
         roleMenuLinkService.saveBatchByRoleIdAndMenuIds(body.getRoleId(), body.getMenuIdList());
+        return Result.success();
+    }
+
+    /**
+     * 角色分配权限
+     *
+     * @param body 权限分配信息
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:role:assign:permission')")
+    @PostMapping("/permission")
+    @Operation(summary = "角色分配权限", description = "角色分配权限", method = "POST")
+    public Result<Void> handlePermission(@Validated @RequestBody AssignPermissionBody body) {
+        rolePermissionLinkService.saveBatchByRoleIdAndPermissionIds(body.getRoleId(), body.getPermissionIdList());
         return Result.success();
     }
 }

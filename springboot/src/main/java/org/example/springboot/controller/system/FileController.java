@@ -1,4 +1,4 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
@@ -48,7 +48,7 @@ public class FileController {
         String suffixName = "." + FileUtil.extName(originalFilename);
         String fileName = UUID.randomUUID() + suffixName;
         Path filePath = Paths.get(basePath, fileName);
-        String path = "/files/" + fileName;
+        String path = "/file/" + fileName;
         try (InputStream inputStream = file.getInputStream()) {
             Files.createDirectories(filePath.getParent());
             FileUtil.copyFile(inputStream, filePath.toFile());

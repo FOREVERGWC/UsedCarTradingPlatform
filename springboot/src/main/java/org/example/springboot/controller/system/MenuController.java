@@ -1,4 +1,4 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.MenuVo;
@@ -8,6 +8,7 @@ import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.service.IMenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
@@ -32,6 +33,7 @@ public class MenuController {
      * @param menu 菜单
      * @return 结果
      */
+    @PreAuthorize("hasAnyAuthority('system:menu:add', 'system:menu:edit')")
     @PostMapping
     @Operation(summary = "添加、修改菜单", description = "添加、修改菜单", method = "POST")
     public Result<Void> save(@RequestBody Menu menu) {
@@ -45,6 +47,7 @@ public class MenuController {
      * @param ids ID列表
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:delete')")
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除菜单", description = "删除菜单", method = "DELETE")
     public Result<Void> removeBatchByIds(@PathVariable List<Long> ids) {
@@ -58,6 +61,7 @@ public class MenuController {
      * @param dto 菜单
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @GetMapping("/list")
     @Operation(summary = "查询菜单列表", description = "查询菜单列表", method = "GET")
     public Result<List<MenuVo>> getList(MenuDto dto) {
@@ -71,6 +75,7 @@ public class MenuController {
      * @param dto 菜单
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @GetMapping("/tree")
     @Operation(summary = "查询菜单树", description = "查询菜单树", method = "GET")
     public Result<List<MenuVo>> getTree(MenuDto dto) {
@@ -83,6 +88,7 @@ public class MenuController {
      *
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @GetMapping("/auth/tree")
     @Operation(summary = "查询用户菜单树", description = "查询用户菜单树", method = "GET")
     public Result<List<MenuVo>> getAuthTree() {
@@ -96,6 +102,7 @@ public class MenuController {
      * @param roleId 角色ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @GetMapping("/role/{roleId}")
     @Operation(summary = "查询角色菜单树", description = "查询角色菜单树", method = "GET")
     public Result<List<MenuVo>> getRoleTree(@PathVariable Long roleId) {
@@ -109,6 +116,7 @@ public class MenuController {
      * @param dto 菜单
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:list')")
     @GetMapping("/page")
     @Operation(summary = "查询菜单分页", description = "查询菜单分页", method = "GET")
     public Result<IPage<MenuVo>> getPage(MenuDto dto) {
@@ -122,6 +130,7 @@ public class MenuController {
      * @param dto 菜单
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:query')")
     @GetMapping
     @Operation(summary = "查询菜单", description = "查询菜单", method = "GET")
     public Result<MenuVo> getOne(MenuDto dto) {
@@ -135,6 +144,7 @@ public class MenuController {
      * @param id 菜单ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:edit')")
     @PutMapping("/status/{id}")
     @Operation(summary = "恢复或停用菜单", description = "恢复或停用菜单", method = "PUT")
     public Result<Void> handleStatus(@PathVariable Long id) {
@@ -148,6 +158,7 @@ public class MenuController {
      * @param id 菜单ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:menu:edit')")
     @PutMapping("/visible/{id}")
     @Operation(summary = "显示或隐藏菜单", description = "显示或隐藏菜单", method = "PUT")
     public Result<Void> handleVisible(@PathVariable Long id) {

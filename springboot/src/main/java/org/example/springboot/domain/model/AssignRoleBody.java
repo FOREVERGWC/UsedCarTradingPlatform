@@ -29,12 +29,12 @@ public class AssignRoleBody implements Serializable {
      * 用户ID
      */
     @Schema(description = "用户ID")
-    @NotNull(message = "{userId.NotNull")
+    @NotNull(message = "{userId.NotNull}")
     private Long userId;
     /**
      * 角色ID列表
      */
     @Schema(description = "角色ID列表")
-    @NotNull(message = "{roleIdList.NotNull")
+    @NotNull(message = "{roleIdList.NotNull}")
     private List<Long> roleIdList;
 }

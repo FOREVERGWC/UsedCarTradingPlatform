@@ -8,15 +8,15 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.dto.FollowDto;
 import org.example.springboot.domain.entity.Follow;
 import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.domain.vo.FollowVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.FollowMapper;
 import org.example.springboot.service.IFollowService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +37,18 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
     private IUserService userService;
 
     @Override
+    public boolean save(Follow entity) {
+        Long userId = UserUtils.getLoginUserId();
+        entity.setFollowerId(userId);
+        return super.save(entity);
+    }
+
+    @Override
     public boolean saveOrUpdate(Follow entity) {
         if (entity.getId() == null) {
-            UserVo user = BaseContext.getUser();
-            entity.setFollowerId(user.getId());
-            return super.save(entity);
+            return save(entity);
         }
-        return super.saveOrUpdate(entity);
+        return super.updateById(entity);
     }
 
     @Override
@@ -114,7 +119,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
 
     @Override
     public Map<String, Object> getInfo(Long userId) {
-        Long id = Optional.ofNullable(BaseContext.getUser()).orElse(UserVo.builder().build()).getId();
+        Long id = Optional.ofNullable(UserUtils.getLoginUser()).orElse(LoginUser.builder().build()).getId();
         long followerCount = count(new LambdaQueryWrapper<Follow>().eq(Follow::getFollowedId, userId));
         long followedCount = count(new LambdaQueryWrapper<Follow>().eq(Follow::getFollowerId, userId));
         boolean isFollowing = id != null && lambdaQuery()
@@ -126,7 +131,7 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
 
     @Override
     public Map<String, Object> followTo(Long userId) {
-        UserVo user = BaseContext.getUser();
+        LoginUser user = UserUtils.getLoginUser();
         if (Objects.equals(user.getId(), userId)) {
             throw new RuntimeException("操作失败！不能对自己进行此操作");
         }

@@ -1,20 +1,25 @@
 package org.example.springboot.service.cache;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.Constants;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class CaptchaServiceImpl implements ICaptchaService {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Value("${captcha.enabled}")
+    private Boolean captchaEnabled;
 
     @Override
     public void setCaptcha(String uuid, String value) {
@@ -36,9 +41,12 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     @Override
     public void validateLoginCode(String uuid, String code) {
+        if (!captchaEnabled) {
+            return;
+        }
         String captcha = getCaptcha(uuid);
-        if (!Objects.equals(captcha, code)) {
-            throw new CustomException(ResultCode.LOGIN_CODE_ERROR);
+        if (!StrUtil.equalsIgnoreCase(captcha, code)) {
+            throw new InternalAuthenticationServiceException(ResultCode.LOGIN_CODE_ERROR.getMsg());
         }
         removeCaptcha(uuid);
     }
@@ -46,7 +54,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
     @Override
     public void validateCode(String uuid, String code) {
         String captcha = getCaptcha(uuid);
-        if (!Objects.equals(captcha, code)) {
+        if (!StrUtil.equalsIgnoreCase(captcha, code)) {
             throw new CustomException(ResultCode.REGISTER_CODE_ERROR);
         }
         removeCaptcha(uuid);

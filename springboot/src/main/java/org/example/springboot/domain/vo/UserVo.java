@@ -1,6 +1,5 @@
 package org.example.springboot.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -31,7 +30,6 @@ public class UserVo extends User {
      * 令牌
      */
     @Schema(description = "令牌")
-    @TableField(exist = false)
     private String token;
     /**
      * 状态

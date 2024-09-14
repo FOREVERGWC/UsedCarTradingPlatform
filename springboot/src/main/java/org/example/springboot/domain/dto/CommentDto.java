@@ -22,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "评论实体", description = "评论")
 public class CommentDto extends Comment {
     @Serial

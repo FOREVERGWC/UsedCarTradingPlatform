@@ -22,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "聊天实体", description = "聊天")
 public class ChatDto extends Chat {
     @Serial

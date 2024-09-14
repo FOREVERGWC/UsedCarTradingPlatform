@@ -29,12 +29,12 @@ public class AssignMenuBody implements Serializable {
      * 角色ID
      */
     @Schema(description = "角色ID")
-    @NotNull(message = "{roleId.NotNull")
+    @NotNull(message = "{roleId.NotNull}")
     private Long roleId;
     /**
      * 菜单ID列表
      */
     @Schema(description = "菜单ID列表")
-    @NotNull(message = "{menuIdList.NotNull")
+    @NotNull(message = "{menuIdList.NotNull}")
     private List<Long> menuIdList;
 }

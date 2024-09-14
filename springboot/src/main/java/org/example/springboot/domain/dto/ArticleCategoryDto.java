@@ -22,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "文章类别实体", description = "文章类别")
 public class ArticleCategoryDto extends ArticleCategory {
     @Serial

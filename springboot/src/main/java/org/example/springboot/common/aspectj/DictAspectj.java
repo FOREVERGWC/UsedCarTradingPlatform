@@ -46,15 +46,14 @@ public class DictAspectj {
         if (ObjectUtil.isEmpty(data)) {
             return;
         }
-        if (data instanceof IPage<?> page) {
-            List<?> records = page.getRecords();
-            records.forEach(this::processDictAnnotation);
-        } else if (data instanceof List<?> list) {
-            list.forEach(this::processDictAnnotation);
-        } else if (data instanceof Map) {
-            processDictAnnotation(data);
-        } else {
-            processDictAnnotation(data);
+        switch (data) {
+            case IPage<?> page -> {
+                List<?> records = page.getRecords();
+                records.forEach(this::processDictAnnotation);
+            }
+            case List<?> list -> list.forEach(this::processDictAnnotation);
+            case Map map -> processDictAnnotation(data);
+            case null, default -> processDictAnnotation(data);
         }
     }
 

@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item prop="email" class="email">
           <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
-          <el-button @click="handleCaptcha">发送</el-button>
+          <el-button @click="handleCaptcha" :disabled="isSending">{{ isSending ? `${timer}s` : '发送' }}</el-button>
         </el-form-item>
         <el-form-item v-if="enabled" prop="code">
           <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"/>
@@ -34,7 +34,7 @@
 
 <script setup>
 import {ref} from 'vue';
-import {resetPassword, sendRegisterCodeByEmail} from "@/api/auth.js";
+import {resetPassword, sendResetCodeByEmail} from "@/api/auth.js";
 import {ElMessage} from "element-plus";
 import {useRouter} from "vue-router";
 
@@ -65,7 +65,7 @@ const handleCaptcha = () => {
   formRef.value.validateField('email', (valid) => {
     if (!valid) return;
     const data = {email: form.value.email};
-    sendRegisterCodeByEmail(data).then(res => {
+    sendResetCodeByEmail(data).then(res => {
       if (res.code !== 200) {
         ElMessage.error(res.msg);
         return;

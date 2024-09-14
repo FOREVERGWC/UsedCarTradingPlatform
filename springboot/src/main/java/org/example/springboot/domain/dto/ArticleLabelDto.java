@@ -23,7 +23,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "文章标签实体", description = "文章标签")
 public class ArticleLabelDto extends ArticleLabel {
     @Serial

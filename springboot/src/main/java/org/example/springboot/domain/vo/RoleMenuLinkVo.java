@@ -27,11 +27,6 @@ public class RoleMenuLinkVo extends RoleMenuLink {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
-     * 占位符
-     */
-    @Schema(description = "占位符")
-    private String placeholder;
-    /**
      * 角色
      */
     @Schema(description = "角色")

@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Result<Void> Exception(Exception e) {
+        log.error(e.getMessage());
         return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result<Void> MethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
         BindingResult bindingResult = e.getBindingResult();
         ObjectError error = bindingResult.getAllErrors().getFirst();
         return Result.error(error.getDefaultMessage());
@@ -30,16 +32,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public Result<Void> CustomException(CustomException e) {
+        log.error(e.getMessage());
         return Result.error(e.getResultCodeEnum());
     }
 
     @ExceptionHandler(value = RuntimeException.class)
     public Result<Void> RuntimeException(RuntimeException e) {
+        log.error(e.getMessage());
         return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(value = NullPointerException.class)
     public Result<Void> NullPointerException(NullPointerException e) {
+        log.error(e.getMessage());
         return Result.error(e.getMessage());
     }
 
@@ -51,11 +56,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result<Void> IllegalArgumentException(IllegalArgumentException e) {
+        log.error(e.getMessage());
         return Result.error(e.getMessage());
     }
 
     @ExceptionHandler(value = BadSqlGrammarException.class)
     public Result<Void> BadSqlGrammarException(BadSqlGrammarException e) {
+        log.error(e.getMessage());
         return Result.error(e.getMessage());
     }
 }

@@ -37,13 +37,27 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     private IUserRoleLinkService userRoleLinkService;
 
     @Override
+    public boolean save(Role entity) {
+        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setDeleted(DeleteEnum.NORMAL.getCode());
+        return super.save(entity);
+    }
+
+    @Override
+    public boolean saveBatch(Collection<Role> entityList) {
+        entityList.forEach(item -> {
+            item.setStatus(UserStatus.NORMAL.getCode());
+            item.setDeleted(DeleteEnum.NORMAL.getCode());
+        });
+        return super.saveBatch(entityList);
+    }
+
+    @Override
     public boolean saveOrUpdate(Role entity) {
         if (entity.getId() == null) {
-            entity.setStatus(UserStatus.NORMAL.getCode());
-            entity.setDeleted(DeleteEnum.NORMAL.getCode());
-            return super.save(entity);
+            return save(entity);
         }
-        return super.saveOrUpdate(entity);
+        return super.updateById(entity);
     }
 
     @Transactional
@@ -61,19 +75,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public List<Role> listByUserId(Long userId) {
-        List<UserRoleLink> linkList = userRoleLinkService.listByUserId(userId);
-        List<Long> roleIdList = linkList.stream().map(UserRoleLink::getRoleId).toList();
+        List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(userId);
         if (CollectionUtil.isEmpty(roleIdList)) {
             return List.of();
         }
         return Optional.ofNullable(listByIds(roleIdList)).orElse(List.of());
     }
-
-//    @Override
-//    public List<Long> listRoleIdsByUserId(Long userId) {
-//        List<UserRoleLink> linkList = userRoleLinkService.listByUserId(userId);
-//        return linkList.stream().map(UserRoleLink::getRoleId).toList();
-//    }
 
     @Override
     public Map<Long, List<Long>> mapRoleIdsByUserIds(List<Long> userIds) {

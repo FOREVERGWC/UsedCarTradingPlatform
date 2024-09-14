@@ -1,21 +1,14 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.model.EmailBody;
-import org.example.springboot.domain.dto.UserDto;
-import org.example.springboot.domain.entity.User;
-import org.example.springboot.domain.model.LoginBody;
-import org.example.springboot.domain.model.RegisterBody;
-import org.example.springboot.domain.model.ResetBody;
+import org.example.springboot.domain.model.*;
 import org.example.springboot.domain.vo.CaptchaVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.service.IAuthService;
 import org.example.springboot.service.IEmailService;
-import org.example.springboot.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,24 +21,22 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "网站服务", description = "网站服务")
 public class AuthController {
     @Resource
-    private IUserService userService;
-    @Resource
     private IAuthService authService;
     @Resource
     private IEmailService emailService;
 
-    /**
-     * PC端登录
-     *
-     * @param body PC端登录请求体
-     * @return 结果
-     */
-    @PostMapping("/login")
-    @Operation(summary = "PC端登录", description = "PC端登录", method = "POST")
-    public Result<User> login(@Validated @RequestBody LoginBody body) {
-        User user = userService.login(body);
-        return Result.success(user);
-    }
+//    /**
+//     * PC端登录
+//     *
+//     * @param body PC端登录请求体
+//     * @return 结果
+//     */
+//    @PostMapping("/login")
+//    @Operation(summary = "PC端登录", description = "PC端登录", method = "POST")
+//    public Result<LoginUser> login(@Validated @RequestBody LoginBody body) {
+//        LoginUser user = authService.login(body);
+//        return Result.success(user);
+//    }
 
     /**
      * 注册用户
@@ -56,7 +47,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "注册用户", description = "注册用户", method = "POST")
     public Result<Void> register(@Validated @RequestBody RegisterBody body) {
-        userService.register(body);
+        authService.register(body);
         return Result.success();
     }
 
@@ -69,7 +60,7 @@ public class AuthController {
     @PutMapping("/password/reset")
     @Operation(summary = "重置密码", description = "重置密码", method = "PUT")
     public Result<Void> resetPassword(@Validated @RequestBody ResetBody body) {
-        userService.resetPassword(body);
+        authService.resetPassword(body);
         return Result.success();
     }
 
@@ -92,10 +83,8 @@ public class AuthController {
      */
     @GetMapping("/token")
     @Operation(summary = "获取当前用户信息", description = "获取当前用户信息", method = "GET")
-    public Result<UserVo> getByToken() {
-        UserVo account = BaseContext.getUser();
-        UserVo user = userService.getOne(UserDto.builder().id(account.getId()).build());
-        user.setToken(account.getToken());
+    public Result<LoginUser> getByToken() {
+        LoginUser user = UserUtils.getLoginUser();
         return Result.success(user);
     }
 

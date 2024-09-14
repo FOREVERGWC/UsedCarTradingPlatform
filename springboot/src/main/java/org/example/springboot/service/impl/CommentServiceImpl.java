@@ -8,15 +8,14 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.dto.CommentDto;
 import org.example.springboot.domain.entity.Comment;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.vo.CommentVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.CommentMapper;
 import org.example.springboot.service.ICommentService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +35,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private IUserService userService;
 
     @Override
+    public boolean save(Comment entity) {
+        Long userId = UserUtils.getLoginUserId();
+        entity.setUserId(userId);
+        return super.save(entity);
+    }
+
+    @Override
     public boolean saveOrUpdate(Comment entity) {
         if (entity.getId() == null) {
-            UserVo user = BaseContext.getUser();
-            entity.setUserId(user.getId());
-            return super.save(entity);
+            return save(entity);
         }
-        return super.saveOrUpdate(entity);
+        return super.updateById(entity);
     }
 
     @Override

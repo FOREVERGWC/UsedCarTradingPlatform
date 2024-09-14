@@ -1,4 +1,4 @@
-package org.example.springboot.controller;
+package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.RoleMenuLinkVo;
@@ -19,7 +19,7 @@ import java.util.List;
  * </p>
  */
 @RestController
-@RequestMapping("/roleMenuLink")
+@RequestMapping("/role/menu/link")
 @Tag(name = "角色、菜单关系", description = "角色、菜单关系")
 public class RoleMenuLinkController {
     @Resource

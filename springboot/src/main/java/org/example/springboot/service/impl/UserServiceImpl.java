@@ -15,16 +15,11 @@ import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.Role;
 import org.example.springboot.domain.entity.User;
-import org.example.springboot.domain.model.LoginBody;
-import org.example.springboot.domain.model.RegisterBody;
-import org.example.springboot.domain.model.ResetBody;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.UserMapper;
 import org.example.springboot.service.IRoleService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.service.IUserService;
-import org.example.springboot.service.cache.ICaptchaService;
-import org.example.springboot.utils.TokenUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +40,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private IRoleService roleService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
-    @Resource
-    private ICaptchaService captchaService;
 
     @Override
     public boolean save(User entity) {
+        validateUsernameAvailable(entity.getId(), entity.getUsername());
+        validatePhoneAvailable(entity.getId(), entity.getPhone());
+        validateEmailAvailable(entity.getId(), entity.getEmail());
         entity.setNickname(StrUtil.isNotBlank(entity.getNickname()) ? entity.getNickname() : entity.getUsername());
         entity.setName(StrUtil.isNotBlank(entity.getName()) ? entity.getName() : "");
         entity.setAvatar(StrUtil.isNotBlank(entity.getAvatar()) ? entity.getAvatar() : "");
@@ -59,20 +55,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         entity.setOpenId(StrUtil.isNotBlank(entity.getOpenId()) ? entity.getOpenId() : "");
         entity.setBalance(BigDecimal.ZERO);
         entity.setLoginIp("");
-        entity.setRemark("");
         return super.save(entity);
     }
 
     @Transactional
     @Override
-    public boolean saveOrUpdate(UserDto dto) {
-        validateUsernameAvailable(dto.getId(), dto.getUsername());
-        validatePhoneAvailable(dto.getId(), dto.getPhone());
-        validateEmailAvailable(dto.getId(), dto.getEmail());
-        if (dto.getId() == null) {
-            return save(dto);
+    public boolean saveOrUpdate(User entity) {
+        if (entity.getId() == null) {
+            return save(entity);
         }
-        return super.updateById(dto);
+        validateUsernameAvailable(entity.getId(), entity.getUsername());
+        validatePhoneAvailable(entity.getId(), entity.getPhone());
+        validateEmailAvailable(entity.getId(), entity.getEmail());
+        return super.updateById(entity);
     }
 
     @Override
@@ -164,54 +159,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         } else {
             user.setStatus(UserStatus.NORMAL.getCode());
         }
-        updateById(user);
-    }
-
-    @Override
-    public UserVo login(LoginBody body) {
-        User user = getByUsername(body.getUsername());
-        if (user == null) {
-            throw new RuntimeException("用户不存在！");
-        }
-        if (!Objects.equals(body.getPassword(), user.getPassword())) {
-            throw new RuntimeException("用户名或密码错误！");
-        }
-        if (Objects.equals(user.getStatus(), UserStatus.DISABLE.getCode())) {
-            throw new RuntimeException("该用户已被禁用！请联系管理员");
-        }
-        captchaService.validateLoginCode(body.getUuid(), body.getCode());
-        // 生成token
-        String token = TokenUtils.createToken(user.getId(), user.getPassword());
-        UserVo vo = getOne(UserDto.builder().id(user.getId()).build());
-        vo.setToken(token);
-        // TODO 异步记录登录信息
-        return vo;
-    }
-
-    @Transactional
-    @Override
-    public void register(RegisterBody body) {
-        if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
-            throw new CustomException(ResultCode.REGISTER_CONFIRM_ERROR);
-        }
-        validateUsernameAvailable(null, body.getUsername());
-        validateEmailAvailable(null, body.getEmail());
-        captchaService.validateCode(body.getEmail(), body.getCode());
-        User user = User.builder().build();
-        BeanUtils.copyProperties(body, user);
-        save(user);
-        // TODO 2L替换为枚举
-        userRoleLinkService.saveBatchByUserIdAndRoleIds(user.getId(), List.of(2L));
-    }
-
-    @Override
-    public void resetPassword(ResetBody body) {
-        if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
-            throw new CustomException(ResultCode.RESET_CONFIRM_ERROR);
-        }
-        captchaService.validateCode(body.getEmail(), body.getCode());
-        User user = getByEmail(body.getEmail());
-        user.setPassword(body.getPassword());
         updateById(user);
     }
 

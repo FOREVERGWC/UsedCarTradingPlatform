@@ -1,9 +1,6 @@
 package org.example.springboot.common.config;
 
-import jakarta.annotation.Resource;
-import org.example.springboot.common.interceptor.JwtInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -12,21 +9,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    @Resource
-    private JwtInterceptor jwtInterceptor;
+//    @Resource
+//    private JwtInterceptor jwtInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry
-                .addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/")
-                .excludePathPatterns("/captcha", "/register/code")
-                .excludePathPatterns("/login", "/login/wechat", "/register", "/password/reset")
-                .excludePathPatterns("/file/**")
-                .excludePathPatterns("/static/**")
-                .excludePathPatterns("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry
+//                .addInterceptor(jwtInterceptor)
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/")
+//                .excludePathPatterns("/captcha", "/register/code")
+//                .excludePathPatterns("/login", "/login/wechat", "/register", "/password/reset")
+//                .excludePathPatterns("/file/**")
+//                .excludePathPatterns("/static/**")
+//                .excludePathPatterns("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**");
+//    }
 
     /**
      * 静态资源映射

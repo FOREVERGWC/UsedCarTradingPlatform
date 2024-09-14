@@ -8,18 +8,17 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.common.enums.ArticleStatus;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.dto.ArticleDto;
 import org.example.springboot.domain.entity.*;
 import org.example.springboot.domain.vo.ArticleVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.ArticleMapper;
 import org.example.springboot.service.*;
 import org.example.springboot.service.cache.IArticleCacheService;
 import org.example.springboot.utils.LabelUtils;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,26 +46,31 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Resource
     private IArticleCacheService articleCacheService;
 
+    @Override
+    public boolean save(Article entity) {
+        Long userId = UserUtils.getLoginUserId();
+        entity.setUserId(userId);
+        entity.setViewCount(0L);
+        entity.setLikeCount(0L);
+        entity.setDislikeCount(0L);
+        entity.setCommentCount(0L);
+        entity.setCollectionCount(0L);
+        // TODO 状态暂时默认为已发布
+        entity.setStatus(ArticleStatus.PUBLISHED.getCode());
+        // TODO 后期添加定时发布功能，暂时为创建即发布
+        entity.setReleaseTime(LocalDateTime.now());
+        return super.save(entity);
+    }
+
     @Transactional
     @Override
     public boolean saveOrUpdate(Article entity) {
         if (entity.getId() == null) {
-            UserVo user = BaseContext.getUser();
-            entity.setUserId(user.getId());
-            entity.setViewCount(0L);
-            entity.setLikeCount(0L);
-            entity.setDislikeCount(0L);
-            entity.setCommentCount(0L);
-            entity.setCollectionCount(0L);
-            // TODO 状态暂时默认为已发布
-            entity.setStatus(ArticleStatus.PUBLISHED.getCode());
-            // TODO 后期添加定时发布功能，暂时为创建即发布
-            entity.setReleaseTime(LocalDateTime.now());
-            boolean flag = super.save(entity);
+            boolean flag = save(entity);
             handleArticleLabelList(entity);
             return flag;
         }
-        boolean flag = super.saveOrUpdate(entity);
+        boolean flag = super.updateById(entity);
         handleArticleLabelList(entity);
         return flag;
     }
@@ -180,7 +184,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      * @param article 文章
      */
     private void handleArticleLabelList(Article article) {
-        UserVo user = BaseContext.getUser();
+        Long userId = UserUtils.getLoginUserId();
         List<String> labelList = LabelUtils.generateLabelList(article.getContent());
         if (CollectionUtil.isEmpty(labelList)) {
             return;
@@ -205,7 +209,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 ArticleLabelLink link = ArticleLabelLink.builder()
                         .articleId(article.getId())
                         .labelId(labelId)
-                        .userId(user.getId())
+                        .userId(userId)
                         .build();
                 labelLinks.add(link);
             }
@@ -215,7 +219,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             newLabels.forEach(newLabel -> labelLinks.add(ArticleLabelLink.builder()
                     .articleId(article.getId())
                     .labelId(newLabel.getId())
-                    .userId(user.getId())
+                    .userId(userId)
                     .build()));
         }
         if (CollectionUtil.isNotEmpty(labelLinks)) {
@@ -231,10 +235,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
      */
     private LambdaQueryChainWrapper<Article> getWrapper(Article entity) {
         // TODO 这是后台接口，判断用户权限，若非管理员则只能查看自己的文章，添加一个前台接口只允许查看已发布、公开状态的文章
-        UserVo user = BaseContext.getUser();
-        if (!user.getRoleIdList().contains(1L)) {
-            entity.setUserId(user.getId());
-        }
         LambdaQueryChainWrapper<Article> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Article::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getTitle()), Article::getTitle, entity.getTitle())

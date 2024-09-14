@@ -53,6 +53,11 @@ public class Menu extends BaseEntity {
     @Schema(description = "父级菜单ID")
     private Long parentId;
     /**
+     * 祖级菜单ID
+     */
+    @Schema(description = "祖级菜单ID")
+    private Long ancestorId;
+    /**
      * 路由地址
      */
     @Schema(description = "路由地址")

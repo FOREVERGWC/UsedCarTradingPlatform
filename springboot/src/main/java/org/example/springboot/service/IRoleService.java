@@ -23,14 +23,6 @@ public interface IRoleService extends IService<Role> {
      */
     List<Role> listByUserId(Long userId);
 
-//    /**
-//     * 根据用户ID查询角色ID列表
-//     *
-//     * @param userId 用户ID
-//     * @return 结果
-//     */
-//    List<Long> listRoleIdsByUserId(Long userId);
-
     /**
      * 根据用户ID列表批量查询角色ID集合
      *

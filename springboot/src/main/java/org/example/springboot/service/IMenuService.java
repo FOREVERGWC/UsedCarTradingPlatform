@@ -15,6 +15,14 @@ import java.util.List;
  */
 public interface IMenuService extends IService<Menu> {
     /**
+     * 根据用户ID查询菜单列表
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    List<Menu> listByUserId(Long userId);
+
+    /**
      * 查询菜单列表
      *
      * @param dto 菜单

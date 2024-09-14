@@ -8,15 +8,14 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.BaseContext;
 import org.example.springboot.domain.dto.ChatDto;
 import org.example.springboot.domain.entity.Chat;
 import org.example.springboot.domain.entity.User;
 import org.example.springboot.domain.vo.ChatVo;
-import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.ChatMapper;
 import org.example.springboot.service.IChatService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +35,18 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements IC
     private IUserService userService;
 
     @Override
+    public boolean save(Chat entity) {
+        Long userId = UserUtils.getLoginUserId();
+        entity.setSenderId(userId);
+        return super.save(entity);
+    }
+
+    @Override
     public boolean saveOrUpdate(Chat entity) {
         if (entity.getId() == null) {
-            UserVo user = BaseContext.getUser();
-            entity.setSenderId(user.getId());
-            return super.save(entity);
+            return save(entity);
         }
-        return super.saveOrUpdate(entity);
+        return super.updateById(entity);
     }
 
     @Override

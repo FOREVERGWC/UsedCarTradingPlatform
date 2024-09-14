@@ -2,8 +2,8 @@ package org.example.springboot.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
-import org.example.springboot.common.BaseContext;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.model.LoginUser;
+import org.example.springboot.utils.UserUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class AutoFillMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        User user = BaseContext.getUser();
+        LoginUser user = UserUtils.getLoginUser();
         String username = user == null ? "" : user.getUsername();
         Object create = metaObject.getValue("createBy");
         Object update = metaObject.getValue("updateBy");
@@ -35,14 +35,18 @@ public class AutoFillMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        User user = BaseContext.getUser();
+        LoginUser user = UserUtils.getLoginUser();
         String username = user == null ? "" : user.getUsername();
         Object update = metaObject.getValue("updateBy");
 
         LocalDateTime date = LocalDateTime.now();
         Object updateBy = update != null ? update : username;
 
+        Object value = metaObject.getValue("remark");
+        Object remark = value != null ? value : "";
+
         metaObject.setValue("updateBy", updateBy);
         metaObject.setValue("updateTime", date);
+        metaObject.setValue("remark", remark);
     }
 }
