@@ -1,6 +1,6 @@
 package org.example.springboot.mapper;
 
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

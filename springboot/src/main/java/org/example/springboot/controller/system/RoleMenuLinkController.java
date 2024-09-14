@@ -3,7 +3,7 @@ package org.example.springboot.controller.system;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.RoleMenuLinkVo;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.RoleMenuLink;
+import org.example.springboot.domain.entity.system.RoleMenuLink;
 import org.example.springboot.domain.dto.RoleMenuLinkDto;
 import org.example.springboot.service.IRoleMenuLinkService;
 import io.swagger.v3.oas.annotations.Operation;

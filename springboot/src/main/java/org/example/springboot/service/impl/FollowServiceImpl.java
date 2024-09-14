@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.dto.FollowDto;
 import org.example.springboot.domain.entity.Follow;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.domain.vo.FollowVo;
 import org.example.springboot.mapper.FollowMapper;

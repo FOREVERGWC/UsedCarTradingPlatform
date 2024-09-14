@@ -1,8 +1,8 @@
 package org.example.springboot.domain.vo;
 
-import org.example.springboot.domain.entity.RolePermissionLink;
-import org.example.springboot.domain.entity.Role;
-import org.example.springboot.domain.entity.Permission;
+import org.example.springboot.domain.entity.system.RolePermissionLink;
+import org.example.springboot.domain.entity.system.Role;
+import org.example.springboot.domain.entity.system.Permission;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

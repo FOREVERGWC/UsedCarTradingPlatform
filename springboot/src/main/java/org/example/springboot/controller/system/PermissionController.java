@@ -3,7 +3,7 @@ package org.example.springboot.controller.system;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.PermissionVo;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.Permission;
+import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.dto.PermissionDto;
 import org.example.springboot.service.IPermissionService;
 import io.swagger.v3.oas.annotations.Operation;

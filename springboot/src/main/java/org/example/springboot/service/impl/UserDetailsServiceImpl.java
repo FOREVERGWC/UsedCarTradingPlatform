@@ -2,10 +2,10 @@ package org.example.springboot.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
-import org.example.springboot.domain.entity.Menu;
-import org.example.springboot.domain.entity.Permission;
-import org.example.springboot.domain.entity.Role;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.Menu;
+import org.example.springboot.domain.entity.system.Permission;
+import org.example.springboot.domain.entity.system.Role;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.service.*;
 import org.springframework.security.core.GrantedAuthority;

@@ -5,7 +5,7 @@ import org.example.springboot.domain.model.AssignMenuBody;
 import org.example.springboot.domain.model.AssignPermissionBody;
 import org.example.springboot.domain.vo.RoleVo;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.Role;
+import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.dto.RoleDto;
 import org.example.springboot.service.IRoleMenuLinkService;
 import org.example.springboot.service.IRolePermissionLinkService;

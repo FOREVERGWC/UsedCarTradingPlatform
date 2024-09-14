@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.dto.CommentDto;
 import org.example.springboot.domain.entity.Comment;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.CommentVo;
 import org.example.springboot.mapper.CommentMapper;
 import org.example.springboot.service.ICommentService;

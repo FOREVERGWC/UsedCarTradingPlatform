@@ -3,7 +3,7 @@ package org.example.springboot.controller.system;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.MenuVo;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.Menu;
+import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.service.IMenuService;
 import io.swagger.v3.oas.annotations.Operation;

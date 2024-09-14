@@ -1,6 +1,6 @@
 package org.example.springboot.mapper;
 
-import org.example.springboot.domain.entity.RolePermissionLink;
+import org.example.springboot.domain.entity.system.RolePermissionLink;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

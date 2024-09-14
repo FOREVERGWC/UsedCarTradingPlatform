@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.example.springboot.domain.entity.Menu;
-import org.example.springboot.domain.entity.Permission;
-import org.example.springboot.domain.entity.Role;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.Menu;
+import org.example.springboot.domain.entity.system.Permission;
+import org.example.springboot.domain.entity.system.Role;
+import org.example.springboot.domain.entity.system.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -3,7 +3,7 @@ package org.example.springboot.controller.system;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.domain.vo.UserRoleLinkVo;
 import org.example.springboot.domain.Result;
-import org.example.springboot.domain.entity.UserRoleLink;
+import org.example.springboot.domain.entity.system.UserRoleLink;
 import org.example.springboot.domain.dto.UserRoleLinkDto;
 import org.example.springboot.service.IUserRoleLinkService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -6,7 +6,7 @@ import cn.hutool.core.lang.UUID;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.LoginBody;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.domain.model.RegisterBody;

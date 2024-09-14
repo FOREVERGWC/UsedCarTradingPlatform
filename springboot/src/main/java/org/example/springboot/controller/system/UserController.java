@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.dto.UserDto;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.AssignRoleBody;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.service.IUserRoleLinkService;

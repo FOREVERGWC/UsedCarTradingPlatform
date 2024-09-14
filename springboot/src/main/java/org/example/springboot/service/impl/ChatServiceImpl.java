@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.dto.ChatDto;
 import org.example.springboot.domain.entity.Chat;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.ChatVo;
 import org.example.springboot.mapper.ChatMapper;
 import org.example.springboot.service.IChatService;

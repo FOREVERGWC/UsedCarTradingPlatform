@@ -1,6 +1,6 @@
 package org.example.springboot.domain.dto;
 
-import org.example.springboot.domain.entity.RolePermissionLink;
+import org.example.springboot.domain.entity.system.RolePermissionLink;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,7 +1,7 @@
 package org.example.springboot.domain.dto;
 
 import lombok.*;
-import org.example.springboot.domain.entity.Menu;
+import org.example.springboot.domain.entity.system.Menu;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -13,6 +13,7 @@ import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.dto.ArticleDto;
 import org.example.springboot.domain.entity.*;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.ArticleVo;
 import org.example.springboot.mapper.ArticleMapper;
 import org.example.springboot.service.*;

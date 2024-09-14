@@ -1,6 +1,6 @@
 package org.example.springboot.domain.vo;
 
-import org.example.springboot.domain.entity.Permission;
+import org.example.springboot.domain.entity.system.Permission;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

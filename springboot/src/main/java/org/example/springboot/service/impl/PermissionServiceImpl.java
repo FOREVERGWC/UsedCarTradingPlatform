@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
-import org.example.springboot.domain.entity.Permission;
+import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.dto.PermissionDto;
 import org.example.springboot.domain.vo.PermissionVo;
 import org.example.springboot.mapper.PermissionMapper;

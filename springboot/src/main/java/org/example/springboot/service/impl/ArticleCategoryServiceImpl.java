@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 import org.example.springboot.common.enums.DeleteEnum;
 import org.example.springboot.domain.dto.ArticleCategoryDto;
 import org.example.springboot.domain.entity.ArticleCategory;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.ArticleCategoryVo;
 import org.example.springboot.mapper.ArticleCategoryMapper;
 import org.example.springboot.service.IArticleCategoryService;

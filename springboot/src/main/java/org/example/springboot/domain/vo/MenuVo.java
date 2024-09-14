@@ -1,9 +1,7 @@
 package org.example.springboot.domain.vo;
 
 import lombok.*;
-import org.example.springboot.common.annotation.Dict;
-import org.example.springboot.common.enums.MenuType;
-import org.example.springboot.domain.entity.Menu;
+import org.example.springboot.domain.entity.system.Menu;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;

@@ -3,7 +3,7 @@ package org.example.springboot.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.springboot.domain.dto.RolePermissionLinkDto;
-import org.example.springboot.domain.entity.RolePermissionLink;
+import org.example.springboot.domain.entity.system.RolePermissionLink;
 import org.example.springboot.domain.vo.RolePermissionLinkVo;
 
 import java.io.Serializable;

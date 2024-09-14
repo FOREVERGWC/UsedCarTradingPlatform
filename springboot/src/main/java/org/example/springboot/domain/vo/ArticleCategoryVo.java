@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import org.example.springboot.domain.entity.ArticleCategory;
-import org.example.springboot.domain.entity.User;
+import org.example.springboot.domain.entity.system.User;
 
 import java.io.Serial;
 import java.util.List;

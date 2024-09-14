@@ -1,10 +1,10 @@
 package org.example.springboot.domain.dto;
 
-import lombok.*;
-import org.example.springboot.domain.entity.system.UserRoleLink;
+import org.example.springboot.domain.entity.system.LogLogin;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 用户、角色关系
+ * 登录日志
  * </p>
  */
 @Data
@@ -23,8 +23,8 @@ import java.util.Map;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Schema(name = "用户、角色关系实体", description = "用户、角色关系")
-public class UserRoleLinkDto extends UserRoleLink {
+@Schema(name = "登录日志实体", description = "登录日志")
+public class LogLoginDto extends LogLogin {
     @Serial
     private static final long serialVersionUID = 1L;
     /**

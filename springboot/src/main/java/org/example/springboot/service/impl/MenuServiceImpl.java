@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
-import org.example.springboot.domain.entity.Menu;
+import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.domain.vo.MenuVo;
 import org.example.springboot.mapper.MenuMapper;
@@ -123,7 +123,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
             return vo;
         }).toList();
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
+        return DataUtils.listToTree(vos,
+                MenuVo::getParentId,
+                MenuVo::setChildren,
+                MenuVo::getId,
+                0L,
+                MenuVo::getSort,
+                Comparator.naturalOrder());
     }
 
     @Override

@@ -3,7 +3,7 @@ package org.example.springboot.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.springboot.domain.dto.MenuDto;
-import org.example.springboot.domain.entity.Menu;
+import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.vo.MenuVo;
 
 import java.util.List;

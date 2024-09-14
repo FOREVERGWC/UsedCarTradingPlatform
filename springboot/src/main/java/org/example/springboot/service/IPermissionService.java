@@ -3,7 +3,7 @@ package org.example.springboot.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.springboot.domain.dto.PermissionDto;
-import org.example.springboot.domain.entity.Permission;
+import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.vo.PermissionVo;
 
 import java.util.List;

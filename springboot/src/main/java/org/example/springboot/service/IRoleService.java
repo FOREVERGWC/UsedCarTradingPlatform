@@ -3,7 +3,7 @@ package org.example.springboot.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.example.springboot.domain.dto.RoleDto;
-import org.example.springboot.domain.entity.Role;
+import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.vo.RoleVo;
 
 import java.util.List;

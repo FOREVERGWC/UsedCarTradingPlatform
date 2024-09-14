@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.example.springboot.domain.entity.Role;
-import org.example.springboot.domain.entity.User;
-import org.example.springboot.domain.entity.UserRoleLink;
+import org.example.springboot.domain.entity.system.Role;
+import org.example.springboot.domain.entity.system.User;
+import org.example.springboot.domain.entity.system.UserRoleLink;
 
 import java.io.Serial;
 
