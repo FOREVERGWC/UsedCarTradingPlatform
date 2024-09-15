@@ -8,6 +8,7 @@ import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.service.*;
+import org.example.springboot.service.cache.ILoginCacheService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private IMenuService menuService;
     @Resource
     private IPermissionService permissionService;
+    @Resource
+    private ILoginCacheService loginCacheService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -34,6 +37,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("登录失败！用户名或密码错误");
         }
+        // 账户锁定
+        boolean accountNonLocked = loginCacheService.getAccountNonLocked(username);
         // 角色列表
         List<Role> roleList = roleService.listByUserId(user.getId());
         // 菜单列表
@@ -47,6 +52,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .distinct()
                 .toList();
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
-        return new LoginUser(user, roleList, menuList, permissionList, authorities);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
     }
 }

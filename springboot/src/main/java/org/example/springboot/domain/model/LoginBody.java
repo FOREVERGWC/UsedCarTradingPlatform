@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.example.springboot.common.enums.LoginType;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class LoginBody implements Serializable {
      * 用户名
      */
     @Schema(description = "用户名")
-    @NotBlank(message = "{username.NotBlank")
+    @NotBlank(message = "{username.NotBlank}")
     private String username;
     /**
      * 密码
@@ -38,15 +39,29 @@ public class LoginBody implements Serializable {
     @NotBlank(message = "{password.NotBlank}")
     private String password;
     /**
+     * 手机
+     */
+    @Schema(description = "手机")
+    private String phone;
+    /**
+     * 邮箱
+     */
+    @Schema(description = "邮箱")
+    private String email;
+    /**
      * 唯一标识
      */
     @Schema(description = "唯一标识")
-    @NotBlank(message = "{uuid.NotBlank}")
     private String uuid;
     /**
      * 验证码
      */
     @Schema(description = "验证码")
-    @NotNull(message = "{code.NotBlank}")
     private String code;
+    /**
+     * 登录类型
+     */
+    @Schema(description = "登录类型")
+    @NotNull(message = "{loginType.NotNull}")
+    private LoginType loginType;
 }

@@ -2,12 +2,9 @@ package org.example.springboot.common.config;
 
 import jakarta.annotation.Resource;
 import org.example.springboot.common.config.security.*;
-import org.example.springboot.common.config.security.filter.UsernamePasswordValidateCodeFilter;
-import org.example.springboot.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,19 +26,9 @@ public class SecurityConfig {
     @Resource
     private CheckTokenFilter checkTokenFilter;
     @Resource
-    private LoginSuccessHandler loginSuccessHandler;
-    @Resource
-    private LoginFailureHandler loginFailureHandler;
-    @Resource
     private LoginAuthenticationHandler loginAuthenticationHandler;
     @Resource
     private LoginAccessDefineHandler loginAccessDefineHandler;
-    @Resource
-    private AuthenticationManagerBuilder authenticationManagerBuilder;
-    @Resource
-    private UserDetailsServiceImpl userDetailsService;
-    @Resource
-    private UsernamePasswordValidateCodeFilter usernamePasswordValidateCodeFilter;
 
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -49,32 +36,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
-//        usernamePasswordAuthenticationProvider.setBCryptPasswordEncoder(bCryptPasswordEncoder);
-//        authenticationManagerBuilder.authenticationProvider(usernamePasswordAuthenticationProvider);
-        authenticationManagerBuilder.authenticationProvider(new UsernamePasswordAuthenticationProvider(userDetailsService, bCryptPasswordEncoder));
-        //可以继续添加其他的provider
-//        authenticationManagerBuilder.authenticationProvider(phoneNumberAuthenticationProvider);
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter(AuthenticationManager authenticationManager) {
-        JsonLoginFilter jsonLoginFilter = new JsonLoginFilter(authenticationManager);
-        jsonLoginFilter.setAuthenticationSuccessHandler(loginSuccessHandler);
-        jsonLoginFilter.setAuthenticationFailureHandler(loginFailureHandler);
-        return jsonLoginFilter;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authenticationManager(authenticationManager)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(usernamePasswordValidateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(usernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests ->

@@ -25,18 +25,18 @@ public class AuthController {
     @Resource
     private IEmailService emailService;
 
-//    /**
-//     * PC端登录
-//     *
-//     * @param body PC端登录请求体
-//     * @return 结果
-//     */
-//    @PostMapping("/login")
-//    @Operation(summary = "PC端登录", description = "PC端登录", method = "POST")
-//    public Result<LoginUser> login(@Validated @RequestBody LoginBody body) {
-//        LoginUser user = authService.login(body);
-//        return Result.success(user);
-//    }
+    /**
+     * PC端登录
+     *
+     * @param body PC端登录请求体
+     * @return 结果
+     */
+    @PostMapping("/login")
+    @Operation(summary = "PC端登录", description = "PC端登录", method = "POST")
+    public Result<LoginUser> login(@Validated @RequestBody LoginBody body) {
+        LoginUser user = authService.login(body);
+        return Result.success(user);
+    }
 
     /**
      * 注册用户

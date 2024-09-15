@@ -14,13 +14,10 @@ import org.example.springboot.domain.model.ResetBody;
 import org.example.springboot.domain.vo.CaptchaVo;
 import org.example.springboot.service.*;
 import org.example.springboot.service.cache.ICaptchaService;
-import org.example.springboot.utils.TokenUtils;
+import org.example.springboot.strategy.LoginFactory;
+import org.example.springboot.strategy.service.ILoginService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +28,7 @@ import java.util.Objects;
 @Service
 public class AuthServiceImpl implements IAuthService {
     @Resource
-    private AuthenticationManager authenticationManager;
+    private LoginFactory loginFactory;
     @Resource
     private ICaptchaService captchaService;
     @Resource
@@ -61,48 +58,8 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public LoginUser login(LoginBody body) {
-//        validateCaptcha(username, captcha, uuid); // 校验验证码
-//        loginPreCheck(username, password); // 密码前置校验
-        // TODO: 2023/12/27 用户校验
-        Authentication authentication;
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword());
-            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
-            authentication = authenticationManager.authenticate(authenticationToken);
-        } catch (Exception e) {
-            if (e instanceof BadCredentialsException) {
-//                sysLoginInfoService.recordSysLoginInfo(username, Constant.LOGIN_FAIL, MessageUtils.getMsg("user.not.exists"));
-                // TODO: 2024/1/2 异步记录日志
-//                throw new UserNotExistsException();
-            } else {
-//                sysLoginInfoService.recordSysLoginInfo(username, Constant.LOGIN_FAIL, e.getMessage());
-//                throw new ServiceException(e.getMessage());
-            }
-            throw new RuntimeException(e);
-        }
-//        sysLoginInfoService.recordSysLoginInfo(username, Constant.LOGIN_SUCCESS, MessageUtils.getMsg("user.login.success"));
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-//        sysUserService.recordLoginInfo(loginUser.getUserId());
-        String token = TokenUtils.createToken(loginUser.getId(), loginUser.getUsername());
-        loginUser.setToken(token);
-        return loginUser;
-//        User user = userService.getByUsername(body.getUsername());
-//        if (user == null) {
-//            throw new RuntimeException("用户不存在！");
-//        }
-//        if (!Objects.equals(body.getPassword(), user.getPassword())) {
-//            throw new RuntimeException("用户名或密码错误！");
-//        }
-//        if (Objects.equals(user.getStatus(), UserStatus.DISABLE.getCode())) {
-//            throw new RuntimeException("该用户已被禁用！请联系管理员");
-//        }
-//        captchaService.validateLoginCode(body.getUuid(), body.getCode());
-//        // 生成token
-//        String token = TokenUtils.createToken(user.getId(), user.getPassword());
-//        UserVo vo = userService.getOne(UserDto.builder().id(user.getId()).build());
-//        vo.setToken(token);
-//        // TODO 异步记录登录信息
-//        return vo;
+        ILoginService loginService = loginFactory.getFactory(body.getLoginType());
+        return loginService.login(body);
     }
 
     @Transactional
