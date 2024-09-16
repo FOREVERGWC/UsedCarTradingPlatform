@@ -3,6 +3,8 @@ package org.example.springboot.domain.entity.system;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.example.springboot.common.annotation.Dict;
+import org.example.springboot.common.enums.LoginType;
 import org.example.springboot.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -34,6 +36,12 @@ public class LogLogin extends BaseEntity {
     @Schema(description = "主键ID")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+    /**
+     * 登录类型(1账密、2邮箱验证码、3手机验证码)
+     */
+    @Dict(enumClass = LoginType.class)
+    @Schema(description = "登录类型")
+    private LoginType loginType;
     /**
      * 操作系统
      */

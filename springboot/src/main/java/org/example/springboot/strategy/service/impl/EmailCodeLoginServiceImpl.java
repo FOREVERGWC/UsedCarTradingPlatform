@@ -2,6 +2,7 @@ package org.example.springboot.strategy.service.impl;
 
 import jakarta.annotation.Resource;
 import org.example.springboot.common.config.security.EmailCodeAuthenticationToken;
+import org.example.springboot.common.enums.LoginType;
 import org.example.springboot.common.manager.AsyncManager;
 import org.example.springboot.common.manager.factory.AsyncFactory;
 import org.example.springboot.domain.Result;
@@ -70,16 +71,16 @@ public class EmailCodeLoginServiceImpl implements ILoginService {
             throw e;
         } finally {
             if (flag) {
-                // TODO recordLogin添加type字段，区分登录方式，username修改为登录凭据
-                AsyncManager.me().execute(AsyncFactory.recordLogin(email, true, Result.success().getMsg()));
+                AsyncManager.me().execute(AsyncFactory.recordLogin(email, LoginType.EMAIL_CODE, true, Result.success().getMsg()));
             } else {
                 loginCacheService.addFailureCount(email);
-                AsyncManager.me().execute(AsyncFactory.recordLogin(email, false, exception.getMessage()));
+                AsyncManager.me().execute(AsyncFactory.recordLogin(email, LoginType.EMAIL_CODE, false, exception.getMessage()));
             }
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();
         String token = TokenUtils.createToken(user.getId(), user.getUsername());
         user.setToken(token);
+        AsyncManager.me().execute(AsyncFactory.updateLogin(user.getId()));
         return user;
     }
 }

@@ -79,7 +79,8 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin> i
                 .like(StrUtil.isNotBlank(entity.getIp()), LogLogin::getIp, entity.getIp())
                 .like(StrUtil.isNotBlank(entity.getLocation()), LogLogin::getLocation, entity.getLocation())
                 .eq(entity.getStatus() != null, LogLogin::getStatus, entity.getStatus())
-                .like(StrUtil.isNotBlank(entity.getMsg()), LogLogin::getMsg, entity.getMsg());
+                .like(StrUtil.isNotBlank(entity.getMsg()), LogLogin::getMsg, entity.getMsg())
+                .orderByDesc(LogLogin::getCreateTime);
         if (entity instanceof LogLoginDto dto) {
             Map<String, Object> params = dto.getParams();
             // 创建时间

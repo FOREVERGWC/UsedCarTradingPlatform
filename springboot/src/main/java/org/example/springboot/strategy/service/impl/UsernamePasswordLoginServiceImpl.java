@@ -1,6 +1,7 @@
 package org.example.springboot.strategy.service.impl;
 
 import jakarta.annotation.Resource;
+import org.example.springboot.common.enums.LoginType;
 import org.example.springboot.common.manager.AsyncManager;
 import org.example.springboot.common.manager.factory.AsyncFactory;
 import org.example.springboot.domain.Result;
@@ -69,15 +70,16 @@ public class UsernamePasswordLoginServiceImpl implements ILoginService {
             throw e;
         } finally {
             if (flag) {
-                AsyncManager.me().execute(AsyncFactory.recordLogin(username, true, Result.success().getMsg()));
+                AsyncManager.me().execute(AsyncFactory.recordLogin(username, LoginType.USERNAME_PASSWORD, true, Result.success().getMsg()));
             } else {
                 loginCacheService.addFailureCount(username);
-                AsyncManager.me().execute(AsyncFactory.recordLogin(username, false, exception.getMessage()));
+                AsyncManager.me().execute(AsyncFactory.recordLogin(username, LoginType.USERNAME_PASSWORD, false, exception.getMessage()));
             }
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();
         String token = TokenUtils.createToken(user.getId(), user.getUsername());
         user.setToken(token);
+        AsyncManager.me().execute(AsyncFactory.updateLogin(user.getId()));
         return user;
     }
 }

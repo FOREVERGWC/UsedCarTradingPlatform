@@ -4,8 +4,11 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.example.springboot.common.enums.LoginType;
 import org.example.springboot.domain.entity.system.LogLogin;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.service.impl.LogLoginServiceImpl;
+import org.example.springboot.service.impl.UserServiceImpl;
 import org.example.springboot.utils.AddressUtils;
 import org.example.springboot.utils.ServletUtils;
 
@@ -25,7 +28,7 @@ public class AsyncFactory {
      * @param msg      消息
      * @return 结果
      */
-    public static TimerTask recordLogin(String username, Boolean status, String msg) {
+    public static TimerTask recordLogin(String username, LoginType loginType, Boolean status, String msg) {
         HttpServletRequest request = ServletUtils.getRequest();
         UserAgent ua = ServletUtils.getUserAgent(request);
         String ip = ServletUtils.getUserIp(request);
@@ -35,6 +38,7 @@ public class AsyncFactory {
             public void run() {
                 String location = AddressUtils.getRealAddressByIP(ip);
                 LogLogin logLogin = LogLogin.builder()
+                        .loginType(loginType)
                         .os(ua.getOs().getName())
                         .browser(ua.getBrowser().getName())
                         .ip(ip)
@@ -59,6 +63,19 @@ public class AsyncFactory {
             @Override
             public void run() {
                 log.info("记录操作日志：{}", LocalDateTime.now());
+            }
+        };
+    }
+
+    public static TimerTask updateLogin(Long userId) {
+        String ip = ServletUtils.getUserIp();
+        LocalDateTime now = LocalDateTime.now();
+
+        return new TimerTask() {
+            @Override
+            public void run() {
+                User user = User.builder().id(userId).loginIp(ip).loginTime(now).build();
+                SpringUtil.getBean(UserServiceImpl.class).updateById(user);
             }
         };
     }
