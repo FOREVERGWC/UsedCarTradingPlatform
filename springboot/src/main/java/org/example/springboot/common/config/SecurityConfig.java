@@ -2,9 +2,12 @@ package org.example.springboot.common.config;
 
 import jakarta.annotation.Resource;
 import org.example.springboot.common.config.security.*;
+import org.example.springboot.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,10 +32,29 @@ public class SecurityConfig {
     private LoginAuthenticationHandler loginAuthenticationHandler;
     @Resource
     private LoginAccessDefineHandler loginAccessDefineHandler;
+    @Resource
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(bCryptPasswordEncoder());
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
+    }
+
+    @Bean
+    public EmailCodeAuthenticationProvider emailCodeAuthenticationProvider() {
+        return new EmailCodeAuthenticationProvider(userDetailsService);
+    }
+
+    @Bean
+    public PhoneCodeAuthenticationProvider phoneCodeAuthenticationProvider() {
+        return new PhoneCodeAuthenticationProvider(userDetailsService);
     }
 
     @Bean
@@ -41,7 +63,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManagerBuilder authBuilder) throws Exception {
+        authBuilder.authenticationProvider(daoAuthenticationProvider());
+        authBuilder.authenticationProvider(emailCodeAuthenticationProvider());
+        authBuilder.authenticationProvider(phoneCodeAuthenticationProvider());
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -50,7 +75,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/captcha", "/register/code", "/reset/code").permitAll()
+                                .requestMatchers("/captcha", "/email/**").permitAll()
                                 .requestMatchers("/login", "/login/wechat", "/register", "/password/reset").permitAll()
                                 .requestMatchers("/static/**", "/file/**").permitAll()
                                 .requestMatchers("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**").permitAll()

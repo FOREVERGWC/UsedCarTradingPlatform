@@ -10,9 +10,25 @@ public interface Constants {
      */
     String TOKEN_PREFIX = "Bearer ";
     /**
-     * Redis验证码键值前缀
+     * Redis邮箱注册验证码键值前缀
      */
-    String CAPTCHA_KEY = "captcha:";
+    String CAPTCHA_EMAIL_REGISTER_KEY = "captcha:email:register:";
+    /**
+     * Redis唯一标识符登录验证码键值前缀
+     */
+    String CAPTCHA_UUID_LOGIN_KEY = "captcha:uuid:login:";
+    /**
+     * Redis邮箱登录验证码键值前缀
+     */
+    String CAPTCHA_EMAIL_LOGIN_KEY = "captcha:email:login:";
+    /**
+     * Redis邮箱改密验证码键值前缀
+     */
+    String CAPTCHA_EMAIL_RESET_KEY = "captcha:email:reset:";
+    /**
+     * Redis手机登录验证码键值前缀
+     */
+    String CAPTCHA_PHONE_LOGIN_KEY = "captcha:phone:login:";
     /**
      * Redis验证码有效时长
      */

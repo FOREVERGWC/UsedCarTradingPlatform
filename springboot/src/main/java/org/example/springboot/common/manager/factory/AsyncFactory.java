@@ -1,0 +1,65 @@
+package org.example.springboot.common.manager.factory;
+
+import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.http.useragent.UserAgent;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.example.springboot.domain.entity.system.LogLogin;
+import org.example.springboot.service.impl.LogLoginServiceImpl;
+import org.example.springboot.utils.AddressUtils;
+import org.example.springboot.utils.ServletUtils;
+
+import java.time.LocalDateTime;
+import java.util.TimerTask;
+
+/**
+ * 异步工厂
+ */
+@Slf4j
+public class AsyncFactory {
+    /**
+     * 记录登录日志
+     *
+     * @param username 用户名
+     * @param status   状态
+     * @param msg      消息
+     * @return 结果
+     */
+    public static TimerTask recordLogin(String username, Boolean status, String msg) {
+        HttpServletRequest request = ServletUtils.getRequest();
+        UserAgent ua = ServletUtils.getUserAgent(request);
+        String ip = ServletUtils.getUserIp(request);
+
+        return new TimerTask() {
+            @Override
+            public void run() {
+                String location = AddressUtils.getRealAddressByIP(ip);
+                LogLogin logLogin = LogLogin.builder()
+                        .os(ua.getOs().getName())
+                        .browser(ua.getBrowser().getName())
+                        .ip(ip)
+                        .location(location)
+                        .status(status)
+                        .msg(msg)
+                        .createBy(username)
+                        .updateBy(username)
+                        .build();
+                SpringUtil.getBean(LogLoginServiceImpl.class).save(logLogin);
+            }
+        };
+    }
+
+    /**
+     * 记录操作日志
+     *
+     * @return 结果
+     */
+    public static TimerTask recordOperation() {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                log.info("记录操作日志：{}", LocalDateTime.now());
+            }
+        };
+    }
+}

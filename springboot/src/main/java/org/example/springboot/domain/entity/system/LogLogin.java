@@ -35,11 +35,6 @@ public class LogLogin extends BaseEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
-     * 用户ID
-     */
-    @Schema(description = "用户ID")
-    private Long userId;
-    /**
      * 操作系统
      */
     @Schema(description = "操作系统")

@@ -13,14 +13,12 @@ public interface IEmailService {
      *
      * @param email 邮箱
      */
-    void sendResetPasswordCode(String email);
+    void sendResetCode(String email);
 
     /**
-     * 根据邮箱发送验证码邮件
+     * 根据邮箱发送登录验证码邮件
      *
-     * @param email   邮箱
-     * @param subject 主题
-     * @param content 内容
+     * @param email 邮箱
      */
-    void sendCodeByEmail(String email, String subject, String content);
+    void sendLoginCode(String email);
 }

@@ -1,10 +1,11 @@
 package org.example.springboot.strategy.service.impl;
 
 import jakarta.annotation.Resource;
+import org.example.springboot.common.manager.AsyncManager;
+import org.example.springboot.common.manager.factory.AsyncFactory;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.model.LoginBody;
 import org.example.springboot.domain.model.LoginUser;
-import org.example.springboot.service.ILogLoginService;
 import org.example.springboot.service.cache.ICaptchaService;
 import org.example.springboot.service.cache.ILoginCacheService;
 import org.example.springboot.strategy.service.ILoginService;
@@ -26,8 +27,6 @@ public class UsernamePasswordLoginServiceImpl implements ILoginService {
     @Resource
     private ICaptchaService captchaService;
     @Resource
-    private ILogLoginService logLoginService;
-    @Resource
     private ILoginCacheService loginCacheService;
 
     @Override
@@ -35,9 +34,10 @@ public class UsernamePasswordLoginServiceImpl implements ILoginService {
         Authentication authentication;
         boolean flag = false;
         Exception exception = new RuntimeException();
+        String username = body.getUsername();
         try {
-            captchaService.validateLoginCode(body.getUuid(), body.getCode());
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword());
+            captchaService.validateUuidLoginCode(body.getUuid(), body.getCode());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, body.getPassword());
             authentication = authenticationManager.authenticate(authenticationToken);
             flag = true;
         } catch (AccountExpiredException e) {
@@ -68,12 +68,11 @@ public class UsernamePasswordLoginServiceImpl implements ILoginService {
             exception = e;
             throw e;
         } finally {
-            // TODO 登录异步记录日志
             if (flag) {
-                logLoginService.record(0L, body.getUsername(), true, Result.success().getMsg());
+                AsyncManager.me().execute(AsyncFactory.recordLogin(username, true, Result.success().getMsg()));
             } else {
-                loginCacheService.addFailureCount(body.getUsername());
-                logLoginService.record(0L, body.getUsername(), false, exception.getMessage());
+                loginCacheService.addFailureCount(username);
+                AsyncManager.me().execute(AsyncFactory.recordLogin(username, false, exception.getMessage()));
             }
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();

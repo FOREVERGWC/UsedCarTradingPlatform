@@ -15,16 +15,6 @@ import java.util.List;
  */
 public interface ILogLoginService extends IService<LogLogin> {
     /**
-     * 记录登录日志
-     *
-     * @param userId   用户ID
-     * @param username 用户名
-     * @param status   状态
-     * @param msg      消息
-     */
-    void record(Long userId, String username, Boolean status, String msg);
-
-    /**
      * 查询登录日志列表
      *
      * @param dto 登录日志

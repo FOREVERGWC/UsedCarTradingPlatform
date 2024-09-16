@@ -54,4 +54,50 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
         return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
     }
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        User user = userService.getByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("登录失败！邮箱或验证码错误");
+        }
+        // 账户锁定
+        boolean accountNonLocked = loginCacheService.getAccountNonLocked(email);
+        // 角色列表
+        List<Role> roleList = roleService.listByUserId(user.getId());
+        // 菜单列表
+        List<Menu> menuList = menuService.listByUserId(user.getId());
+        // 权限列表
+        List<Permission> permissionList = permissionService.listByUserId(user.getId());
+        // 权限标识列表
+        List<String> codeList = permissionList.stream()
+                .map(Permission::getCode)
+                .filter(StrUtil::isNotBlank)
+                .distinct()
+                .toList();
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
+    }
+
+    public UserDetails loadUserByPhone(String phone) throws UsernameNotFoundException {
+        User user = userService.getByPhone(phone);
+        if (user == null) {
+            throw new UsernameNotFoundException("登录失败！手机号或验证码错误");
+        }
+        // 账户锁定
+        boolean accountNonLocked = loginCacheService.getAccountNonLocked(phone);
+        // 角色列表
+        List<Role> roleList = roleService.listByUserId(user.getId());
+        // 菜单列表
+        List<Menu> menuList = menuService.listByUserId(user.getId());
+        // 权限列表
+        List<Permission> permissionList = permissionService.listByUserId(user.getId());
+        // 权限标识列表
+        List<String> codeList = permissionList.stream()
+                .map(Permission::getCode)
+                .filter(StrUtil::isNotBlank)
+                .distinct()
+                .toList();
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
+    }
 }

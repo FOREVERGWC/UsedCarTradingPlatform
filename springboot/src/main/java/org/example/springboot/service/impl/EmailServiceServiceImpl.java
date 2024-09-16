@@ -1,16 +1,28 @@
 package org.example.springboot.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.example.springboot.common.enums.ResultCode;
+import org.example.springboot.common.exception.CustomException;
+import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.service.IEmailService;
+import org.example.springboot.service.IUserService;
 import org.example.springboot.service.cache.ICaptchaService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -19,6 +31,10 @@ public class EmailServiceServiceImpl implements IEmailService {
     private JavaMailSender javaMailSender;
     @Resource
     private ICaptchaService captchaService;
+    @Resource
+    private TemplateEngine templateEngine;
+    @Resource
+    private IUserService userService;
 
     @Value("${spring.application.name}")
     private String application;
@@ -28,29 +44,83 @@ public class EmailServiceServiceImpl implements IEmailService {
 
     @Override
     public void sendRegisterCode(String email) {
-        sendCodeByEmail(email, "【注册】", "您的验证码是：{}");
-    }
-
-    @Override
-    public void sendResetPasswordCode(String email) {
-        sendCodeByEmail(email, "【修改密码】", "您的验证码是：{}");
-    }
-
-    @Override
-    public void sendCodeByEmail(String email, String subject, String content) {
+        User user = userService.getByEmail(email);
+        if (user != null) {
+            throw new CustomException(ResultCode.EMAIL_HAS_USED_ERROR);
+        }
+        String captcha = captchaService.getEmailRegisterCode(email);
+        if (StrUtil.isNotBlank(captcha)) {
+            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+        }
+        String subject = "注册";
         String code = RandomUtil.randomNumbers(4);
-        captchaService.setCaptcha(email, code);
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("application", application);
+        dataMap.put("email", email);
+        dataMap.put("code", code);
+        dataMap.put("createTime", DateUtil.now());
+        Context context = new Context();
+        for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
+            context.setVariable(entry.getKey(), entry.getValue());
+        }
+        String content = templateEngine.process("register", context);
+        try {
+            sendEmail(email, subject, content);
+            captchaService.setEmailRegisterCode(email, code);
+            log.info("【{}】邮箱：{}邮件：{}发送成功！", subject, email, code);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            log.error("【{}】邮箱：{}邮件：{}发送失败！错误信息：{}", subject, email, code, e.toString());
+        }
+    }
+
+    @Override
+    public void sendResetCode(String email) {
+        String captcha = captchaService.getEmailResetCode(email);
+        if (StrUtil.isNotBlank(captcha)) {
+            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+        }
+        String subject = "修改密码";
+        String code = RandomUtil.randomNumbers(4);
+        try {
+            sendEmail(email, subject, StrUtil.format("改密验证码：{}", code));
+            captchaService.setEmailResetCode(email, code);
+            log.info("【{}】邮箱：{}邮件：{}发送成功！", subject, email, code);
+        } catch (Exception e) {
+            log.error("【{}】邮箱：{}邮件：{}发送失败！错误信息：{}", subject, email, code, e.toString());
+        }
+    }
+
+    @Override
+    public void sendLoginCode(String email) {
+        String captcha = captchaService.getEmailLoginCode(email);
+        if (StrUtil.isNotBlank(captcha)) {
+            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+        }
+        String subject = "登录";
+        String code = RandomUtil.randomNumbers(4);
+        try {
+            sendEmail(email, subject, StrUtil.format("登录验证码：{}", code));
+            captchaService.setEmailLoginCode(email, code);
+            log.info("【{}】邮箱：{}邮件：{}发送成功！", subject, email, code);
+        } catch (Exception e) {
+            log.error("【{}】邮箱：{}邮件：{}发送失败！错误信息：{}", subject, email, code, e.toString());
+        }
+    }
+
+    /**
+     * 发送邮件
+     *
+     * @param email   邮箱
+     * @param subject 主题
+     * @param content 内容
+     */
+    private void sendEmail(String email, String subject, String content) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        try {
-            helper.setFrom(username, application);
-            helper.setTo(email);
-            helper.setSubject(subject);
-            helper.setText(StrUtil.format(content, code), true);
-            javaMailSender.send(message);
-            log.info("邮箱：{}验证码：{}发送成功！", email, code);
-        } catch (Exception e) {
-            log.error("邮箱：{}验证码：{}发送失败！错误信息：{}", email, code, e.toString());
-        }
+        helper.setFrom(username, application);
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(content, true);
+        javaMailSender.send(message);
     }
 }

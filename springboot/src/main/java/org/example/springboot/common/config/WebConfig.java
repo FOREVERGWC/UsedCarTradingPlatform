@@ -9,22 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-//    @Resource
-//    private JwtInterceptor jwtInterceptor;
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry
-//                .addInterceptor(jwtInterceptor)
-//                .addPathPatterns("/**")
-//                .excludePathPatterns("/")
-//                .excludePathPatterns("/captcha", "/register/code")
-//                .excludePathPatterns("/login", "/login/wechat", "/register", "/password/reset")
-//                .excludePathPatterns("/file/**")
-//                .excludePathPatterns("/static/**")
-//                .excludePathPatterns("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**");
-//    }
-
     /**
      * 静态资源映射
      *

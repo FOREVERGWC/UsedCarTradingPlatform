@@ -36,11 +36,19 @@ public enum ResultCode {
     /**
      * 登录失败！用户名或密码错误
      */
-    LOGIN_USERNAME_OR_PASSWORD_ERROR(700, "登录失败！用户名或密码错误"),
+    LOGIN_USERNAME_OR_PASSWORD_ERROR(500, "登录失败！用户名或密码错误"),
     /**
      * 登录失败！验证码错误
      */
-    LOGIN_CODE_ERROR(701, "登录失败！验证码错误"),
+    LOGIN_CODE_ERROR(500, "登录失败！验证码错误"),
+    /**
+     * 登录失败！邮箱或验证码错误
+     */
+    LOGIN_EMAIL_CODE_ERROR(500, "登录失败！邮箱或验证码错误"),
+    /**
+     * 登录失败！手机或验证码错误
+     */
+    LOGIN_PHONE_CODE_ERROR(500, "登录失败！手机或验证码错误"),
     /**
      * 登录失败！账户过期
      */
@@ -58,6 +66,14 @@ public enum ResultCode {
      */
     LOGIN_LOCKED_ERROR(705, "登录失败！该账户已被锁定"),
     /**
+     * 发送失败！该邮箱已注册
+     */
+    EMAIL_HAS_USED_ERROR(500, "发送失败！该邮箱已注册"),
+    /**
+     * 发送失败！该邮箱已发送，请注意查收
+     */
+    EMAIL_HAS_SEND_ERROR(500, "发送失败！该邮箱已发送，请注意查收"),
+    /**
      * 注册失败！验证码错误
      */
     REGISTER_CODE_ERROR(800, "注册失败！验证码错误"),
@@ -66,13 +82,13 @@ public enum ResultCode {
      */
     REGISTER_CONFIRM_ERROR(801, "注册失败！确认密码不一致"),
     /**
-     * 重置失败！验证码错误
+     * 修改失败！手机或验证码错误
      */
-    RESET_CODE_ERROR(900, "重置失败！验证码错误"),
+    RESET_EMAIL_CODE_ERROR(900, "修改失败！手机或验证码错误"),
     /**
-     * 重置失败！确认密码不一致
+     * 修改失败！确认密码不一致
      */
-    RESET_CONFIRM_ERROR(901, "重置失败！确认密码不一致"),
+    RESET_CONFIRM_ERROR(901, "修改失败！确认密码不一致"),
     /**
      * 参数缺失
      */

@@ -51,7 +51,7 @@ public class AuthServiceImpl implements IAuthService {
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(100, 30);
         String code = lineCaptcha.getCode();
         String img = lineCaptcha.getImageBase64Data();
-        captchaService.setCaptcha(uuid, code);
+        captchaService.setUuidLoginCode(uuid, code);
         vo.setImg(img);
         return vo;
     }
@@ -72,7 +72,7 @@ public class AuthServiceImpl implements IAuthService {
         BeanUtils.copyProperties(body, user);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userService.save(user);
-        captchaService.validateCode(body.getEmail(), body.getCode());
+        captchaService.validateEmailRegisterCode(body.getEmail(), body.getCode());
         // TODO 2L替换为枚举
         userRoleLinkService.saveBatchByUserIdAndRoleIds(user.getId(), List.of(2L));
     }
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements IAuthService {
         if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
             throw new CustomException(ResultCode.RESET_CONFIRM_ERROR);
         }
-        captchaService.validateCode(body.getEmail(), body.getCode());
+        captchaService.validateEmailResetCode(body.getEmail(), body.getCode());
         User user = userService.getByEmail(body.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
         userService.updateById(user);

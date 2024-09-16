@@ -28,7 +28,7 @@ public class CheckTokenFilter extends OncePerRequestFilter {
 
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
     String[] whiteList = {
-            "/captcha", "/register/code", "/reset/code",
+            "/captcha", "/email/**",
             "/login", "/login/wechat", "/register", "/password/reset",
             "/static/**", "/file/**",
             "/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**"

@@ -1,14 +1,19 @@
 package org.example.springboot.strategy.service.impl;
 
 import jakarta.annotation.Resource;
+import org.example.springboot.common.config.security.PhoneCodeAuthenticationToken;
+import org.example.springboot.common.manager.AsyncManager;
+import org.example.springboot.common.manager.factory.AsyncFactory;
+import org.example.springboot.domain.Result;
 import org.example.springboot.domain.model.LoginBody;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.service.cache.ICaptchaService;
+import org.example.springboot.service.cache.ILoginCacheService;
 import org.example.springboot.strategy.service.ILoginService;
 import org.example.springboot.utils.TokenUtils;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,30 +27,59 @@ public class PhoneCodeLoginServiceImpl implements ILoginService {
     private AuthenticationManager authenticationManager;
     @Resource
     private ICaptchaService captchaService;
+    @Resource
+    private ILoginCacheService loginCacheService;
 
     @Override
     public LoginUser login(LoginBody body) {
-        captchaService.validateLoginCode(body.getUuid(), body.getCode());
-        // TODO 继承AbstractAuthenticationToken，重写一个PhoneCodeAuthenticationToken
-        // TODO 注入PhoneCodeManager
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(body.getPhone(), body.getCode());
         Authentication authentication;
+        boolean flag = false;
+        Exception exception = new RuntimeException();
+        String phone = body.getPhone();
         try {
+            captchaService.validatePhoneLoginCode(phone, body.getCode());
+            PhoneCodeAuthenticationToken authenticationToken = new PhoneCodeAuthenticationToken(phone);
             authentication = authenticationManager.authenticate(authenticationToken);
+            flag = true;
+        } catch (AccountExpiredException e) {
+            // 账号过期
+            exception = e;
+            throw e;
+        } catch (CredentialsExpiredException e) {
+            // 密码过期
+            exception = e;
+            throw e;
+        } catch (DisabledException e) {
+            // 账号被禁用
+            exception = e;
+            throw e;
+        } catch (LockedException e) {
+            // 账号被锁定
+            exception = e;
+            throw e;
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
+            // 用户名或密码错误
+            exception = e;
+            throw e;
+        } catch (InternalAuthenticationServiceException e) {
+            // 系统内部错误
+            exception = e;
+            throw e;
         } catch (Exception e) {
-            // TODO 登录失败异步记录日志
-            // TODO 记录错误账号和错误次数存入Redis，短时间到达5次锁定账号
-            throw new RuntimeException(e);
+            exception = e;
+            throw e;
+        } finally {
+            if (flag) {
+                // TODO recordLogin添加type字段，区分登录方式，username修改为登录凭据
+                AsyncManager.me().execute(AsyncFactory.recordLogin(phone, true, Result.success().getMsg()));
+            } else {
+                loginCacheService.addFailureCount(phone);
+                AsyncManager.me().execute(AsyncFactory.recordLogin(phone, false, exception.getMessage()));
+            }
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();
         String token = TokenUtils.createToken(user.getId(), user.getUsername());
         user.setToken(token);
-        // TODO 校验验证码
-        // TODO 校验是否锁定
-        // TODO 校验是否禁用
-        // TODO 创建token
-        // TODO 异步记录登录日志
-        // TODO 返回用户信息
         return user;
     }
 }

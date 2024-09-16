@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 /**
  * <p>
- * PC端登录请求体
+ * 登录请求体
  * </p>
  */
 @Data
@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Accessors(chain = true)
 @ToString
 @EqualsAndHashCode(callSuper = false)
-@Schema(name = "PC端登录请求体", description = "PC端登录请求体")
+@Schema(name = "登录请求体", description = "登录请求体")
 public class LoginBody implements Serializable {
     @Serial
     private static final long serialVersionUID = 3117188356336879282L;
@@ -39,15 +39,15 @@ public class LoginBody implements Serializable {
     @NotBlank(message = "{password.NotBlank}")
     private String password;
     /**
-     * 手机
-     */
-    @Schema(description = "手机")
-    private String phone;
-    /**
      * 邮箱
      */
     @Schema(description = "邮箱")
     private String email;
+    /**
+     * 手机
+     */
+    @Schema(description = "手机")
+    private String phone;
     /**
      * 唯一标识
      */
