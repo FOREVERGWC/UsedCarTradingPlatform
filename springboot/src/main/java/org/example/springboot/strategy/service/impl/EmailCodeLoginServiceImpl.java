@@ -8,10 +8,10 @@ import org.example.springboot.common.manager.factory.AsyncFactory;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.model.LoginBody;
 import org.example.springboot.domain.model.LoginUser;
+import org.example.springboot.service.ITokenService;
 import org.example.springboot.service.cache.ICaptchaService;
 import org.example.springboot.service.cache.ILoginCacheService;
 import org.example.springboot.strategy.service.ILoginService;
-import org.example.springboot.utils.TokenUtils;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,6 +30,8 @@ public class EmailCodeLoginServiceImpl implements ILoginService {
     private ICaptchaService captchaService;
     @Resource
     private ILoginCacheService loginCacheService;
+    @Resource
+    private ITokenService tokenService;
 
     @Override
     public LoginUser login(LoginBody body) {
@@ -78,7 +80,7 @@ public class EmailCodeLoginServiceImpl implements ILoginService {
             }
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();
-        String token = TokenUtils.createToken(user.getId(), user.getUsername());
+        String token = tokenService.createToken(user);
         user.setToken(token);
         AsyncManager.me().execute(AsyncFactory.updateLogin(user.getId()));
         return user;

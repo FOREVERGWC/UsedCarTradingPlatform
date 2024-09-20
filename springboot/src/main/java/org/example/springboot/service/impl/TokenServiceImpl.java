@@ -1,5 +1,6 @@
 package org.example.springboot.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.exception.CustomException;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.service.ITokenService;
+import org.example.springboot.service.cache.ILoginCacheService;
 import org.example.springboot.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class TokenServiceImpl implements ITokenService {
     @Resource
-    private UserDetailsServiceImpl userDetailsService;
+    private ILoginCacheService loginCacheService;
+
+    @Override
+    public String createToken(LoginUser user) {
+        String uuid = UUID.fastUUID().toString();
+        user.setUuid(uuid);
+        loginCacheService.setLoginUser(user);
+        return TokenUtils.createToken(uuid);
+    }
 
     @Override
     public String getAuthorization(HttpServletRequest request) {
@@ -37,9 +47,7 @@ public class TokenServiceImpl implements ITokenService {
             throw new CustomException(ResultCode.TOKEN_CHECK_ERROR);
         }
         TokenUtils.verifyToken(authorization);
-        String username = TokenUtils.getUsernameByToken(authorization);
-        // TODO 从Redis获取
-        LoginUser user = (LoginUser) userDetailsService.loadUserByUsername(username);
+        LoginUser user = loginCacheService.getLoginUser(authorization);
         user.setToken(authorization);
         return user;
     }

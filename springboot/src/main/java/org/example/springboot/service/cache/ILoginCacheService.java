@@ -1,5 +1,7 @@
 package org.example.springboot.service.cache;
 
+import org.example.springboot.domain.model.LoginUser;
+
 public interface ILoginCacheService {
     /**
      * 记录登录失败次数
@@ -14,4 +16,35 @@ public interface ILoginCacheService {
      * @param principal 用户身份
      */
     boolean getAccountNonLocked(String principal);
+
+    /**
+     * 存入登录用户
+     *
+     * @param user 登录用户
+     */
+    void setLoginUser(LoginUser user);
+
+    /**
+     * 通过令牌获取登录用户
+     *
+     * @param token 令牌
+     * @return 登录用户
+     */
+    LoginUser getLoginUser(String token);
+
+    /**
+     * 通过令牌获取登录用户ID
+     *
+     * @param token 令牌
+     * @return 登录用户ID
+     */
+    Long getUserIdByToken(String token);
+
+    /**
+     * 通过令牌获取登录用户名
+     *
+     * @param token 令牌
+     * @return 登录用户名
+     */
+    String getUsernameByToken(String token);
 }

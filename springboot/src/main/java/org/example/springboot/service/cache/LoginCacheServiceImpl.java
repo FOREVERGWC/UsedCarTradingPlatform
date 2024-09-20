@@ -1,7 +1,11 @@
 package org.example.springboot.service.cache;
 
 import cn.hutool.core.convert.Convert;
+import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
+import org.example.springboot.common.instance.ObjectMapperInstance;
+import org.example.springboot.domain.model.LoginUser;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +32,30 @@ public class LoginCacheServiceImpl implements ILoginCacheService {
         Object value = redisTemplate.opsForValue().get(key);
         Integer count = Convert.toInt(value, 0);
         return count < 5;
+    }
+
+    @Override
+    public void setLoginUser(LoginUser user) {
+        String key = "login:user:" + user.getUuid();
+        redisTemplate.opsForValue().set(key, user, 2, TimeUnit.HOURS);
+    }
+
+    @Override
+    public LoginUser getLoginUser(String token) {
+        String uuid = JWT.decode(token).getAudience().getFirst();
+        String key = "login:user:" + uuid;
+        return (LoginUser) redisTemplate.opsForValue().get(key);
+    }
+
+    @Override
+    public Long getUserIdByToken(String token) {
+        LoginUser user = getLoginUser(token);
+        return user == null ? null : user.getId();
+    }
+
+    @Override
+    public String getUsernameByToken(String token) {
+        LoginUser user = getLoginUser(token);
+        return user == null ? null : user.getUsername();
     }
 }

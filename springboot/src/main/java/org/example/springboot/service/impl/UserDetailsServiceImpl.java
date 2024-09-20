@@ -1,6 +1,5 @@
 package org.example.springboot.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.Resource;
 import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.entity.system.Permission;
@@ -9,8 +8,6 @@ import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.model.LoginUser;
 import org.example.springboot.service.*;
 import org.example.springboot.service.cache.ILoginCacheService;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,14 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.listByUserId(user.getId());
         // 权限列表
         List<Permission> permissionList = permissionService.listByUserId(user.getId());
-        // 权限标识列表
-        List<String> codeList = permissionList.stream()
-                .map(Permission::getCode)
-                .filter(StrUtil::isNotBlank)
-                .distinct()
-                .toList();
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
-        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList);
     }
 
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
@@ -68,14 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.listByUserId(user.getId());
         // 权限列表
         List<Permission> permissionList = permissionService.listByUserId(user.getId());
-        // 权限标识列表
-        List<String> codeList = permissionList.stream()
-                .map(Permission::getCode)
-                .filter(StrUtil::isNotBlank)
-                .distinct()
-                .toList();
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
-        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList);
     }
 
     public UserDetails loadUserByPhone(String phone) throws UsernameNotFoundException {
@@ -91,13 +74,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<Menu> menuList = menuService.listByUserId(user.getId());
         // 权限列表
         List<Permission> permissionList = permissionService.listByUserId(user.getId());
-        // 权限标识列表
-        List<String> codeList = permissionList.stream()
-                .map(Permission::getCode)
-                .filter(StrUtil::isNotBlank)
-                .distinct()
-                .toList();
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(codeList);
-        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList, authorities);
+        return new LoginUser(user, accountNonLocked, roleList, menuList, permissionList);
     }
 }

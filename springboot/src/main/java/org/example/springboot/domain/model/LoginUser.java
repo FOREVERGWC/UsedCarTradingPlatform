@@ -1,5 +1,7 @@
 package org.example.springboot.domain.model;
 
+import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,6 +12,7 @@ import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.entity.system.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -36,6 +39,11 @@ public class LoginUser extends User implements UserDetails {
     @Schema(description = "账户锁定状态")
     private Boolean accountNonLocked;
     /**
+     * 唯一标识符
+     */
+    @Schema(description = "唯一标识符")
+    private String uuid;
+    /**
      * 令牌
      */
     @Schema(description = "令牌")
@@ -55,24 +63,24 @@ public class LoginUser extends User implements UserDetails {
      */
     @Schema(description = "权限列表")
     private List<Permission> permissionList;
-    /**
-     * 权限标识列表
-     */
-    @Schema(description = "权限标识列表")
-    private Collection<? extends GrantedAuthority> authorities;
 
-    public LoginUser(User user, Boolean accountNonLocked, List<Role> roleList, List<Menu> menuList, List<Permission> permissionList, Collection<? extends GrantedAuthority> authorities) {
+    public LoginUser(User user, Boolean accountNonLocked, List<Role> roleList, List<Menu> menuList, List<Permission> permissionList) {
         super(user.getId(), user.getUsername(), user.getPassword(), user.getNickname(), user.getName(), user.getAvatar(), user.getGender(), user.getBirthday(), user.getStatus(), user.getPhone(), user.getEmail(), user.getOpenId(), user.getBalance(), user.getLoginIp(), user.getLoginTime(), user.getCreateBy(), user.getCreateTime(), user.getUpdateBy(), user.getUpdateTime(), user.getRemark());
         this.accountNonLocked = accountNonLocked;
         this.roleList = roleList;
         this.menuList = menuList;
         this.permissionList = permissionList;
-        this.authorities = authorities;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+        return permissionList.stream()
+                .map(Permission::getCode)
+                .filter(StrUtil::isNotBlank)
+                .distinct()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     @Override

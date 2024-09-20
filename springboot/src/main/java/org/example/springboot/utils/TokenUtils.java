@@ -20,13 +20,12 @@ public class TokenUtils {
     /**
      * 生成令牌
      *
-     * @param userId   用户ID
-     * @param username 用户名
+     * @param uuid 唯一标识符
      * @return 令牌
      */
-    public static String createToken(Long userId, String username) {
+    public static String createToken(String uuid) {
         return JWT.create()
-                .withAudience(String.valueOf(userId), username)
+                .withAudience(uuid)
                 .withIssuedAt(new Date())
                 .withExpiresAt(DateUtil.offsetHour(new Date(), 2))
                 .withSubject(subject)
@@ -45,28 +44,6 @@ public class TokenUtils {
         } catch (JWTVerificationException e) {
             throw new CustomException(ResultCode.TOKEN_VERIFY_ERROR);
         }
-    }
-
-    /**
-     * 通过令牌获取用户ID
-     *
-     * @param token 令牌
-     * @return 用户ID
-     */
-    public static Long getUserIdByToken(String token) {
-        // TODO 根据令牌从缓存查询用户ID
-        return Long.valueOf(JWT.decode(token).getAudience().getFirst());
-    }
-
-    /**
-     * 通过令牌获取用户名
-     *
-     * @param token 令牌
-     * @return 用户名
-     */
-    public static String getUsernameByToken(String token) {
-        // TODO 根据令牌从缓存查询用户名
-        return JWT.decode(token).getAudience().getLast();
     }
 }
 
