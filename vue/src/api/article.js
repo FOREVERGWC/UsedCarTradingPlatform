@@ -46,6 +46,17 @@ export const getArticlePage = (params) => {
 
 /**
  * 查询文章
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getArticleById = (id) => {
+    return request({
+        url: `/article/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询文章
  * @param params 文章
  * @returns {*} 结果
  */

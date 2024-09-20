@@ -46,6 +46,17 @@ export const getUserRoleLinkPage = (params) => {
 
 /**
  * 查询用户、角色关系
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getUserRoleLinkById = (id) => {
+    return request({
+        url: `/user/role/link/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询用户、角色关系
  * @param params 用户、角色关系
  * @returns {*} 结果
  */

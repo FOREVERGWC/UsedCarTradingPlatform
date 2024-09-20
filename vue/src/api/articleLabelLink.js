@@ -46,6 +46,17 @@ export const getArticleLabelLinkPage = (params) => {
 
 /**
  * 查询文章、文章标签关系
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getArticleLabelLinkById = (id) => {
+    return request({
+        url: `/articleLabelLink/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询文章、文章标签关系
  * @param params 文章、文章标签关系
  * @returns {*} 结果
  */

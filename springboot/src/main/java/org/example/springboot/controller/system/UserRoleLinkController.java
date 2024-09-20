@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -76,6 +77,20 @@ public class UserRoleLinkController {
         IPage<UserRoleLinkVo> page = userRoleLinkService.getPage(dto);
         return Result.success(page);
     }
+
+    /**
+     * 查询用户、角色关系
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "查询用户、角色关系", description = "查询用户、角色关系", method = "GET")
+    public Result<UserRoleLink> getById(@PathVariable Long id) {
+        UserRoleLink vo = userRoleLinkService.getById(id);
+        return Result.success(vo);
+    }
+
 
     /**
      * 查询用户、角色关系

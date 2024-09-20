@@ -39,7 +39,8 @@ import {ref, onMounted} from "vue";
 import {ElMessage} from "element-plus";
 import UserInfoCard from "./components/UserInfoCard.vue";
 import useUserStore from "@/store/modules/user.js";
-import {getByToken, resetPassword, sendResetCodeByEmail} from "@/api/auth.js";
+import {getByToken, resetPassword} from "@/api/auth.js";
+import {sendResetCode} from "@/api/email.js";
 
 const user = ref({
   id: '',
@@ -81,7 +82,7 @@ const loadUserInfo = () => {
 // 发送验证码
 const sendCode = async () => {
   codeButtonDisabled.value = true
-  const res = await sendResetCodeByEmail({email: user.value.email})
+  const res = await sendResetCode({email: user.value.email})
   if (res.code !== 200) {
     ElMessage.error(res.msg || '验证码发送失败')
     codeButtonDisabled.value = false

@@ -57,6 +57,17 @@ export const getArticleCategoryPage = (params) => {
 
 /**
  * 查询文章类别
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getArticleCategoryById = (id) => {
+    return request({
+        url: `/articleCategory/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询文章类别
  * @param params 文章类别
  * @returns {*} 结果
  */

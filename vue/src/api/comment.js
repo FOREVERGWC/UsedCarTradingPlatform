@@ -46,6 +46,17 @@ export const getCommentPage = (params) => {
 
 /**
  * 查询评论
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getCommentById = (id) => {
+    return request({
+        url: `/comment/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询评论
  * @param params 评论
  * @returns {*} 结果
  */

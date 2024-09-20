@@ -16,12 +16,12 @@
                               value-format='YYYY-MM-DD HH:mm:ss'/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-select v-model='queryParams.status' clearable placeholder="请选择状态">
+              <el-select v-model='queryParams.status' clearable filterable placeholder="请选择状态">
                 <el-option v-for='item in statusList' :key='item.value' :label='item.label' :value='item.value'/>
               </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-select v-model='queryParams.role' clearable placeholder="请选择角色">
+              <el-select v-model='queryParams.role' clearable filterable placeholder="请选择角色">
                 <el-option v-for='item in roleList' :key='item.id' :label='item.name' :value='item.id'/>
               </el-select>
             </el-col>
@@ -30,9 +30,6 @@
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.email" clearable placeholder="请输入邮箱"/>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.openId" clearable placeholder="请输入微信小程序开放ID"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.loginIp" clearable placeholder="请输入最后登录IP"/>
@@ -93,7 +90,41 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column type="expand">
           <template v-slot="{ row }">
-            <span>{{ row }}</span>
+            <el-descriptions :column="3" border>
+              <el-descriptions-item>
+                <template #label>
+                  <span>
+                    <el-icon>
+                      <male/>
+                    </el-icon>
+                    性别
+                  </span>
+                </template>
+                <span>{{ row.genderText }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <span>
+                    <el-icon>
+                      <key/>
+                    </el-icon>
+                    微信小程序开放ID
+                  </span>
+                </template>
+                <span>{{ row.openId }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <span>
+                    <el-icon>
+                      <wallet/>
+                    </el-icon>
+                    余额
+                  </span>
+                </template>
+                <span>{{ row.balance }}</span>
+              </el-descriptions-item>
+            </el-descriptions>
           </template>
         </el-table-column>
         <el-table-column label="序号" type="index" width="70"/>
@@ -112,12 +143,12 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="生日" >
+        <el-table-column label="生日" width="90">
           <template v-slot="{ row }">
             {{ formatDate(row.birthday) }}
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="状态" width="100">
           <template v-slot="{ row }">
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
           </template>
@@ -131,13 +162,11 @@
         </el-table-column>
         <el-table-column label="电话" prop="phone"/>
         <el-table-column label="邮箱" prop="email"/>
-        <el-table-column label="微信小程序开放ID" prop="openId"/>
-        <el-table-column label="余额" prop="balance"/>
         <el-table-column label="最后登录IP" prop="loginIp"/>
-        <el-table-column label="最后登录时间" prop="loginTime"/>
+        <el-table-column label="最后登录时间" prop="loginTime" width="150"/>
         <el-table-column label="操作" width="280">
           <template v-slot="{ row }">
-            <el-button icon="EditPen" @click="showAssign(row)">分配角色</el-button>
+            <el-button icon="EditPen" @click="showAssign(row)">分配</el-button>
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
             <el-popconfirm title="确认删除该行吗？" @confirm="handleDelete(row.id)">
               <template #reference>
@@ -175,13 +204,18 @@
         <el-form-item label="头像">
           <AvatarUpload v-model="form.data.avatar"/>
         </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="form.data.gender" clearable filterable placeholder="请选择性别">
+            <el-option v-for="item in genderList" :key="item.value" :label='item.label' :value="item.value"/>
+          </el-select>
+        </el-form-item>
         <el-form-item label="生日">
           <el-date-picker v-model='form.data.birthday' placeholder='请选择生日'
                           type='date'
                           value-format='YYYY-MM-DD HH:mm:ss'/>
         </el-form-item>
         <el-form-item v-if="form.data.id" label="状态" prop="status">
-          <el-select v-model="form.data.status" clearable placeholder="请选择状态">
+          <el-select v-model="form.data.status" clearable filterable placeholder="请选择状态">
             <el-option v-for="item in statusList" :key="item.value" :label='item.label' :value="item.value"/>
           </el-select>
         </el-form-item>
@@ -207,7 +241,8 @@
       </template>
     </el-dialog>
 
-    <RoleAssign :id="assignForm.userId" :visible="assignForm.visible" @update:visible="assignForm.visible = $event" @refresh="getPage" />
+    <RoleAssign :id="assignForm.userId" :visible="assignForm.visible" @update:visible="assignForm.visible = $event"
+                @refresh="getPage"/>
   </div>
 </template>
 
@@ -216,7 +251,7 @@ import RoleAssign from './components/RoleAssign.vue';
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
-import {formatDate, statusList} from "@/utils/common.js";
+import {formatDate, genderList, statusList} from "@/utils/common.js";
 import useRoleStore from "@/store/modules/role.js";
 
 const roleStore = useRoleStore();
@@ -227,6 +262,7 @@ const queryParams = reactive({
   pageSize: 20,
   username: '',
   name: '',
+  gender: '',
   birthday: '',
   status: '',
   role: '',

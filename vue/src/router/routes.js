@@ -1,14 +1,21 @@
 export const constantRoutes = [
     {
         path: '',
+        meta: { title: '首页', icon: 'dashboard', hidden: true },
         redirect: '/index',
         component: () => import('@/views/backend/index.vue'),
         children: [
             {
                 path: '/index',
                 name: 'Index',
-                meta: { title: '首页', icon: 'dashboard', affix: true },
+                meta: { title: '首页', icon: 'dashboard', hidden: true },
                 component: () => import('@/views/backend/index/index.vue')
+            },
+            {
+                path: '/profile',
+                name: 'Profile',
+                meta: {name: '个人中心', icon: 'Stopwatch', hidden: false},
+                component: () => import('@/views/backend/profile/index.vue')
             }
         ]
     },
@@ -167,10 +174,10 @@ export const constantRoutes = [
         component: () => import('@/views/RegisterView.vue')
     },
     {
-        path: '/reset-password',
+        path: '/reset',
         name: 'ResetPassword',
         meta: {name: '找回密码', roles: [], icon: 'Stopwatch', hidden: true},
-        component: () => import('@/views/ResetPasswordView.vue')
+        component: () => import('@/views/ResetView.vue')
     },
     {
         path: '/:pathMatch(.*)*',

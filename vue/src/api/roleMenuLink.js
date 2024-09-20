@@ -46,6 +46,17 @@ export const getRoleMenuLinkPage = (params) => {
 
 /**
  * 查询角色、菜单关系
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getRoleMenuLinkById = (id) => {
+    return request({
+        url: `/role/menu/link/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询角色、菜单关系
  * @param params 角色、菜单关系
  * @returns {*} 结果
  */

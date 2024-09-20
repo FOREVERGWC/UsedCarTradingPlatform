@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
+
 import java.util.List;
 
 /**
@@ -75,6 +76,19 @@ public class RoleMenuLinkController {
     public Result<IPage<RoleMenuLinkVo>> getPage(RoleMenuLinkDto dto) {
         IPage<RoleMenuLinkVo> page = roleMenuLinkService.getPage(dto);
         return Result.success(page);
+    }
+
+    /**
+     * 查询角色、菜单关系
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "查询角色、菜单关系", description = "查询角色、菜单关系", method = "GET")
+    public Result<RoleMenuLink> getById(@PathVariable Long id) {
+        RoleMenuLink vo = roleMenuLinkService.getById(id);
+        return Result.success(vo);
     }
 
     /**

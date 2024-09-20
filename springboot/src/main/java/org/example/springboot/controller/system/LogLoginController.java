@@ -78,6 +78,12 @@ public class LogLoginController {
         return Result.success(page);
     }
 
+    /**
+     * 查询登录日志
+     *
+     * @param id 主键ID
+     * @return 结果
+     */
     @GetMapping("/{id}")
     @Operation(summary = "查询登录日志", description = "查询登录日志", method = "GET")
     public Result<LogLogin> getById(@PathVariable Long id) {

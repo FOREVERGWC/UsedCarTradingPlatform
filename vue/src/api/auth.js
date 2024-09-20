@@ -33,17 +33,6 @@ export const logout = () => {
 }
 
 /**
- * 修改密码
- * @param data 密码信息
- * @returns {*} 结果
- */
-export const updatePassword = (data) => {
-    return request({
-        url: '/password/update', method: 'PUT', data: data
-    })
-}
-
-/**
  * 获取当前用户信息
  * @returns {*} 结果
  */
@@ -60,28 +49,6 @@ export const getByToken = () => {
 export const getCaptcha = () => {
     return request({
         url: '/captcha', method: 'GET'
-    })
-}
-
-/**
- * 根据邮箱发送注册验证码邮件
- * @param data 注册邮箱
- * @returns {*} 结果
- */
-export const sendRegisterCodeByEmail = (data) => {
-    return request({
-        url: '/register/code', method: 'POST', data: data
-    })
-}
-
-/**
- * 根据邮箱发送改密验证码邮件
- * @param data 注册邮箱
- * @returns {*} 结果
- */
-export const sendResetCodeByEmail = (data) => {
-    return request({
-        url: '/reset/code', method: 'POST', data: data
     })
 }
 

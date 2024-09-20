@@ -46,6 +46,17 @@ export const getChatPage = (params) => {
 
 /**
  * 查询聊天
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getChatById = (id) => {
+    return request({
+        url: `/chat/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询聊天
  * @param params 聊天
  * @returns {*} 结果
  */

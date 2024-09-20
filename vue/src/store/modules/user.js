@@ -51,14 +51,17 @@ const useUserStore = defineStore('user', {
             return new Promise((resolve, reject) => {
                 getByToken().then(res => {
                     const user = res.data
+                    const roleIdList = user.roleList.map(item => item.id);
                     this.id = user.id
                     this.username = user.username
                     this.nickname = user.nickname
                     this.name = user.name
+                    this.avatar = user.avatar
                     this.token = user.token
-                    this.roleIdList = _.isEmpty(user.roleIdList) ? [] : user.roleIdList
+                    this.roleIdList = _.isEmpty(roleIdList) ? [] : roleIdList
                     resolve(res)
                 }).catch(() => {
+                    this.token = ''
                     reject()
                 })
             })

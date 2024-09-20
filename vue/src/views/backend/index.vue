@@ -5,8 +5,8 @@
         <div class="menu-header">
           <span class="title">{{ title }}</span>
           <el-icon>
-            <Expand v-show="isCollapse" @click.native="handleCollapse"/>
-            <Fold v-show="!isCollapse" @click.native="handleCollapse"/>
+            <Expand v-show="isCollapse" @click="handleCollapse"/>
+            <Fold v-show="!isCollapse" @click="handleCollapse"/>
           </el-icon>
         </div>
 
@@ -32,7 +32,9 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click.native.prevent='toFrontend'><span>前台</span></el-dropdown-item>
+              <el-dropdown-item @click.native.prevent='toFrontend'>
+                <span>前台</span>
+              </el-dropdown-item>
               <el-dropdown-item divided command="profile">
                 <span>个人中心</span>
               </el-dropdown-item>
@@ -124,7 +126,7 @@ const toFrontend = () => {
 const handleCommand = (value) => {
   switch (value) {
     case 'profile':
-      console.log('个人中心')
+      router.push('/profile')
       break;
     case 'logout':
       ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {

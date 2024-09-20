@@ -2,7 +2,7 @@
   <el-card>
     <div class="user-info">
       <div class="avatar-container">
-        <avatar-upload v-model="localUser.avatar" @success="handleAvatarUploadSuccess" />
+        <avatar-upload v-model="localUser.avatar" @success="handleAvatarUploadSuccess"/>
       </div>
       <h3>{{ localUser.nickname || localUser.username }}</h3>
 
@@ -12,11 +12,14 @@
           <span v-if="field.key === 'gender'">
             {{ genderMap[field.value] || '未知' }}
           </span>
+          <span v-else-if="field.key === 'birthday'">
+            {{ formatDate(field.value) }}
+          </span>
           <span v-else>
             {{ field.value || '未填写' }}
           </span>
           <el-icon class="edit-icon" @click="field.editing = true">
-            <Edit />
+            <Edit/>
           </el-icon>
         </p>
 
@@ -51,11 +54,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { ElMessage } from "element-plus";
-import { Edit } from "@element-plus/icons-vue";
+import {ref, watch} from "vue";
+import {ElMessage} from "element-plus";
+import {Edit} from "@element-plus/icons-vue";
 import AvatarUpload from "@/components/AvatarUpload/index.js";
-import { saveUser } from "@/api/user.js";
+import {saveUser} from "@/api/user.js";
+import {formatDate} from "../../../../utils/common.js";
 
 const props = defineProps({
   user: {
@@ -67,7 +71,7 @@ const props = defineProps({
 const emit = defineEmits(["refreshUser"]);
 
 // 本地用户对象，用于处理局部更新
-const localUser = ref({ ...props.user });
+const localUser = ref({...props.user});
 
 // 性别映射
 const genderMap = {
@@ -78,19 +82,19 @@ const genderMap = {
 
 // 可编辑字段配置
 const editableFields = ref([
-  { key: "nickname", label: "昵称", value: localUser.value.nickname, editing: false },
-  { key: "name", label: "姓名", value: localUser.value.name, editing: false },
-  { key: "gender", label: "性别", value: localUser.value.gender, editing: false },
-  { key: "email", label: "邮箱", value: localUser.value.email, editing: false },
-  { key: "phone", label: "电话", value: localUser.value.phone, editing: false },
-  { key: "birthday", label: "生日", value: localUser.value.birthday, editing: false },
+  {key: "nickname", label: "昵称", value: localUser.value.nickname, editing: false},
+  {key: "name", label: "姓名", value: localUser.value.name, editing: false},
+  {key: "gender", label: "性别", value: localUser.value.gender, editing: false},
+  {key: "email", label: "邮箱", value: localUser.value.email, editing: false},
+  {key: "phone", label: "电话", value: localUser.value.phone, editing: false},
+  {key: "birthday", label: "生日", value: localUser.value.birthday, editing: false},
 ]);
 
 // 监听 props.user 变化，并更新本地用户对象
 watch(
     () => props.user,
     (newUser) => {
-      localUser.value = { ...newUser };
+      localUser.value = {...newUser};
       editableFields.value.forEach((field) => {
         field.value = localUser.value[field.key];
       });

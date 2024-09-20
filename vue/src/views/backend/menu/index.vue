@@ -23,9 +23,6 @@
               <el-input v-model="queryParams.path" clearable placeholder="请输入路由地址"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.component" clearable placeholder="请输入组件路径"/>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.type" clearable filterable placeholder="请选择类型">
                 <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
@@ -93,7 +90,7 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="名称" prop="name"/>
-        <el-table-column label="图标">
+        <el-table-column label="图标" width="55">
           <template v-slot="{ row }">
             <el-icon>
               <component :is="row.icon"/>
@@ -103,17 +100,20 @@
         <el-table-column label="路由地址" prop="path"/>
         <el-table-column label="组件路径" prop="component"/>
         <el-table-column label="类型" prop="typeText"/>
-        <el-table-column label="排序" prop="sort"/>
-        <el-table-column label="状态">
+        <el-table-column label="排序" prop="sort" width="55"/>
+        <el-table-column label="状态" width="100">
           <template v-slot="{ row }">
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
           </template>
         </el-table-column>
-        <el-table-column label="可见">
+        <el-table-column label="可见" width="100">
           <template v-slot="{ row }">
             <el-switch v-model="row.visible" @change="() => handleVisible(row.id)"/>
           </template>
         </el-table-column>
+        <el-table-column label="创建时间" prop="createTime" width="150"/>
+        <el-table-column label="修改时间" prop="updateTime" width="150"/>
+        <el-table-column label="备注" prop="remark"/>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
@@ -196,10 +196,9 @@
 </template>
 
 <script setup>
-import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
+import {nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {
   getMenuOne,
-  getMenuPage,
   getMenuTree,
   handleStatusMenu,
   handleVisibleMenu,
@@ -207,7 +206,6 @@ import {
   saveMenu
 } from '@/api/menu'
 import {ElMessage} from "element-plus"
-import {handleStatusRole} from "@/api/role.js";
 
 const loading = ref(true)
 const queryParams = reactive({

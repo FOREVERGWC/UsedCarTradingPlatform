@@ -7,7 +7,7 @@ import request from '@/utils/request';
  */
 export const saveLogLogin = (data) => {
     return request({
-        url: '/logLogin', method: 'POST', data: data
+        url: '/log/login', method: 'POST', data: data
     })
 }
 
@@ -18,7 +18,7 @@ export const saveLogLogin = (data) => {
  */
 export const removeLogLoginBatchByIds = (ids) => {
     return request({
-        url: `/logLogin/${ids}`, method: 'DELETE'
+        url: `/log/login/${ids}`, method: 'DELETE'
     })
 }
 
@@ -29,7 +29,7 @@ export const removeLogLoginBatchByIds = (ids) => {
  */
 export const getLogLoginList = (params) => {
     return request({
-        url: '/logLogin/list', method: 'GET', params: params
+        url: '/log/login/list', method: 'GET', params: params
     })
 }
 
@@ -40,7 +40,18 @@ export const getLogLoginList = (params) => {
  */
 export const getLogLoginPage = (params) => {
     return request({
-        url: '/logLogin/page', method: 'GET', params: params
+        url: '/log/login/page', method: 'GET', params: params
+    })
+}
+
+/**
+ * 查询登录日志
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getLogLoginById = (id) => {
+    return request({
+        url: `/log/login/${id}`, method: 'GET'
     })
 }
 
@@ -51,6 +62,6 @@ export const getLogLoginPage = (params) => {
  */
 export const getLogLoginOne = (params) => {
     return request({
-        url: '/logLogin', method: 'GET', params: params
+        url: '/log/login', method: 'GET', params: params
     })
 }

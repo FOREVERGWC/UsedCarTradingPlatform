@@ -1,8 +1,8 @@
 <template>
   <el-dialog :title="form.title" v-model="form.visible" @update:visible="handleVisible" destroy-on-close
              width="40%" @close="handleClose">
-    <el-tree-v2 ref="treeRef" :data="menuList" :props="node" :default-checked-keys="form.menuIdList" show-checkbox
-                :height="600"/>
+    <el-tree-v2 ref="treeRef" :data="menuList" :props="node" :default-checked-keys="form.checkedIdList" :default-expanded-keys="form.expandedIdList" show-checkbox
+                :height="600" check-strictly/>
     <template #footer>
       <el-button @click="handleClose">取 消</el-button>
       <el-button type="primary" @click="handleSave">确 定</el-button>
@@ -11,10 +11,12 @@
 </template>
 
 <script setup>
-import {ref, reactive, onMounted, watch} from 'vue';
+import {ref, reactive, onMounted, watch, nextTick} from 'vue';
 import {ElMessage} from 'element-plus';
-import {getMenuListByRoleId, getMenuTree} from "@/api/menu.js";
+import {getMenuTree} from "@/api/menu.js";
 import {handleRoleMenu} from "@/api/role.js";
+import {getRoleMenuLinkList} from "@/api/roleMenuLink.js";
+import {getExpandedIds} from "@/utils/common.js";
 
 const props = defineProps({
   id: String,
@@ -34,7 +36,8 @@ const menuList = ref([])
 const form = reactive({
   visible: props.visible,
   title: '分配菜单',
-  menuIdList: []
+  checkedIdList: [],
+  expandedIdList: []
 });
 const treeRef = ref(null);
 
@@ -44,10 +47,19 @@ const getMenuInfo = () => {
       ElMessage.error(res.msg);
       return
     }
-    menuList.value = res.data || [];
+    menuList.value = res.data || []
+    form.expandedIdList = getExpandedIds(res.data)
   })
-  getMenuListByRoleId(props.id).then(res => {
-    form.menuIdList = res.data?.map(item => item.id) || []
+  const params = {
+    roleId: props.id,
+  }
+  getRoleMenuLinkList(params).then(res => {
+    form.checkedIdList = res.data?.map(item => item.menuId) || []
+    nextTick(() => {
+      if (!treeRef.value) return
+      treeRef.value.setExpandedKeys(form.expandedIdList)
+      treeRef.value.setCheckedKeys(form.checkedIdList)
+    })
   })
 }
 
@@ -61,7 +73,10 @@ const handleVisible = (value) => {
 }
 
 const handleSave = () => {
-  const data = {roleId: props.id, menuIdList: treeRef.value.getCheckedKeys()}
+  const data = {
+    roleId: props.id,
+    menuIdList: [...treeRef.value.getCheckedKeys(), ...treeRef.value.getHalfCheckedKeys()]
+  }
   handleRoleMenu(data).then(res => {
     if (res.code !== 200) {
       ElMessage.error(res.msg);

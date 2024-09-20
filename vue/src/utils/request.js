@@ -35,6 +35,9 @@ request.interceptors.response.use(response => {
     const res = response.data
     if (res.code === 401) {
         ElMessage.error(res.msg)
+        useUserStore().handleLogout().then(() => {
+            location.href = router.resolve('/index').href;
+        })
         // router.push('/login')
     }
     return res

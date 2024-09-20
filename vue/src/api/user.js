@@ -46,6 +46,17 @@ export const getUserPage = (params) => {
 
 /**
  * 查询用户信息
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getUserById = (id) => {
+    return request({
+        url: `/user`, method: 'GET'
+    })
+}
+
+/**
+ * 查询用户信息
  * @param params 用户信息
  * @returns {*} 结果
  */
@@ -62,8 +73,7 @@ export const getUserOne = (params) => {
  */
 export const handleStatusUser = (id) => {
     return request({
-        url: `/user/status/${id}`,
-        method: 'PUT'
+        url: `/user/status/${id}`, method: 'PUT'
     })
 }
 

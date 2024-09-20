@@ -90,6 +90,20 @@ public class UserController {
     /**
      * 查询用户信息
      *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:user:query')")
+    @GetMapping("/{id}")
+    @Operation(summary = "查询用户信息", description = "查询用户信息", method = "GET")
+    public Result<User> getById(@PathVariable Long id) {
+        User vo = userService.getById(id);
+        return Result.success(vo);
+    }
+
+    /**
+     * 查询用户信息
+     *
      * @param dto 用户信息
      * @return 结果
      */

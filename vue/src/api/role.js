@@ -46,6 +46,17 @@ export const getRolePage = (params) => {
 
 /**
  * 查询角色
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getRoleById = (id) => {
+    return request({
+        url: `/role/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询角色
  * @param params 角色
  * @returns {*} 结果
  */
@@ -76,5 +87,16 @@ export const handleStatusRole = (id) => {
 export const handleRoleMenu = (data) => {
     return request({
         url: '/role/menu', method: 'POST', data: data
+    })
+}
+
+/**
+ * 角色分配权限
+ * @param data 权限分配信息
+ * @returns {*} 结果
+ */
+export const handleRolePermission = (data) => {
+    return request({
+        url: '/role/permission', method: 'POST', data: data
     })
 }

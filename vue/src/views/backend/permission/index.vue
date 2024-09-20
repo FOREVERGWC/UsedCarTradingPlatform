@@ -11,12 +11,16 @@
               <el-input v-model="queryParams.code" clearable placeholder="请输入权限标识"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-select v-model="queryParams.parentId" clearable filterable placeholder="请选择父级权限">
-                <el-option v-for="item in parentList" :key="item.id" :label="item.name" :value="item.id"/>
-              </el-select>
-            </el-col>
-            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.sort" clearable placeholder="请输入排序"/>
+              <el-tree-select
+                  v-model="queryParams.parentId"
+                  :data="parentList"
+                  :props="parentProps"
+                  :render-after-expand="false"
+                  check-strictly
+                  clearable
+                  filterable
+                  placeholder='请选择父级权限'
+              />
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.status" clearable filterable placeholder="请选择状态">
@@ -70,14 +74,22 @@
     <el-card>
       <el-table v-loading="loading" :cell-style="{ textAlign: 'center' }" :data="permissionList"
                 :header-cell-style="{ textAlign: 'center' }" stripe
-                @selection-change="handleSelectionChange">
+                @selection-change="handleSelectionChange"
+                row-key="id"
+                default-expand-all>
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="名称" prop="name"/>
         <el-table-column label="权限标识" prop="code"/>
-        <el-table-column label="父级权限ID" prop="parentId"/>
         <el-table-column label="排序" prop="sort"/>
-        <el-table-column label="状态" prop="status"/>
+        <el-table-column label="状态">
+          <template v-slot="{ row }">
+            <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" prop="createTime"/>
+        <el-table-column label="修改时间" prop="updateTime"/>
+        <el-table-column label="备注" prop="remark"/>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
@@ -112,9 +124,16 @@
           <el-input v-model="form.data.code" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="父级权限" prop="parentId">
-          <el-select v-model="form.data.parentId" clearable filterable placeholder="请选择父级权限">
-            <el-option v-for="item in parentList" :key="item.id" :label="item.name" :value="item.id"/>
-          </el-select>
+          <el-tree-select
+              v-model="form.data.parentId"
+              :data="parentList"
+              :props="parentProps"
+              :render-after-expand="false"
+              check-strictly
+              clearable
+              filterable
+              placeholder='请选择父级权限'
+          />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.data.sort" autocomplete="new"/>
@@ -137,9 +156,13 @@
 </template>
 
 <script setup>
-import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getPermissionOne, getPermissionPage, removePermissionBatchByIds, savePermission} from '@/api/permission'
-import {getParentList} from '@/api/parent'
+import {nextTick, onMounted, reactive, ref, toRaw} from 'vue'
+import {
+  getPermissionOne,
+  getPermissionPage, getPermissionTree, handleStatusPermission,
+  removePermissionBatchByIds,
+  savePermission
+} from '@/api/permission'
 import {ElMessage} from "element-plus"
 
 const loading = ref(true)
@@ -174,8 +197,8 @@ const permissionFields = {
   '状态': 'status'
 }
 const statusList = [
-  { label: '禁用', value: '0' },
-  { label: '正常', value: '1' }
+  {label: '禁用', value: '0'},
+  {label: '正常', value: '1'}
 ]
 const form = ref({
   visible: false,
@@ -191,10 +214,17 @@ const rules = {
   status: [{required: true, message: '请选择状态', trigger: 'change'}]
 }
 
+const parentProps = {
+  value: 'id',
+  label: 'name',
+  children: 'children'
+}
+
 const getPage = () => {
   loading.value = true
-  getParentList({}).then(res => {
+  getPermissionTree({}).then(res => {
     parentList.value = res.data || []
+    parentList.value.unshift({id: '0', name: '根结点'})
   })
   getPermissionPage(queryParams).then(res => {
     permissionList.value = res.data?.records || []
@@ -266,6 +296,17 @@ const handleDelete = (id) => {
     ElMessage.success('删除成功！')
   }).finally(() => {
     getPage()
+  })
+}
+
+const handleStatus = (id) => {
+  handleStatusPermission(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
   })
 }
 

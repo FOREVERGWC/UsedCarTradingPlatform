@@ -114,6 +114,20 @@ public class PermissionController {
     /**
      * 查询权限
      *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:permission:query')")
+    @GetMapping("/{id}")
+    @Operation(summary = "查询权限", description = "查询权限", method = "GET")
+    public Result<Permission> getById(@PathVariable Long id) {
+        Permission vo = permissionService.getById(id);
+        return Result.success(vo);
+    }
+
+    /**
+     * 查询权限
+     *
      * @param dto 权限
      * @return 结果
      */

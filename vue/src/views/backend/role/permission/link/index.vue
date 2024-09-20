@@ -117,9 +117,9 @@
 
 <script setup>
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getRolePermissionLinkOne, getRolePermissionLinkPage, removeRolePermissionLinkBatchByIds, saveRolePermissionLink} from '@/api/rolePermissionLink'
-import {getRoleList} from '@/api/role'
-import {getPermissionList} from '@/api/permission'
+import {getRolePermissionLinkOne, getRolePermissionLinkPage, removeRolePermissionLinkBatchByIds, saveRolePermissionLink} from '@/api/rolePermissionLink.js'
+import {getRoleList} from '@/api/role.js'
+import {getPermissionList} from '@/api/permission.js'
 import {ElMessage} from "element-plus"
 
 const loading = ref(true)

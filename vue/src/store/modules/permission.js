@@ -26,6 +26,8 @@ const usePermissionStore = defineStore('permission', {
                     })
                     this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
                     resolve(rewriteRoutes)
+                }).catch(error => {
+                    console.log(error,'111')
                 })
             })
         }

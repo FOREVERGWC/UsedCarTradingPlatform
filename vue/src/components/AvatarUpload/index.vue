@@ -5,7 +5,9 @@
       :before-upload="beforeUpload"
       :http-request="customUpload"
   >
-    <img v-if="url" :src="url" class="avatar" alt=""/>
+    <el-avatar shape="square" v-if="url" :src="url" alt="" class="avatar" @error="() => true">
+      <img alt="" src="@/assets/imgs/profile.png"/>
+    </el-avatar>
     <el-icon v-else class="avatar-uploader-icon">
       <Plus/>
     </el-icon>

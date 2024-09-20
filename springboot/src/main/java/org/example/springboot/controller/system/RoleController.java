@@ -95,6 +95,20 @@ public class RoleController {
     /**
      * 查询角色
      *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:role:query')")
+    @GetMapping("/{id}")
+    @Operation(summary = "查询角色", description = "查询角色", method = "GET")
+    public Result<Role> getById(@PathVariable Long id) {
+        Role vo = roleService.getById(id);
+        return Result.success(vo);
+    }
+
+    /**
+     * 查询角色
+     *
      * @param dto 角色
      * @return 结果
      */

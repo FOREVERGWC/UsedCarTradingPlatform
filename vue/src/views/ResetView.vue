@@ -18,7 +18,8 @@
           <el-button @click="handleCaptcha" :disabled="isSending">{{ isSending ? `${timer}s` : '发送' }}</el-button>
         </el-form-item>
         <el-form-item v-if="enabled" prop="code">
-          <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"/>
+          <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"
+                    @keyup.enter="handleReset"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleReset">重置密码</el-button>
@@ -34,9 +35,10 @@
 
 <script setup>
 import {ref} from 'vue';
-import {resetPassword, sendResetCodeByEmail} from "@/api/auth.js";
+import {resetPassword} from "@/api/auth.js";
 import {ElMessage} from "element-plus";
 import {useRouter} from "vue-router";
+import {sendResetCode} from "@/api/email.js";
 
 const router = useRouter()
 
@@ -65,7 +67,7 @@ const handleCaptcha = () => {
   formRef.value.validateField('email', (valid) => {
     if (!valid) return;
     const data = {email: form.value.email};
-    sendResetCodeByEmail(data).then(res => {
+    sendResetCode(data).then(res => {
       if (res.code !== 200) {
         ElMessage.error(res.msg);
         return;

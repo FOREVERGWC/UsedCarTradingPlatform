@@ -81,6 +81,19 @@ public class RolePermissionLinkController {
     /**
      * 查询角色、权限关系
      *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @GetMapping("/{id}")
+    @Operation(summary = "查询角色、权限关系", description = "查询角色、权限关系", method = "GET")
+    public Result<RolePermissionLink> getById(@PathVariable Long id) {
+        RolePermissionLink vo = rolePermissionLinkService.getById(id);
+        return Result.success(vo);
+    }
+
+    /**
+     * 查询角色、权限关系
+     *
      * @param dto 角色、权限关系
      * @return 结果
      */

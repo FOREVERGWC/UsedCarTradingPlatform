@@ -127,6 +127,20 @@ public class MenuController {
     /**
      * 查询菜单
      *
+     * @param id 主键ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:menu:query')")
+    @GetMapping("/{id}")
+    @Operation(summary = "查询菜单", description = "查询菜单", method = "GET")
+    public Result<Menu> getById(@PathVariable Long id) {
+        Menu vo = menuService.getById(id);
+        return Result.success(vo);
+    }
+
+    /**
+     * 查询菜单
+     *
      * @param dto 菜单
      * @return 结果
      */

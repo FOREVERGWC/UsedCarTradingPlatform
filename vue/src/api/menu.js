@@ -67,6 +67,17 @@ export const getMenuPage = (params) => {
 
 /**
  * 查询菜单
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getMenuById = (id) => {
+    return request({
+        url: `/menu/${id}`, method: 'GET'
+    })
+}
+
+/**
+ * 查询菜单
  * @param params 菜单
  * @returns {*} 结果
  */

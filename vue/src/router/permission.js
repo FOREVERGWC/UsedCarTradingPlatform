@@ -2,7 +2,7 @@ import router from './index.js'
 import useUserStore from '@/store/modules/user'
 import usePermissionStore from '@/store/modules/permission'
 
-const whiteList = ['/login', '/register', '/reset-password'];
+const whiteList = ['/login', '/register', '/reset'];
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore();

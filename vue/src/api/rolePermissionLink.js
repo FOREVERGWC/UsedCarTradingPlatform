@@ -7,7 +7,7 @@ import request from '@/utils/request';
  */
 export const saveRolePermissionLink = (data) => {
     return request({
-        url: '/rolePermissionLink', method: 'POST', data: data
+        url: '/role/permission/link', method: 'POST', data: data
     })
 }
 
@@ -18,7 +18,7 @@ export const saveRolePermissionLink = (data) => {
  */
 export const removeRolePermissionLinkBatchByIds = (ids) => {
     return request({
-        url: `/rolePermissionLink/${ids}`, method: 'DELETE'
+        url: `/role/permission/link/${ids}`, method: 'DELETE'
     })
 }
 
@@ -29,7 +29,7 @@ export const removeRolePermissionLinkBatchByIds = (ids) => {
  */
 export const getRolePermissionLinkList = (params) => {
     return request({
-        url: '/rolePermissionLink/list', method: 'GET', params: params
+        url: '/role/permission/link/list', method: 'GET', params: params
     })
 }
 
@@ -40,7 +40,18 @@ export const getRolePermissionLinkList = (params) => {
  */
 export const getRolePermissionLinkPage = (params) => {
     return request({
-        url: '/rolePermissionLink/page', method: 'GET', params: params
+        url: '/role/permission/link/page', method: 'GET', params: params
+    })
+}
+
+/**
+ * 查询角色、权限关系
+ * @param id 主键ID
+ * @returns {*} 结果
+ */
+export const getRolePermissionLinkById = (id) => {
+    return request({
+        url: `/role/permission/link/${id}`, method: 'GET'
     })
 }
 
@@ -51,6 +62,6 @@ export const getRolePermissionLinkPage = (params) => {
  */
 export const getRolePermissionLinkOne = (params) => {
     return request({
-        url: '/rolePermissionLink', method: 'GET', params: params
+        url: '/role/permission/link', method: 'GET', params: params
     })
 }
