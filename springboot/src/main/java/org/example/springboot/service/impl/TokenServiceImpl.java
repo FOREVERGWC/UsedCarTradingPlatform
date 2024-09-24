@@ -34,6 +34,9 @@ public class TokenServiceImpl implements ITokenService {
     @Override
     public String getAuthorization(HttpServletRequest request) {
         String token = request.getHeader(Constants.TOKEN);
+        if (StrUtil.isBlank(token)) {
+            token = request.getParameter(Constants.TOKEN);
+        }
         if (StrUtil.isNotBlank(token) && token.startsWith(Constants.TOKEN_PREFIX)) {
             token = token.replace(Constants.TOKEN_PREFIX, "");
         }

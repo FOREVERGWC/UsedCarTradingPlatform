@@ -7,12 +7,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.entity.system.LogLogin;
 import org.example.springboot.domain.dto.LogLoginDto;
 import org.example.springboot.domain.vo.LogLoginVo;
 import org.example.springboot.mapper.LogLoginMapper;
+import org.example.springboot.service.IBaseService;
 import org.example.springboot.service.ILogLoginService;
+import org.example.springboot.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +29,10 @@ import java.util.Map;
  * </p>
  */
 @Service
-public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin> implements ILogLoginService {
+public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin> implements ILogLoginService, IBaseService<LogLogin> {
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
     @Override
     public List<LogLoginVo> getList(LogLoginDto dto) {
         List<LogLogin> logLoginList = getWrapper(dto).list();
@@ -65,13 +73,18 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin> i
         return vo;
     }
 
-    /**
-     * 组装查询包装器
-     *
-     * @param entity 登录日志
-     * @return 结果
-     */
-    private LambdaQueryChainWrapper<LogLogin> getWrapper(LogLogin entity) {
+    @Override
+    public void exportExcel(LogLogin logLogin, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, logLogin, LogLogin.class, threadPoolTaskExecutor);
+    }
+
+    @Override
+    public List<LogLogin> getPageList(LogLogin entity, IPage<LogLogin> page) {
+        return baseMapper.getPageList((page.getCurrent() - 1) * page.getSize(), page.getSize(), getWrapper(entity));
+    }
+
+    @Override
+    public LambdaQueryChainWrapper<LogLogin> getWrapper(LogLogin entity) {
         LambdaQueryChainWrapper<LogLogin> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, LogLogin::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getOs()), LogLogin::getOs, entity.getOs())

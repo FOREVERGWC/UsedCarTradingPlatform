@@ -91,8 +91,8 @@ public class Article extends BaseEntity {
     /**
      * 可见性(0私有、1公开)
      */
-    @Dict(enumClass = ArticleVisible.class)
     @Schema(description = "可见性(0私有、1公开)")
+    @Dict(enumClass = ArticleVisible.class)
     private String visible;
     /**
      * 允许评论(0否、1是)
@@ -102,8 +102,8 @@ public class Article extends BaseEntity {
     /**
      * 状态(0未发布、1已发布、2定时发布)
      */
-    @Dict(enumClass = ArticleStatus.class)
     @Schema(description = "状态(0未发布、1已发布、2定时发布)")
+    @Dict(enumClass = ArticleStatus.class)
     private String status;
     /**
      * 发布时间

@@ -1,6 +1,7 @@
 package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.vo.LogLoginVo;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.entity.system.LogLogin;
@@ -102,5 +103,17 @@ public class LogLoginController {
     public Result<LogLoginVo> getOne(LogLoginDto dto) {
         LogLoginVo vo = logLoginService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 导出登录日志
+     *
+     * @param logLogin 登录日志
+     * @param response 响应对象
+     */
+    @GetMapping("/export")
+    @Operation(summary = "导出登录日志", description = "导出登录日志", method = "GET")
+    public void exportExcel(LogLogin logLogin, HttpServletResponse response) {
+        logLoginService.exportExcel(logLogin, response);
     }
 }

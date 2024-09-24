@@ -70,8 +70,8 @@ public class Menu extends BaseEntity {
     /**
      * 类型(1目录、2菜单、3按钮)
      */
-    @Dict(enumClass = MenuType.class)
     @Schema(description = "类型(1目录、2菜单、3按钮)")
+    @Dict(enumClass = MenuType.class)
     private String type;
     /**
      * 排序
@@ -81,8 +81,8 @@ public class Menu extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
+    @Dict(enumClass = UserStatus.class)
     private String status;
     /**
      * 可见(0否、1是)

@@ -1,7 +1,10 @@
 package org.example.springboot.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -71,5 +74,27 @@ public class DataUtils {
             return entity == null ? 0L : parentId;
         }
         return getAncestorId(getParentIdFunction.apply(entity), getById, getParentIdFunction);
+    }
+
+    /**
+     * 实体对象转换为VO对象
+     *
+     * @param item    实体对象
+     * @param voClass VO类类型
+     * @param <T>     实体类泛型
+     * @return VO对象
+     */
+    public static <T> T convertToVo(T item, Class<? extends T> voClass) {
+        try {
+            // TODO 考虑使用MapStruct代替BeanUtils.copyProperties
+            Constructor<? extends T> constructor = voClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            T vo = constructor.newInstance();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

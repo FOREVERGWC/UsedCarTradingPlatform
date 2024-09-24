@@ -26,6 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
+//    @Resource
+//    private CorsFilter corsFilter;
     @Resource
     private CheckTokenFilter checkTokenFilter;
     @Resource
@@ -71,7 +73,9 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+
                 .addFilterBefore(checkTokenFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(corsFilter, CheckTokenFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
@@ -79,13 +83,15 @@ public class SecurityConfig {
                                 .requestMatchers("/login", "/login/wechat", "/register", "/password/reset").permitAll()
                                 .requestMatchers("/static/**", "/file/**").permitAll()
                                 .requestMatchers("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**").permitAll()
-                                .anyRequest().authenticated())
+                                .anyRequest().authenticated()
+                )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         // 匿名用户访问处理
                         .authenticationEntryPoint(loginAuthenticationHandler)
                         // 认证用户无权访问处理
                         .accessDeniedHandler(loginAccessDefineHandler)
                 )
+//                .cors(item -> item.configurationSource(corsConfigurationSource()))
                 .headers(headers -> headers.frameOptions((HeadersConfigurer.FrameOptionsConfig::disable)))
                 .headers(headers -> headers.frameOptions((HeadersConfigurer.FrameOptionsConfig::sameOrigin)));
         return http.build();

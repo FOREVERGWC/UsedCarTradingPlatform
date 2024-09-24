@@ -49,8 +49,8 @@ public class Role extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
+    @Dict(enumClass = UserStatus.class)
     private String status;
     /**
      * 逻辑删除(0正常、1删除)

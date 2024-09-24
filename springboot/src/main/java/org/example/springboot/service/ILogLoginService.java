@@ -2,6 +2,7 @@ package org.example.springboot.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.dto.LogLoginDto;
 import org.example.springboot.domain.entity.system.LogLogin;
 import org.example.springboot.domain.vo.LogLoginVo;
@@ -37,4 +38,12 @@ public interface ILogLoginService extends IService<LogLogin> {
      * @return 结果
      */
     LogLoginVo getOne(LogLoginDto dto);
+
+    /**
+     * 导出登录日志
+     *
+     * @param logLogin 登录日志
+     * @param response 响应对象
+     */
+    void exportExcel(LogLogin logLogin, HttpServletResponse response);
 }

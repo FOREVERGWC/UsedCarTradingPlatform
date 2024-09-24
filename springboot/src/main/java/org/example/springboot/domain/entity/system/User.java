@@ -67,8 +67,8 @@ public class User extends BaseEntity {
     /**
      * 性别(0女、1男、2未知)
      */
-    @Dict(enumClass = Gender.class)
     @Schema(description = "性别(0女、1男、2未知)")
+    @Dict(enumClass = Gender.class)
     private String gender;
     /**
      * 生日
@@ -78,8 +78,8 @@ public class User extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
+    @Dict(enumClass = UserStatus.class)
     private String status;
     /**
      * 电话

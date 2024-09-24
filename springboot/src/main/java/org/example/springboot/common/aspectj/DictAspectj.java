@@ -21,24 +21,17 @@ import java.util.Map;
 @Aspect
 @Component
 public class DictAspectj {
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    // 切点，拦截 controller 包下的所有方法
-    @Pointcut("execution(* org.example.springboot.controller..*(..))")
+    @Pointcut("execution(public * org.example.springboot.controller..*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public void controllerMethods() {
     }
 
+    @Pointcut("execution(public * org.example.springboot.controller.*(..)) && @annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    public void excludeResponse() {
+    }
+
     // 在方法成功执行后进行处理
-    @AfterReturning(pointcut = "controllerMethods()", returning = "result")
+    @AfterReturning(pointcut = "controllerMethods() && !excludeResponse()", returning = "result")
     public void doAfterReturning(Object result) {
-//        if (result instanceof List) {
-//            List<?> list = (List<?>) result;
-//            list.forEach(this::processDictAnnotation);
-//        } else {
-//            processDictAnnotation(result);
-//        }
         if (!(result instanceof Result<?> rs)) {
             return;
         }

@@ -1,5 +1,7 @@
 package org.example.springboot.domain;
 
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,30 +31,38 @@ public class BaseEntity implements Serializable {
      * 创建者
      */
     @Schema(description = "创建者")
+    @ExcelProperty(value = "创建者")
     @TableField(fill = FieldFill.INSERT)
     private String createBy;
     /**
      * 创建时间
      */
     @Schema(description = "创建时间")
+//    @ColumnWidth(value = 25)
+    @ExcelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     /**
      * 修改者
      */
     @Schema(description = "修改者")
+    @ExcelProperty(value = "修改者")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
     /**
      * 修改时间
      */
     @Schema(description = "修改时间")
+//    @ColumnWidth(value = 25)
+    @ExcelProperty(value = "修改时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
     /**
      * 备注
      */
     @Schema(description = "备注")
+//    @ColumnWidth(value = 50)
+    @ExcelProperty(value = "备注")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String remark;
 }

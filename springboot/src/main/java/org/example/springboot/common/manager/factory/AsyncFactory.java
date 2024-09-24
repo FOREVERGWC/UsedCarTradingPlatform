@@ -38,7 +38,7 @@ public class AsyncFactory {
             public void run() {
                 String location = AddressUtils.getRealAddressByIP(ip);
                 LogLogin logLogin = LogLogin.builder()
-                        .loginType(loginType)
+                        .loginType(loginType.getCode())
                         .os(ua.getOs().getName())
                         .browser(ua.getBrowser().getName())
                         .ip(ip)

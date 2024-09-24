@@ -64,7 +64,7 @@ public class Permission extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Dict(enumClass = UserStatus.class)
     @Schema(description = "状态(0禁用、1正常)")
+    @Dict(enumClass = UserStatus.class)
     private String status;
 }
