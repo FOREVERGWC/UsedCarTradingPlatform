@@ -28,5 +28,5 @@ public interface LogLoginMapper extends BaseMapper<LogLogin> {
     @Select("SELECT t1.id, t1.login_type, t1.os, t1.browser, t1.ip, t1.location, t1.status, t1.msg, t1.create_by,t1.create_time, t1.update_by, t1.update_time, t1.remark FROM sys_log_login AS t1 JOIN " +
             "(SELECT id FROM sys_log_login ORDER BY create_time DESC LIMIT #{offset}, #{rows}) t2 ON t1.id = t2.id;")
     List<LogLogin> getPageList(Long offset, Long rows, @Param(Constants.WRAPPER) Wrapper<LogLogin> wrapper);
-    // TODO 包装器未生效，传入IPage<LogLogin>无法分页
+    // TODO 包装器未生效，传入IPage<LogLogin>无法分页，${ew.customSqlSegment}无效
 }
