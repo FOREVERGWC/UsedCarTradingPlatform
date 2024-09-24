@@ -65,3 +65,14 @@ export const getLogLoginOne = (params) => {
         url: '/log/login', method: 'GET', params: params
     })
 }
+
+/**
+ * 导出登录日志
+ * @param params 登录日志
+ * @returns {*} 结果
+ */
+export const exportLogLoginExcel = (params) => {
+    return request({
+        url: '/log/login/export', method: 'GET', responseType: 'blob', params: params
+    })
+}

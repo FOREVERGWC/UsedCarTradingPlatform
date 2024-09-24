@@ -72,9 +72,7 @@
               </el-popconfirm>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
-              <vue3-json-excel :fields="menuFields" :json-data="menuList" name='菜单列表.xls'>
-                <el-button icon="Download" plain>导出</el-button>
-              </vue3-json-excel>
+              <el-button icon="Download" plain @click="handleExport">导出</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -206,6 +204,7 @@ import {
   saveMenu
 } from '@/api/menu'
 import {ElMessage} from "element-plus"
+import {downloadFile} from "@/utils/common.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -225,25 +224,6 @@ const multiple = ref(true)
 const parentList = ref([])
 const menuList = ref([])
 const total = ref(0)
-const menuFields = {
-  '序号': {
-    field: 'id',
-    callback: (id) => {
-      const index = menuList.value.findIndex(item => item.id === id)
-      return index + 1
-    }
-  },
-  '主键ID': 'id',
-  '名称': 'name',
-  '图标': 'icon',
-  '父级菜单ID': 'parentId',
-  '路由地址': 'path',
-  '组件路径': 'component',
-  '类型': 'type',
-  '排序': 'sort',
-  '状态': 'status',
-  '可见': 'visible'
-}
 const typeList = [
   {label: '目录', value: '1'},
   {label: '菜单', value: '2'},
@@ -407,6 +387,10 @@ const handleReset = () => {
   queryParams.status = ''
   queryParams.visible = null
   getPage()
+}
+
+const handleExport = () => {
+  downloadFile('/menu/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

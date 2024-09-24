@@ -62,9 +62,7 @@
               </el-popconfirm>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
-              <vue3-json-excel :fields="permissionFields" :json-data="permissionList" name='权限列表.xls'>
-                <el-button icon="Download" plain>导出</el-button>
-              </vue3-json-excel>
+              <el-button icon="Download" plain @click="handleExport">导出</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -164,6 +162,7 @@ import {
   savePermission
 } from '@/api/permission'
 import {ElMessage} from "element-plus"
+import {downloadFile} from "@/utils/common.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -181,21 +180,6 @@ const multiple = ref(true)
 const parentList = ref([])
 const permissionList = ref([])
 const total = ref(0)
-const permissionFields = {
-  '序号': {
-    field: 'id',
-    callback: (id) => {
-      const index = permissionList.value.findIndex(item => item.id === id)
-      return index + 1
-    }
-  },
-  '主键ID': 'id',
-  '名称': 'name',
-  '权限标识': 'code',
-  '父级权限ID': 'parentId',
-  '排序': 'sort',
-  '状态': 'status'
-}
 const statusList = [
   {label: '禁用', value: '0'},
   {label: '正常', value: '1'}
@@ -325,6 +309,10 @@ const handleReset = () => {
   queryParams.sort = null
   queryParams.status = ''
   getPage()
+}
+
+const handleExport = () => {
+  downloadFile('/permission/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

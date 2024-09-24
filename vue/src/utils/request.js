@@ -33,6 +33,9 @@ request.interceptors.request.use(config => {
  */
 request.interceptors.response.use(response => {
     const res = response.data
+    if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+        return response
+    }
     if (res.code === 401) {
         ElMessage.error(res.msg)
         useUserStore().handleLogout().then(() => {

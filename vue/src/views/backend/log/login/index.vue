@@ -51,9 +51,7 @@
               </el-popconfirm>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
-              <vue3-json-excel :fields="logLoginFields" :json-data="logLoginList" name='登录日志列表.xls'>
-                <el-button icon="Download" plain>导出</el-button>
-              </vue3-json-excel>
+              <el-button icon="Download" plain @click="handleExport">导出</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -102,46 +100,15 @@
           @current-change="handleCurrentChange">
       </el-pagination>
     </el-card>
-
-    <el-dialog :title="form.title" v-model="form.visible" destroy-on-close width="40%">
-      <el-form ref="formRef" :model="form.data" :rules="rules" label-width="80px">
-        <el-form-item label="操作系统" prop="os">
-          <el-input v-model="form.data.os" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="浏览器" prop="browser">
-          <el-input v-model="form.data.browser" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="IP" prop="ip">
-          <el-input v-model="form.data.ip" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="IP属地" prop="location">
-          <el-input v-model="form.data.location" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="form.data.status" clearable filterable placeholder="请选择是否状态">
-            <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="消息" prop="msg">
-          <el-input v-model="form.data.msg" autocomplete="new"/>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.data.remark" :rows="5" autocomplete="new" type="textarea"/>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="form.visible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSave">确 定</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {onMounted, reactive, ref, toRaw} from 'vue'
-import {getLogLoginPage, removeLogLoginBatchByIds, saveLogLogin} from '@/api/logLogin.js'
+import {getLogLoginPage, removeLogLoginBatchByIds} from '@/api/logLogin.js'
 import {getUserList} from '@/api/user.js'
 import {ElMessage} from "element-plus"
+import {downloadFile} from "@/utils/common.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -160,40 +127,10 @@ const multiple = ref(true)
 const userList = ref([])
 const logLoginList = ref([])
 const total = ref(0)
-const logLoginFields = {
-  '序号': {
-    field: 'id',
-    callback: (id) => {
-      const index = logLoginList.value.findIndex(item => item.id === id)
-      return index + 1
-    }
-  },
-  '主键ID': 'id',
-  '操作系统': 'os',
-  '浏览器': 'browser',
-  'IP': 'ip',
-  'IP属地': 'location',
-  '状态': 'status',
-  '消息': 'msg'
-}
 const statusList = [
   {label: '是', value: true},
   {label: '否', value: false}
 ]
-const form = ref({
-  visible: false,
-  title: '',
-  data: {}
-})
-const formRef = ref(null)
-const rules = {
-  os: [{required: true, message: '请输入操作系统', trigger: 'blur'}],
-  browser: [{required: true, message: '请输入浏览器', trigger: 'blur'}],
-  ip: [{required: true, message: '请输入IP', trigger: 'blur'}],
-  location: [{required: true, message: '请输入IP属地', trigger: 'blur'}],
-  status: [{required: true, message: '请输入状态(0失败、1成功)', trigger: 'blur'}],
-  msg: [{required: true, message: '请输入消息', trigger: 'blur'}]
-}
 
 const getPage = () => {
   loading.value = true
@@ -204,22 +141,6 @@ const getPage = () => {
     logLoginList.value = res.data?.records || []
     total.value = res.data?.total || 0
     loading.value = false
-  })
-}
-
-const handleSave = () => {
-  formRef.value.validate(valid => {
-    if (!valid) return
-    saveLogLogin(form.value.data).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg)
-        return
-      }
-      ElMessage.success('保存成功！')
-      form.value.visible = false
-    }).finally(() => {
-      getPage()
-    })
   })
 }
 
@@ -252,6 +173,10 @@ const handleReset = () => {
   queryParams.status = null
   queryParams.msg = ''
   getPage()
+}
+
+const handleExport = () => {
+  downloadFile('/log/login/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

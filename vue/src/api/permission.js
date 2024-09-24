@@ -100,3 +100,14 @@ export const getPermissionListByRoleId = (roleId) => {
         method: 'GET'
     })
 }
+
+/**
+ * 导出权限
+ * @param params 权限
+ * @returns {*} 结果
+ */
+export const exportPermissionExcel = (params) => {
+    return request({
+        url: '/permission/export', method: 'GET', responseType: 'blob', params: params
+    })
+}

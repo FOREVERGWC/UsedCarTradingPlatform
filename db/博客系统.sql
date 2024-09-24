@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 14/09/2024 19:27:37
+ Date: 15/09/2024 21:53:11
 */
 
 SET NAMES utf8mb4;
@@ -235,6 +235,78 @@ INSERT INTO `biz_follow` (`id`, `follower_id`, `followed_id`, `create_by`, `crea
 COMMIT;
 
 -- ----------------------------
+-- Table structure for sys_log_login
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_log_login`;
+CREATE TABLE `sys_log_login` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `os` varchar(20) NOT NULL COMMENT '操作系统',
+  `browser` varchar(20) NOT NULL COMMENT '浏览器',
+  `ip` varchar(128) NOT NULL COMMENT 'IP',
+  `location` varchar(20) NOT NULL COMMENT 'IP属地',
+  `status` tinyint(1) NOT NULL COMMENT '状态(0失败、1成功)',
+  `msg` varchar(255) NOT NULL COMMENT '消息',
+  `create_by` varchar(20) NOT NULL COMMENT '创建者',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_by` varchar(20) NOT NULL COMMENT '修改者',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  `remark` varchar(255) NOT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='登录日志表';
+
+-- ----------------------------
+-- Records of sys_log_login
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (1, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:26:04', '1', '2024-09-14 21:26:04', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:43:08', '1', '2024-09-14 21:43:08', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (3, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 1, '请求成功！', '1', '2024-09-14 21:43:33', '1', '2024-09-14 21:43:33', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (4, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:44:49', '1', '2024-09-14 21:44:49', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (5, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:44:59', '1', '2024-09-14 21:44:59', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (6, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:46:07', '1', '2024-09-14 21:46:07', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (7, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:51:19', '1', '2024-09-14 21:51:19', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (8, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:51:20', '1', '2024-09-14 21:51:20', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (9, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:51:31', '1', '2024-09-14 21:51:31', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (10, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 21:54:05', '1', '2024-09-14 21:54:05', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (11, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 1, '请求成功！', '1', '2024-09-14 22:21:38', '1', '2024-09-14 22:21:38', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (12, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 22:56:19', '1', '2024-09-14 22:56:19', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (13, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 1, '请求成功！', '1', '2024-09-14 22:59:08', '1', '2024-09-14 22:59:08', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (14, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 23:01:23', '1', '2024-09-14 23:01:23', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (15, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 1, '请求成功！', '1', '2024-09-14 23:11:14', '1', '2024-09-14 23:11:14', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (16, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-14 23:13:11', '1', '2024-09-14 23:13:11', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (17, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！用户名或密码错误', '1', '2024-09-14 23:22:09', '1', '2024-09-14 23:22:09', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (18, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！用户名或密码错误', '1', '2024-09-14 23:22:40', '1', '2024-09-14 23:22:40', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (19, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 1, '请求成功！', '1', '2024-09-14 23:22:45', '1', '2024-09-14 23:22:45', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (20, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '请求成功！', '1', '2024-09-15 19:12:38', '1', '2024-09-15 19:12:38', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (21, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:23', '1', '2024-09-15 19:14:23', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (22, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:26', '1', '2024-09-15 19:14:26', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (23, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:27', '1', '2024-09-15 19:14:27', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (24, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:28', '1', '2024-09-15 19:14:28', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (25, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:29', '1', '2024-09-15 19:14:29', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (26, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:30', '1', '2024-09-15 19:14:30', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (27, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '%s %s %s', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:33', '1', '2024-09-15 19:14:33', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (28, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:14:36', '1', '2024-09-15 19:14:36', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (29, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户帐号已被锁定', '1', '2024-09-15 19:14:46', '1', '2024-09-15 19:14:46', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (30, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:28', '1', '2024-09-15 19:17:28', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (31, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:39', '1', '2024-09-15 19:17:39', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (32, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:40', '1', '2024-09-15 19:17:40', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (33, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:41', '1', '2024-09-15 19:17:41', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (34, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:42', '1', '2024-09-15 19:17:42', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (35, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '登录失败！验证码错误', '1', '2024-09-15 19:17:43', '1', '2024-09-15 19:17:43', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (36, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户帐号已被锁定', '1', '2024-09-15 19:17:59', '1', '2024-09-15 19:17:59', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (37, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '请求成功！', '1', '2024-09-15 19:18:20', '1', '2024-09-15 19:18:20', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (38, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户已失效', '1', '2024-09-15 19:22:57', '1', '2024-09-15 19:22:57', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (39, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户已失效', '1', '2024-09-15 19:23:18', '1', '2024-09-15 19:23:18', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (40, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '请求成功！', '1', '2024-09-15 19:23:37', '1', '2024-09-15 19:23:37', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (41, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-15 19:36:18', '1', '2024-09-15 19:36:18', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (42, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户名或密码错误', '12', '2024-09-15 19:36:40', '12', '2024-09-15 19:36:40', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (43, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户名或密码错误', '12', '2024-09-15 19:39:29', '12', '2024-09-15 19:39:29', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (44, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-15 19:39:31', '1', '2024-09-15 19:39:31', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (45, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-09-15 20:51:23', '1', '2024-09-15 20:51:23', '');
+INSERT INTO `sys_log_login` (`id`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (46, 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 0, '用户名或密码错误', '12', '2024-09-15 20:51:36', '12', '2024-09-15 20:51:36', '');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
@@ -256,13 +328,13 @@ CREATE TABLE `sys_menu` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='菜单表';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='菜单表';
 
 -- ----------------------------
 -- Records of sys_menu
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (12, '仪表盘', 'Odometer', 0, 0, '/dashboard', '/backend/dashboard/index.vue', '2', 1, '1', 1, '1', '2024-09-02 16:58:27', '1', '2024-09-02 22:06:07', '');
+INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (12, '仪表盘', 'Odometer', 22, 22, '/dashboard', '/backend/dashboard/index.vue', '2', 1, '1', 1, '1', '2024-09-02 16:58:27', '1', '2024-09-14 21:31:21', '');
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (13, '系统管理', 'House', 0, 0, '/system', '/', '1', 2, '1', 1, '1', '2024-09-02 17:00:03', '1', '2024-09-02 17:00:03', '');
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (14, '用户管理', 'User', 13, 13, '/user', '/backend/user/index.vue', '2', 1, '1', 1, '1', '2024-09-02 17:04:45', '1', '2024-09-02 17:04:45', '');
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (15, '角色管理', 'Avatar', 13, 13, '/role', '/backend/role/index.vue', '2', 2, '1', 1, '1', '2024-09-02 17:05:38', '1', '2024-09-05 22:14:14', '');
@@ -272,6 +344,9 @@ INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (19, '文章类别', 'AddLocation', 17, 17, '/category', '/backend/article/category/index.vue', '2', 2, '1', 1, '1', '2024-09-02 17:16:49', '1', '2024-09-02 17:16:49', '');
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (20, '文章标签', 'BrushFilled', 17, 17, '/label', '/backend/article/label/index.vue', '2', 3, '1', 1, '1', '2024-09-02 17:17:49', '1', '2024-09-02 17:18:16', '');
 INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (21, '权限管理', 'Stamp', 13, 13, '/permission', '/backend/permission/index.vue', '2', 4, '1', 1, '1', '2024-09-05 22:53:27', '1', '2024-09-05 22:53:41', '');
+INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (22, '首页', 'HomeFilled', 0, 0, '/', '/', '1', 1, '1', 1, '1', '2024-09-14 21:30:24', '1', '2024-09-15 18:19:03', '');
+INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (23, '日志管理', 'Cellphone', 13, 13, '/log', '', '1', 5, '1', 1, '1', '2024-09-14 21:40:26', '1', '2024-09-14 21:40:26', '');
+INSERT INTO `sys_menu` (`id`, `name`, `icon`, `parent_id`, `ancestor_id`, `path`, `component`, `type`, `sort`, `status`, `visible`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (24, '登录日志', 'Key', 23, 13, '/log/login', '/backend/log/login/index.vue', '2', 1, '1', 1, '1', '2024-09-14 21:42:41', '1', '2024-09-14 21:44:42', '');
 COMMIT;
 
 -- ----------------------------
@@ -368,37 +443,42 @@ CREATE TABLE `sys_role_menu_link` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='角色、菜单关系表';
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='角色、菜单关系表';
 
 -- ----------------------------
 -- Records of sys_role_menu_link
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (47, 2, 12, '1', '2024-09-05 22:17:25', '1', '2024-09-05 22:17:25', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (48, 2, 17, '1', '2024-09-05 22:17:25', '1', '2024-09-05 22:17:25', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (49, 2, 18, '1', '2024-09-05 22:17:25', '1', '2024-09-05 22:17:25', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (50, 2, 19, '1', '2024-09-05 22:17:25', '1', '2024-09-05 22:17:25', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (51, 2, 20, '1', '2024-09-05 22:17:25', '1', '2024-09-05 22:17:25', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (52, 1, 12, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (53, 1, 17, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (54, 1, 18, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (55, 1, 19, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (56, 1, 20, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (57, 1, 13, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (58, 1, 14, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (59, 1, 15, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (60, 1, 16, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (61, 1, 21, '1', '2024-09-05 22:53:55', '1', '2024-09-05 22:53:55', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (98, 3, 12, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (99, 3, 18, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (100, 3, 19, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (101, 3, 17, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (102, 3, 20, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (103, 3, 13, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (104, 3, 14, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (105, 3, 15, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (106, 3, 16, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
-INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (107, 3, 21, '1', '2024-09-14 01:20:12', '1', '2024-09-14 01:20:12', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (119, 2, 12, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (120, 2, 17, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (121, 2, 18, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (122, 2, 19, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (123, 2, 20, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (124, 2, 22, '1', '2024-09-14 21:31:44', '1', '2024-09-14 21:31:44', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (125, 3, 12, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (126, 3, 18, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (127, 3, 19, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (128, 3, 17, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (129, 3, 20, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (130, 3, 13, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (131, 3, 14, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (132, 3, 15, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (133, 3, 16, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (134, 3, 21, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (135, 3, 22, '1', '2024-09-14 21:31:47', '1', '2024-09-14 21:31:47', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (136, 1, 12, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (137, 1, 17, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (138, 1, 18, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (139, 1, 19, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (140, 1, 20, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (141, 1, 13, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (142, 1, 14, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (143, 1, 15, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (144, 1, 16, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (145, 1, 21, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (146, 1, 22, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (147, 1, 23, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
+INSERT INTO `sys_role_menu_link` (`id`, `role_id`, `menu_id`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (148, 1, 24, '1', '2024-09-14 21:42:56', '1', '2024-09-14 21:42:56', '');
 COMMIT;
 
 -- ----------------------------
@@ -499,7 +579,7 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/745f065e-fb1f-4d65-92eb-927ae8030663.jpg', '2', '2024-08-01 00:00:00', '1', '13037503398', '9165865955@qq.com', '1', 0.00, '1', '2024-08-15 00:00:00', '', '2024-08-16 01:26:41', '1', '2024-09-14 07:28:40', '');
+INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/745f065e-fb1f-4d65-92eb-927ae8030663.jpg', '2', '2024-08-01 00:00:00', '1', '13037503398', '9165865955@qq.com', '1', 0.00, '1', '2024-08-15 00:00:00', '', '2024-08-16 01:26:41', '1', '2024-09-15 19:22:28', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (4, '2', '$2a$10$elhEi/ohemfnXateL1BLZ.lLi.fJ31tDVKdSpr3xnr40pdMjAlqlG', '', '张三', '1', '', '2024-08-22 00:00:00', '1', '13037503390', '916586595@qq.com', '1', 0.00, '1', '2024-08-28 00:00:00', '', '2024-08-16 09:00:11', '', '2024-09-14 06:58:03', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (5, '3', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/files/c3f7a394-7b91-43b3-b924-5d1592426f06.jpg', '2', '2024-08-27 00:00:00', '1', '13037503391', '2@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (6, '4', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/files/a3336d6e-4ef8-46f0-99e6-a104122b9f88.jpg', '2', '2024-08-17 00:00:00', '0', '13037503392', '3@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:34:13', '1', '2024-08-21 15:13:15', '1');

@@ -1,4 +1,6 @@
 import _ from 'lodash-es'
+import {tansParams} from "@/utils/request.js";
+import useUserStore from "@/store/modules/user.js";
 
 export const statusList = [
     {label: '禁用', value: '0'},
@@ -48,3 +50,13 @@ export const getExpandedIds = (data) => {
 
     return ids
 }
+
+/**
+ * 下载文件
+ * @param url 下载地址
+ * @param params 参数
+ */
+export const downloadFile = (url, params = {}) => {
+    const userStore = useUserStore()
+    window.open(`${import.meta.env.VITE_APP_BASE_API}${url}?${tansParams(params)}&token=${userStore.token}`, '_target')
+};

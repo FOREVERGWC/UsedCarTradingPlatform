@@ -47,9 +47,7 @@
               </el-popconfirm>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
-              <vue3-json-excel :fields="roleFields" :json-data="roleList" name='角色列表.xls'>
-                <el-button icon="Download" plain>导出</el-button>
-              </vue3-json-excel>
+              <el-button icon="Download" plain @click="handleExport">导出</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -141,6 +139,7 @@ import {getRoleOne, getRolePage, handleStatusRole, removeRoleBatchByIds, saveRol
 import {ElMessage} from "element-plus"
 import MenuAssign from "./components/MenuAssign.vue";
 import PermissionAssign from './components/PermissionAssign.vue'
+import {downloadFile} from "@/utils/common.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -154,19 +153,6 @@ const single = ref(true)
 const multiple = ref(true)
 const roleList = ref([])
 const total = ref(0)
-const roleFields = {
-  '序号': {
-    field: 'id',
-    callback: (id) => {
-      const index = roleList.value.findIndex(item => item.id === id)
-      return index + 1
-    }
-  },
-  '主键ID': 'id',
-  '角色名称': 'name',
-  '排序': 'sort',
-  '状态(0禁用、1正常)': 'status'
-}
 const statusList = [
   {label: '禁用', value: '0'},
   {label: '正常', value: '1'}
@@ -297,6 +283,10 @@ const handleReset = () => {
   queryParams.name = ''
   queryParams.status = ''
   getPage()
+}
+
+const handleExport = () => {
+  downloadFile('/role/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

@@ -100,3 +100,14 @@ export const handleRolePermission = (data) => {
         url: '/role/permission', method: 'POST', data: data
     })
 }
+
+/**
+ * 导出角色
+ * @param params 角色
+ * @returns {*} 结果
+ */
+export const exportRoleExcel = (params) => {
+    return request({
+        url: '/role/export', method: 'GET', responseType: 'blob', params: params
+    })
+}

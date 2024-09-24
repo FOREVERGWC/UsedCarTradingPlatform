@@ -87,3 +87,14 @@ export const handleUserRole = (data) => {
         url: '/user/role', method: 'POST', data: data
     })
 }
+
+/**
+ * 导出用户
+ * @param params 用户
+ * @returns {*} 结果
+ */
+export const exportUserExcel = (params) => {
+    return request({
+        url: '/user/export', method: 'GET', responseType: 'blob', params: params
+    })
+}

@@ -74,9 +74,7 @@
               </el-popconfirm>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
-              <vue3-json-excel :fields="userFields" :json-data="userList" name='用户信息列表.xls'>
-                <el-button icon="Download" plain>导出</el-button>
-              </vue3-json-excel>
+              <el-button icon="Download" plain @click="handleExport">导出</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -251,7 +249,7 @@ import RoleAssign from './components/RoleAssign.vue';
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user'
 import {ElMessage} from "element-plus"
-import {formatDate, genderList, statusList} from "@/utils/common.js";
+import {downloadFile, formatDate, genderList, statusList} from "@/utils/common.js";
 import useRoleStore from "@/store/modules/role.js";
 
 const roleStore = useRoleStore();
@@ -279,28 +277,6 @@ const multiple = ref(true)
 const roleList = ref(roleStore.roleList)
 const userList = ref([])
 const total = ref(0)
-const userFields = {
-  '序号': {
-    field: 'id',
-    callback: (id) => {
-      const index = userList.value.findIndex(item => item.id === id)
-      return index + 1
-    }
-  },
-  '主键ID': 'id',
-  '用户名': 'username',
-  '姓名': 'name',
-  '头像': 'avatar',
-  '生日': 'birthday',
-  '状态': 'status',
-  '角色': 'role',
-  '电话': 'phone',
-  '邮箱': 'email',
-  '微信小程序开放ID': 'openId',
-  '余额': 'balance',
-  '最后登录IP': 'loginIp',
-  '最后登录时间': 'loginTime'
-}
 const form = ref({
   visible: false,
   title: '',
@@ -436,6 +412,10 @@ const resetQuery = () => {
   queryParams.loginIp = ''
   queryParams.loginTime = ''
   getPage()
+}
+
+const handleExport = () => {
+  downloadFile('/user/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

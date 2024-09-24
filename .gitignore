@@ -1,5 +1,6 @@
 /.idea/
 /logs/
+/files/
 /springboot/.idea/
 /springboot/.mvn/
 /springboot/logs/
@@ -7,3 +8,4 @@
 /vue/.idea/
 /vue/.vscode/
 /vue/node_modules/
+/springboot/system/target

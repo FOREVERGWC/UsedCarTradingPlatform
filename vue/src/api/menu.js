@@ -122,3 +122,14 @@ export const getMenuListByRoleId = (roleId) => {
         method: 'GET'
     })
 }
+
+/**
+ * 导出菜单
+ * @param params 菜单
+ * @returns {*} 结果
+ */
+export const exportMenuExcel = (params) => {
+    return request({
+        url: '/menu/export', method: 'GET', responseType: 'blob', params: params
+    })
+}
