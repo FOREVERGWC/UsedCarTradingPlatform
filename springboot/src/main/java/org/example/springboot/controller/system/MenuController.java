@@ -1,6 +1,7 @@
 package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.vo.MenuVo;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.entity.system.Menu;
@@ -150,6 +151,19 @@ public class MenuController {
     public Result<MenuVo> getOne(MenuDto dto) {
         MenuVo vo = menuService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 导出菜单
+     *
+     * @param menu     菜单
+     * @param response 响应对象
+     */
+    @PreAuthorize("hasAnyAuthority('system:menu:export')")
+    @GetMapping("/export")
+    @Operation(summary = "导出菜单", description = "导出菜单", method = "GET")
+    public void exportExcel(Menu menu, HttpServletResponse response) {
+        menuService.exportExcel(menu, response);
     }
 
     /**

@@ -2,6 +2,7 @@ package org.example.springboot.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.UserVo;
@@ -37,6 +38,14 @@ public interface IUserService extends IService<User> {
      * @return 结果
      */
     UserVo getOne(UserDto dto);
+
+    /**
+     * 导出用户
+     *
+     * @param user     用户
+     * @param response 响应对象
+     */
+    void exportExcel(User user, HttpServletResponse response);
 
     /**
      * 根据用户名查询用户信息

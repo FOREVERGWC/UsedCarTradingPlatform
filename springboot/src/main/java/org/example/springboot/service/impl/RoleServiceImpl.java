@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.enums.DeleteEnum;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
@@ -17,9 +18,12 @@ import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.entity.system.UserRoleLink;
 import org.example.springboot.domain.vo.RoleVo;
 import org.example.springboot.mapper.RoleMapper;
+import org.example.springboot.service.IBaseService;
 import org.example.springboot.service.IRoleService;
 import org.example.springboot.service.IUserRoleLinkService;
+import org.example.springboot.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +36,11 @@ import java.util.stream.Collectors;
  * </p>
  */
 @Service
-public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
+public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService, IBaseService<Role> {
     @Resource
     private IUserRoleLinkService userRoleLinkService;
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public boolean save(Role entity) {
@@ -154,6 +160,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
+    public void exportExcel(Role role, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, role, Role.class, threadPoolTaskExecutor);
+    }
+
+    @Override
     public void handleStatus(Long id) {
         Role role = getById(id);
         if (role == null) {
@@ -167,13 +178,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         updateById(role);
     }
 
-    /**
-     * 组装查询包装器
-     *
-     * @param entity 角色
-     * @return 结果
-     */
-    private LambdaQueryChainWrapper<Role> getWrapper(Role entity) {
+    @Override
+    public List<Role> getPageList(Role entity, IPage<Role> page) {
+        IPage<Role> info = getWrapper(entity).page(page);
+        if (CollectionUtil.isEmpty(info.getRecords())) {
+            return List.of();
+        }
+        return info.getRecords();
+    }
+
+    @Override
+    public LambdaQueryChainWrapper<Role> getWrapper(Role entity) {
         LambdaQueryChainWrapper<Role> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Role::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), Role::getName, entity.getName())

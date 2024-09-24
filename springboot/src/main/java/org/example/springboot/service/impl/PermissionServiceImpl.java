@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
@@ -15,11 +16,14 @@ import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.dto.PermissionDto;
 import org.example.springboot.domain.vo.PermissionVo;
 import org.example.springboot.mapper.PermissionMapper;
+import org.example.springboot.service.IBaseService;
 import org.example.springboot.service.IPermissionService;
 import org.example.springboot.service.IRolePermissionLinkService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.utils.DataUtils;
+import org.example.springboot.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,11 +34,13 @@ import java.util.*;
  * </p>
  */
 @Service
-public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
+public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService, IBaseService<Permission> {
     @Resource
     private IRolePermissionLinkService rolePermissionLinkService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public boolean save(Permission entity) {
@@ -163,6 +169,11 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
+    public void exportExcel(Permission permission, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, permission, Permission.class, threadPoolTaskExecutor);
+    }
+
+    @Override
     public void handleStatus(Long id) {
         Permission permission = getById(id);
         if (permission == null) {
@@ -176,13 +187,17 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         updateById(permission);
     }
 
-    /**
-     * 组装查询包装器
-     *
-     * @param entity 权限
-     * @return 结果
-     */
-    private LambdaQueryChainWrapper<Permission> getWrapper(Permission entity) {
+    @Override
+    public List<Permission> getPageList(Permission entity, IPage<Permission> page) {
+        IPage<Permission> info = getWrapper(entity).page(page);
+        if (CollectionUtil.isEmpty(info.getRecords())) {
+            return List.of();
+        }
+        return info.getRecords();
+    }
+
+    @Override
+    public LambdaQueryChainWrapper<Permission> getWrapper(Permission entity) {
         LambdaQueryChainWrapper<Permission> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Permission::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), Permission::getName, entity.getName())

@@ -1,6 +1,7 @@
 package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.model.AssignMenuBody;
 import org.example.springboot.domain.model.AssignPermissionBody;
 import org.example.springboot.domain.vo.RoleVo;
@@ -118,6 +119,19 @@ public class RoleController {
     public Result<RoleVo> getOne(RoleDto dto) {
         RoleVo vo = roleService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 导出角色
+     *
+     * @param role     角色
+     * @param response 响应对象
+     */
+    @PreAuthorize("hasAnyAuthority('system:role:export')")
+    @GetMapping("/export")
+    @Operation(summary = "导出角色", description = "导出角色", method = "GET")
+    public void exportExcel(Role role, HttpServletResponse response) {
+        roleService.exportExcel(role, response);
     }
 
     /**

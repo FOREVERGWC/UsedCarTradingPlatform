@@ -2,6 +2,7 @@ package org.example.springboot.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.dto.PermissionDto;
 import org.example.springboot.domain.entity.system.Permission;
 import org.example.springboot.domain.vo.PermissionVo;
@@ -61,6 +62,14 @@ public interface IPermissionService extends IService<Permission> {
      * @return 结果
      */
     PermissionVo getOne(PermissionDto dto);
+
+    /**
+     * 导出权限
+     *
+     * @param permission 权限
+     * @param response   响应对象
+     */
+    void exportExcel(Permission permission, HttpServletResponse response);
 
     /**
      * 恢复或停用权限

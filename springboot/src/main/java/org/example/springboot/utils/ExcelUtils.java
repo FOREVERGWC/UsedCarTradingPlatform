@@ -46,6 +46,7 @@ public class ExcelUtils {
      * @param <T>      导出数据实体类泛型
      */
     public static <T> void exportExcel(HttpServletResponse response, IBaseService<T> service, T entity, Class<T> clazz, ThreadPoolTaskExecutor executor) {
+        // TODO 进一步优化策略：附件存储至MinIO，返回附件URL，将查询参数存储至Redis，value为附件URL
         long start = System.currentTimeMillis();
 
         String fileName;
@@ -65,13 +66,14 @@ public class ExcelUtils {
 
         int dataCount = service.getWrapper(entity).count().intValue();
         int fileCount = (int) Math.ceil((double) dataCount / Constants.PER_FILE_ROW_COUNT);
+        int lastFileSheetCount = ((dataCount - (fileCount - 1) * Constants.PER_FILE_ROW_COUNT) / Constants.PER_FILE_ROW_COUNT) + 1;
 
         String finalFileName = fileName;
         List<CompletableFuture<Path>> futures = IntStream.range(0, fileCount)
                 .mapToObj(i -> CompletableFuture.supplyAsync(() -> {
                                     String tempFileName = finalFileName + "_" + i + ".xlsx";
                                     Path tempFilePath = Paths.get(System.getProperty("java.io.tmpdir"), tempFileName);
-                                    generateExcelFile(tempFilePath.toString(), sheetName, service, entity, clazz, i);
+                                    generateExcelFile(tempFilePath.toString(), sheetName, service, entity, clazz, i, i == fileCount - 1 ? lastFileSheetCount : Constants.PER_FILE_SHEET_COUNT);
                                     return tempFilePath;
                                 }, executor)
                                 .exceptionally(e -> processException(finalFileName, sheetName, e))
@@ -110,27 +112,28 @@ public class ExcelUtils {
         }
 
         long end = System.currentTimeMillis();
-        System.out.println("导出耗时：" + (end - start) * 1.0 / 1000 + "s");
+        log.info("导出【{}】耗时：{}秒", fileName, (end - start) * 1.0 / 1000);
     }
 
     /**
-     * @param pathName  文件路径
-     * @param sheetName 工作簿名称
-     * @param service   服务实现类
-     * @param entity    导出数据查询条件
-     * @param clazz     导出数据实体类
-     * @param fileIndex 文件下标
-     * @param <T>       导出数据实体类泛型
+     * @param pathName   文件路径
+     * @param sheetName  工作簿名称
+     * @param service    服务实现类
+     * @param entity     导出数据查询条件
+     * @param clazz      导出数据实体类
+     * @param fileIndex  文件下标
+     * @param sheetCount 工作簿数量
+     * @param <T>        导出数据实体类泛型
      */
     private static <T> void generateExcelFile(String pathName,
                                               String sheetName,
                                               IBaseService<T> service,
                                               T entity,
                                               Class<T> clazz,
-                                              int fileIndex) {
+                                              int fileIndex,
+                                              int sheetCount) {
         try (ExcelWriter excelWriter = EasyExcel.write(pathName).build()) {
-            // TODO 计算最后一个文件需要的工作簿数
-            for (int i = 0; i < Constants.PER_FILE_SHEET_COUNT; i++) {
+            IntStream.range(0, sheetCount).forEach(i -> {
                 WriteSheet ws = EasyExcel.writerSheet(i, sheetName + (i + 1))
                         .head(clazz)
                         .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
@@ -138,7 +141,8 @@ public class ExcelUtils {
                 int current = (fileIndex * Constants.PER_FILE_SHEET_COUNT) + i + 1;
                 List<T> list = service.getPageList(entity, new Page<>(current, Constants.PER_WRITE_ROW_COUNT));
                 excelWriter.write(list, ws);
-            }
+            });
+
         }
     }
 

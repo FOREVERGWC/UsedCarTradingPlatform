@@ -2,6 +2,7 @@ package org.example.springboot.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.vo.MenuVo;
@@ -68,6 +69,14 @@ public interface IMenuService extends IService<Menu> {
      * @return 结果
      */
     MenuVo getOne(MenuDto dto);
+
+    /**
+     * 导出菜单
+     *
+     * @param menu     菜单
+     * @param response 响应对象
+     */
+    void exportExcel(Menu menu, HttpServletResponse response);
 
     /**
      * 恢复或停用菜单

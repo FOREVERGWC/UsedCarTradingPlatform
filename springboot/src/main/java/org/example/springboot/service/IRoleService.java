@@ -2,6 +2,7 @@ package org.example.springboot.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.dto.RoleDto;
 import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.vo.RoleVo;
@@ -62,6 +63,14 @@ public interface IRoleService extends IService<Role> {
      * @return 结果
      */
     RoleVo getOne(RoleDto dto);
+
+    /**
+     * 导出角色
+     *
+     * @param role     角色
+     * @param response 响应对象
+     */
+    void exportExcel(Role role, HttpServletResponse response);
 
     /**
      * 恢复或停用角色

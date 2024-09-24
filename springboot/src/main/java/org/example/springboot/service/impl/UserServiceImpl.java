@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.enums.Gender;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
@@ -17,10 +18,13 @@ import org.example.springboot.domain.entity.system.Role;
 import org.example.springboot.domain.entity.system.User;
 import org.example.springboot.domain.vo.UserVo;
 import org.example.springboot.mapper.UserMapper;
+import org.example.springboot.service.IBaseService;
 import org.example.springboot.service.IRoleService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.service.IUserService;
+import org.example.springboot.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +39,13 @@ import java.util.Objects;
  * </p>
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService, IBaseService<User> {
     @Resource
     private IRoleService roleService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public boolean save(User entity) {
@@ -128,6 +134,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public void exportExcel(User user, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, user, User.class, threadPoolTaskExecutor);
+    }
+
+    @Override
     public User getByUsername(String username) {
         return lambdaQuery()
                 .eq(User::getUsername, username)
@@ -160,6 +171,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setStatus(UserStatus.NORMAL.getCode());
         }
         updateById(user);
+    }
+
+    @Override
+    public List<User> getPageList(User entity, IPage<User> page) {
+        IPage<User> info = getWrapper(entity).page(page);
+        if (CollectionUtil.isEmpty(info.getRecords())) {
+            return List.of();
+        }
+        return info.getRecords();
+    }
+
+    @Override
+    public LambdaQueryChainWrapper<User> getWrapper(User entity) {
+        LambdaQueryChainWrapper<User> wrapper = lambdaQuery()
+                .eq(entity.getId() != null, User::getId, entity.getId())
+                .like(StrUtil.isNotBlank(entity.getUsername()), User::getUsername, entity.getUsername())
+                .like(StrUtil.isNotBlank(entity.getNickname()), User::getNickname, entity.getNickname())
+                .like(StrUtil.isNotBlank(entity.getName()), User::getName, entity.getName())
+                .eq(StrUtil.isNotBlank(entity.getGender()), User::getGender, entity.getGender())
+                .eq(entity.getBirthday() != null, User::getBirthday, entity.getBirthday())
+                .like(StrUtil.isNotBlank(entity.getStatus()), User::getStatus, entity.getStatus())
+                .like(StrUtil.isNotBlank(entity.getPhone()), User::getPhone, entity.getPhone())
+                .like(StrUtil.isNotBlank(entity.getEmail()), User::getEmail, entity.getEmail())
+                .like(StrUtil.isNotBlank(entity.getOpenId()), User::getOpenId, entity.getOpenId())
+                .eq(entity.getBalance() != null, User::getBalance, entity.getBalance())
+                .like(StrUtil.isNotBlank(entity.getLoginIp()), User::getLoginIp, entity.getLoginIp());
+        if (entity instanceof UserDto dto) {
+            Map<String, Object> params = dto.getParams();
+            // 创建时间
+            Object startCreateTime = params == null ? null : params.get("startCreateTime");
+            Object endCreateTime = params == null ? null : params.get("endCreateTime");
+
+            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
+                    User::getCreateTime,
+                    startCreateTime, endCreateTime);
+        }
+        return wrapper;
     }
 
     /**
@@ -226,38 +274,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if (!Objects.equals(id, user.getId())) {
             throw new RuntimeException("修改失败！邮箱已存在");
         }
-    }
-
-    /**
-     * 组装查询包装器
-     *
-     * @param entity 用户信息
-     * @return 结果
-     */
-    private LambdaQueryChainWrapper<User> getWrapper(User entity) {
-        LambdaQueryChainWrapper<User> wrapper = lambdaQuery()
-                .eq(entity.getId() != null, User::getId, entity.getId())
-                .like(StrUtil.isNotBlank(entity.getUsername()), User::getUsername, entity.getUsername())
-                .like(StrUtil.isNotBlank(entity.getNickname()), User::getNickname, entity.getNickname())
-                .like(StrUtil.isNotBlank(entity.getName()), User::getName, entity.getName())
-                .eq(StrUtil.isNotBlank(entity.getGender()), User::getGender, entity.getGender())
-                .eq(entity.getBirthday() != null, User::getBirthday, entity.getBirthday())
-                .like(StrUtil.isNotBlank(entity.getStatus()), User::getStatus, entity.getStatus())
-                .like(StrUtil.isNotBlank(entity.getPhone()), User::getPhone, entity.getPhone())
-                .like(StrUtil.isNotBlank(entity.getEmail()), User::getEmail, entity.getEmail())
-                .like(StrUtil.isNotBlank(entity.getOpenId()), User::getOpenId, entity.getOpenId())
-                .eq(entity.getBalance() != null, User::getBalance, entity.getBalance())
-                .like(StrUtil.isNotBlank(entity.getLoginIp()), User::getLoginIp, entity.getLoginIp());
-        if (entity instanceof UserDto dto) {
-            Map<String, Object> params = dto.getParams();
-            // 创建时间
-            Object startCreateTime = params == null ? null : params.get("startCreateTime");
-            Object endCreateTime = params == null ? null : params.get("endCreateTime");
-
-            wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
-                    User::getCreateTime,
-                    startCreateTime, endCreateTime);
-        }
-        return wrapper;
     }
 }

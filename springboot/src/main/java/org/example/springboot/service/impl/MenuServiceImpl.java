@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.enums.ResultCode;
 import org.example.springboot.common.enums.UserStatus;
 import org.example.springboot.common.exception.CustomException;
@@ -15,12 +16,15 @@ import org.example.springboot.domain.entity.system.Menu;
 import org.example.springboot.domain.dto.MenuDto;
 import org.example.springboot.domain.vo.MenuVo;
 import org.example.springboot.mapper.MenuMapper;
+import org.example.springboot.service.IBaseService;
 import org.example.springboot.service.IMenuService;
 import org.example.springboot.service.IRoleMenuLinkService;
 import org.example.springboot.service.IUserRoleLinkService;
 import org.example.springboot.utils.DataUtils;
+import org.example.springboot.utils.ExcelUtils;
 import org.example.springboot.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -31,11 +35,13 @@ import java.util.*;
  * </p>
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService, IBaseService<Menu> {
     @Resource
     private IUserRoleLinkService userRoleLinkService;
     @Resource
     private IRoleMenuLinkService roleMenuLinkService;
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public boolean save(Menu entity) {
@@ -204,6 +210,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     }
 
     @Override
+    public void exportExcel(Menu menu, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, menu, Menu.class, threadPoolTaskExecutor);
+    }
+
+    @Override
     public void handleStatus(Long id) {
         Menu menu = getById(id);
         if (menu == null) {
@@ -227,13 +238,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         updateById(menu);
     }
 
-    /**
-     * 组装查询包装器
-     *
-     * @param entity 菜单
-     * @return 结果
-     */
-    private LambdaQueryChainWrapper<Menu> getWrapper(Menu entity) {
+    @Override
+    public List<Menu> getPageList(Menu entity, IPage<Menu> page) {
+        IPage<Menu> info = getWrapper(entity).page(page);
+        if (CollectionUtil.isEmpty(info.getRecords())) {
+            return List.of();
+        }
+        return info.getRecords();
+    }
+
+    @Override
+    public LambdaQueryChainWrapper<Menu> getWrapper(Menu entity) {
         LambdaQueryChainWrapper<Menu> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Menu::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), Menu::getName, entity.getName())

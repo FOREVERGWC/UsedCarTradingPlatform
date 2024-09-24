@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.dto.UserDto;
 import org.example.springboot.domain.entity.system.User;
@@ -113,6 +114,19 @@ public class UserController {
     public Result<UserVo> getOne(UserDto dto) {
         UserVo vo = userService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 导出用户
+     *
+     * @param user     用户
+     * @param response 响应对象
+     */
+    @PreAuthorize("hasAnyAuthority('system:user:export')")
+    @GetMapping("/export")
+    @Operation(summary = "导出用户", description = "导出用户", method = "GET")
+    public void exportExcel(User user, HttpServletResponse response) {
+        userService.exportExcel(user, response);
     }
 
     /**

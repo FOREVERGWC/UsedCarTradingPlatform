@@ -1,6 +1,7 @@
 package org.example.springboot.controller.system;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.domain.vo.PermissionVo;
 import org.example.springboot.domain.Result;
 import org.example.springboot.domain.entity.system.Permission;
@@ -137,6 +138,19 @@ public class PermissionController {
     public Result<PermissionVo> getOne(PermissionDto dto) {
         PermissionVo vo = permissionService.getOne(dto);
         return Result.success(vo);
+    }
+
+    /**
+     * 导出权限
+     *
+     * @param permission 权限
+     * @param response   响应对象
+     */
+    @PreAuthorize("hasAnyAuthority('system:permission:export')")
+    @GetMapping("/export")
+    @Operation(summary = "导出权限", description = "导出权限", method = "GET")
+    public void exportExcel(Permission permission, HttpServletResponse response) {
+        permissionService.exportExcel(permission, response);
     }
 
     /**
