@@ -1,10 +1,12 @@
 package org.example.springboot.system.service;
 
 import org.example.springboot.system.domain.model.LoginBody;
-import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.domain.model.RegisterBody;
 import org.example.springboot.system.domain.model.ResetBody;
 import org.example.springboot.system.domain.vo.CaptchaVo;
+import org.example.springboot.system.domain.vo.RouteVo;
+
+import java.util.List;
 
 public interface IAuthService {
     /**
@@ -15,12 +17,12 @@ public interface IAuthService {
     CaptchaVo getCaptcha();
 
     /**
-     * PC端登录
+     * 登录
      *
-     * @param body PC端登录请求体
+     * @param body 登录请求体
      * @return 结果
      */
-    LoginUser login(LoginBody body);
+    String login(LoginBody body);
 
     /**
      * 注册用户
@@ -35,4 +37,11 @@ public interface IAuthService {
      * @param body 密码信息
      */
     void resetPassword(ResetBody body);
+
+    /**
+     * 获取当前用户路由信息
+     *
+     * @return 结果
+     */
+    List<RouteVo> getRoute();
 }

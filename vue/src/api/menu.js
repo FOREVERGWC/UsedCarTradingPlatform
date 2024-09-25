@@ -45,16 +45,6 @@ export const getMenuTree = (params) => {
 }
 
 /**
- * 查询用户菜单树
- * @returns {*} 结果
- */
-export const getMenuAuthTree = () => {
-    return request({
-        url: '/menu/auth/tree', method: 'GET'
-    })
-}
-
-/**
  * 查询菜单分页
  * @param params 菜单
  * @returns {*} 结果
@@ -84,6 +74,17 @@ export const getMenuById = (id) => {
 export const getMenuOne = (params) => {
     return request({
         url: '/menu', method: 'GET', params: params
+    })
+}
+
+/**
+ * 导出菜单
+ * @param params 菜单
+ * @returns {*} 结果
+ */
+export const exportMenuExcel = (params) => {
+    return request({
+        url: '/menu/export', method: 'GET', responseType: 'blob', params: params
     })
 }
 
@@ -120,16 +121,5 @@ export const getMenuListByRoleId = (roleId) => {
     return request({
         url: `/menu/role/${roleId}`,
         method: 'GET'
-    })
-}
-
-/**
- * 导出菜单
- * @param params 菜单
- * @returns {*} 结果
- */
-export const exportMenuExcel = (params) => {
-    return request({
-        url: '/menu/export', method: 'GET', responseType: 'blob', params: params
     })
 }

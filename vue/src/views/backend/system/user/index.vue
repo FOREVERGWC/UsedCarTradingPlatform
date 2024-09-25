@@ -135,7 +135,7 @@
               <el-image v-if="row.avatar" :preview-src-list="[getUrl(row.avatar)]" :src="getUrl(row.avatar)"
                         preview-teleported>
                 <template #error>
-                  <img alt="" src="@/assets/imgs/profile.png"/>
+                  <img alt="" src="../../../../assets/imgs/profile.png"/>
                 </template>
               </el-image>
             </div>
@@ -247,7 +247,7 @@
 <script setup>
 import RoleAssign from './components/RoleAssign.vue';
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user'
+import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user.js'
 import {ElMessage} from "element-plus"
 import {downloadFile, formatDate, genderList, statusList} from "@/utils/common.js";
 import useRoleStore from "@/store/modules/role.js";

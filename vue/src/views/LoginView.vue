@@ -13,15 +13,11 @@
         </el-form-item>
         <el-form-item class="email" prop="email" v-if="form.loginType === '2'">
           <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
-          <el-button @click="handleEmailCaptcha" :disabled="isSending">
-            {{ isSending ? `${timer}s` : '发送' }}
-          </el-button>
+          <CounterButton :handleClick="handleEmailCaptcha"/>
         </el-form-item>
         <el-form-item class="phone" prop="phone" v-if="form.loginType === '3'">
           <el-input v-model="form.phone" placeholder="手机" prefix-icon="Iphone" autocomplete="new"/>
-          <el-button @click="handlePhoneCaptcha" :disabled="isSending">
-            {{ isSending ? `${timer}s` : '发送' }}
-          </el-button>
+          <CounterButton :handleClick="handlePhoneCaptcha"/>
         </el-form-item>
         <el-form-item prop="password" v-if="form.loginType === '1'">
           <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="Lock" show-password
@@ -90,8 +86,6 @@ const rules = {
   code: [{required: true, message: '请输入验证码', trigger: 'blur'}]
 };
 const formRef = ref(null)
-const isSending = ref(false);
-const timer = ref(60);
 
 const handleCaptcha = () => {
   getCaptcha().then(res => {
@@ -100,37 +94,50 @@ const handleCaptcha = () => {
       return
     }
     enabled.value = res.data.enabled
-    form.value.uuid = res.data.uuid
     captcha.value = res.data.img
+    form.value.uuid = res.data.uuid
+    form.value.code = ''
   })
 }
 
 const handleEmailCaptcha = () => {
-  formRef.value.validateField('email', (valid) => {
-    if (!valid) return;
-    const data = {email: form.value.email};
-    sendLoginCode(data).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg);
+  return new Promise((resolve) => {
+    formRef.value.validateField('email', (valid) => {
+      if (!valid) {
+        resolve(false);
         return;
       }
-      ElMessage.success('发送成功！请注意查收');
-      startTimer();
+      const data = {email: form.value.email};
+      sendLoginCode(data).then(res => {
+        if (res.code !== 200) {
+          ElMessage.error(res.msg);
+          resolve(false);
+          return;
+        }
+        ElMessage.success('发送成功！请注意查收');
+        resolve(true);
+      });
     });
   });
 }
 
 const handlePhoneCaptcha = () => {
-  formRef.value.validateField('email', (valid) => {
-    if (!valid) return;
-    const data = {email: form.value.email};
-    sendLoginCode(data).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg);
+  return new Promise((resolve) => {
+    formRef.value.validateField('phone', (valid) => {
+      if (!valid) {
+        resolve(false);
         return;
       }
-      ElMessage.success('发送成功！请注意查收');
-      startTimer();
+      const data = {email: form.value.email};
+      sendLoginCode(data).then(res => {
+        if (res.code !== 200) {
+          ElMessage.error(res.msg);
+          resolve(false);
+          return;
+        }
+        ElMessage.success('发送成功！请注意查收');
+        resolve(true);
+      });
     });
   });
 }
@@ -142,18 +149,6 @@ const handleLogin = () => {
       router.replace('/')
     })
   });
-};
-
-const startTimer = () => {
-  isSending.value = true;
-  timer.value = 60;
-  const countdown = setInterval(() => {
-    timer.value -= 1;
-    if (timer.value <= 0) {
-      clearInterval(countdown);
-      isSending.value = false;
-    }
-  }, 1000);
 };
 
 onMounted(() => {
@@ -189,12 +184,6 @@ onMounted(() => {
 
       .el-input {
         flex: 1;
-      }
-
-      .el-button {
-        margin-left: 10px;
-        width: 100px;
-        flex-shrink: 0;
       }
 
       img {

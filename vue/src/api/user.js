@@ -67,6 +67,17 @@ export const getUserOne = (params) => {
 }
 
 /**
+ * 导出用户
+ * @param params 用户
+ * @returns {*} 结果
+ */
+export const exportUserExcel = (params) => {
+    return request({
+        url: '/user/export', method: 'GET', responseType: 'blob', params: params
+    })
+}
+
+/**
  * 解禁或禁用用户
  * @param id 用户ID
  * @returns {*} 结果
@@ -85,16 +96,5 @@ export const handleStatusUser = (id) => {
 export const handleUserRole = (data) => {
     return request({
         url: '/user/role', method: 'POST', data: data
-    })
-}
-
-/**
- * 导出用户
- * @param params 用户
- * @returns {*} 结果
- */
-export const exportUserExcel = (params) => {
-    return request({
-        url: '/user/export', method: 'GET', responseType: 'blob', params: params
     })
 }

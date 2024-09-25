@@ -4,7 +4,7 @@
       <el-col :xs="10" :sm="10" :md="2" :lg="2" :xl="2">
         <div style="display: flex; align-items: center; justify-content: center;">
           <el-avatar :size="120" :src="avatar" alt="" @error="() => true">
-            <img alt="" src="@/assets/imgs/profile.png"/>
+            <img alt="" src="../../../../../../assets/imgs/profile.png"/>
           </el-avatar>
         </div>
       </el-col>

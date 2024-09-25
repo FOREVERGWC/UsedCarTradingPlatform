@@ -42,7 +42,7 @@ const useUserStore = defineStore('user', {
                         return
                     }
                     ElMessage.success('登录成功！')
-                    this.token = res.data.token
+                    this.token = res.data
                     resolve()
                 })
             })

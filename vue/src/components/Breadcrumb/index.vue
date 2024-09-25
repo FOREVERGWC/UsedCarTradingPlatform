@@ -3,9 +3,9 @@
     <el-breadcrumb-item :to="{ path: item.path }" @click="handleClick(item.path)" v-for="item in list" :key="item.path">
       <div class="breadcrumb-content">
         <el-icon>
-          <component :is="item.meta?.icon"/>
+          <component :is="item.meta.icon"/>
         </el-icon>
-        <span>{{ item.meta?.name }}</span>
+        <span>{{ item.meta.title }}</span>
       </div>
     </el-breadcrumb-item>
   </el-breadcrumb>
@@ -15,10 +15,10 @@
 import {computed} from "vue";
 import {ArrowRight} from "@element-plus/icons-vue";
 import {useRoute} from "vue-router";
-import useNavigationStore from "@/store/modules/navigation.js";
+// import useNavigationStore from "@/store/modules/navigation.js";
 
 const route = useRoute()
-const navigationStore = useNavigationStore()
+// const navigationStore = useNavigationStore()
 
 const list = computed(() => {
   return route.matched || []

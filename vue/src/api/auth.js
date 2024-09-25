@@ -43,6 +43,16 @@ export const getByToken = () => {
 }
 
 /**
+ * 获取当前用户路由信息
+ * @returns {*} 结果
+ */
+export const getRoute = () => {
+    return request({
+        url: '/route', method: 'GET'
+    })
+}
+
+/**
  * 获取验证码图片
  * @returns {*} 结果
  */

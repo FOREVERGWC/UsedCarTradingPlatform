@@ -49,6 +49,12 @@ public class Menu extends BaseEntity {
     @ExcelProperty(value = "名称")
     private String name;
     /**
+     * 标题
+     */
+    @Schema(description = "标题")
+    @ExcelProperty(value = "标题")
+    private String title;
+    /**
      * 图标
      */
     @Schema(description = "图标")
@@ -72,6 +78,12 @@ public class Menu extends BaseEntity {
     @Schema(description = "路由地址")
     @ExcelProperty(value = "路由地址")
     private String path;
+    /**
+     * 重定向地址
+     */
+    @Schema(description = "重定向地址")
+    @ExcelProperty(value = "重定向地址")
+    private String redirect;
     /**
      * 组件路径
      */

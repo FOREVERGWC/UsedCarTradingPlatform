@@ -8,23 +8,21 @@
               <el-input v-model="queryParams.name" clearable placeholder="请输入名称"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.code" clearable placeholder="请输入权限标识"/>
+              <el-input v-model="queryParams.path" clearable placeholder="请输入路由地址"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-tree-select
-                  v-model="queryParams.parentId"
-                  :data="parentList"
-                  :props="parentProps"
-                  :render-after-expand="false"
-                  check-strictly
-                  clearable
-                  filterable
-                  placeholder='请选择父级权限'
-              />
+              <el-select v-model="queryParams.type" clearable filterable placeholder="请选择类型">
+                <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.status" clearable filterable placeholder="请选择状态">
                 <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-col>
+            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+              <el-select v-model="queryParams.visible" clearable filterable placeholder="请选择是否可见">
+                <el-option v-for="item in visibleList" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
@@ -70,7 +68,7 @@
     </el-row>
 
     <el-card>
-      <el-table v-loading="loading" :cell-style="{ textAlign: 'center' }" :data="permissionList"
+      <el-table v-loading="loading" :cell-style="{ textAlign: 'center' }" :data="menuList"
                 :header-cell-style="{ textAlign: 'center' }" stripe
                 @selection-change="handleSelectionChange"
                 row-key="id"
@@ -78,15 +76,29 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="名称" prop="name"/>
-        <el-table-column label="权限标识" prop="code"/>
-        <el-table-column label="排序" prop="sort"/>
-        <el-table-column label="状态">
+        <el-table-column label="图标" width="55">
+          <template v-slot="{ row }">
+            <el-icon>
+              <component :is="row.icon"/>
+            </el-icon>
+          </template>
+        </el-table-column>
+        <el-table-column label="路由地址" prop="path"/>
+        <el-table-column label="组件路径" prop="component"/>
+        <el-table-column label="类型" prop="typeText"/>
+        <el-table-column label="排序" prop="sort" width="55"/>
+        <el-table-column label="状态" width="100">
           <template v-slot="{ row }">
             <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="createTime"/>
-        <el-table-column label="修改时间" prop="updateTime"/>
+        <el-table-column label="可见" width="100">
+          <template v-slot="{ row }">
+            <el-switch v-model="row.visible" @change="() => handleVisible(row.id)"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" prop="createTime" width="150"/>
+        <el-table-column label="修改时间" prop="updateTime" width="150"/>
         <el-table-column label="备注" prop="remark"/>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
@@ -118,10 +130,10 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="权限标识" prop="code">
-          <el-input v-model="form.data.code" autocomplete="new"/>
+        <el-form-item label="图标">
+          <IconPicker v-model="form.data.icon"/>
         </el-form-item>
-        <el-form-item label="父级权限" prop="parentId">
+        <el-form-item label="父级菜单" prop="parentId">
           <el-tree-select
               v-model="form.data.parentId"
               :data="parentList"
@@ -130,8 +142,19 @@
               check-strictly
               clearable
               filterable
-              placeholder='请选择父级权限'
+              placeholder='请选择父级菜单'
           />
+        </el-form-item>
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="form.data.type" clearable filterable placeholder="请选择类型">
+            <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="路由地址" prop="path">
+          <el-input v-model="form.data.path" autocomplete="new"/>
+        </el-form-item>
+        <el-form-item label="组件路径" prop="component" v-if="form.data.type === '2'">
+          <el-input v-model="form.data.component" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input v-model="form.data.sort" autocomplete="new"/>
@@ -139,6 +162,11 @@
         <el-form-item v-if="form.data.id" label="状态" prop="status">
           <el-select v-model="form.data.status" clearable filterable placeholder="请选择状态">
             <el-option v-for="item in statusList" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="可见" prop="visible">
+          <el-select v-model="form.data.visible" clearable filterable placeholder="请选择是否可见">
+            <el-option v-for="item in visibleList" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -156,11 +184,13 @@
 <script setup>
 import {nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {
-  getPermissionOne,
-  getPermissionPage, getPermissionTree, handleStatusPermission,
-  removePermissionBatchByIds,
-  savePermission
-} from '@/api/permission'
+  getMenuOne,
+  getMenuTree,
+  handleStatusMenu,
+  handleVisibleMenu,
+  removeMenuBatchByIds,
+  saveMenu
+} from '@/api/menu.js'
 import {ElMessage} from "element-plus"
 import {downloadFile} from "@/utils/common.js";
 
@@ -169,20 +199,31 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
   name: '',
-  code: '',
   parentId: null,
-  sort: null,
-  status: ''
+  path: '',
+  component: '',
+  type: '',
+  status: '',
+  visible: null
 })
 const ids = ref([])
 const single = ref(true)
 const multiple = ref(true)
 const parentList = ref([])
-const permissionList = ref([])
+const menuList = ref([])
 const total = ref(0)
+const typeList = [
+  {label: '目录', value: '1'},
+  {label: '菜单', value: '2'},
+  {label: '按钮', value: '3'}
+]
 const statusList = [
   {label: '禁用', value: '0'},
   {label: '正常', value: '1'}
+]
+const visibleList = [
+  {label: '是', value: true},
+  {label: '否', value: false}
 ]
 const form = ref({
   visible: false,
@@ -192,10 +233,13 @@ const form = ref({
 const formRef = ref(null)
 const rules = {
   name: [{required: true, message: '请输入名称', trigger: 'blur'}],
-  code: [{required: true, message: '请输入权限标识', trigger: 'blur'}],
-  parentId: [{required: true, message: '请输入父级权限ID', trigger: 'blur'}],
+  parentId: [{required: true, message: '请输入父级菜单ID', trigger: 'change'}],
+  path: [{required: true, message: '请输入路由地址', trigger: 'blur'}],
+  component: [{required: true, message: '请输入组件路径', trigger: 'blur'}],
+  type: [{required: true, message: '请选择类型', trigger: 'change'}],
   sort: [{required: true, message: '请输入排序', trigger: 'blur'}],
-  status: [{required: true, message: '请选择状态', trigger: 'change'}]
+  status: [{required: true, message: '请选择状态', trigger: 'change'}],
+  visible: [{required: true, message: '请输入可见(0否、1是)', trigger: 'blur'}]
 }
 
 const parentProps = {
@@ -206,15 +250,20 @@ const parentProps = {
 
 const getPage = () => {
   loading.value = true
-  getPermissionTree({}).then(res => {
+  getMenuTree({}).then(res => {
     parentList.value = res.data || []
     parentList.value.unshift({id: '0', name: '根结点'})
   })
-  getPermissionPage(queryParams).then(res => {
-    permissionList.value = res.data?.records || []
-    total.value = res.data?.total || 0
+  getMenuTree(queryParams).then(res => {
+    menuList.value = res.data || []
+    total.value = res.data?.length || 0
     loading.value = false
   })
+  // getMenuPage(queryParams).then(res => {
+  //   menuList.value = res.data?.records || []
+  //   total.value = res.data?.total || 0
+  //   loading.value = false
+  // })
 }
 
 const showAdd = () => {
@@ -224,13 +273,17 @@ const showAdd = () => {
   })
   form.value = {
     visible: true,
-    title: '添加权限',
+    title: '添加菜单',
     data: {
       name: '',
-      code: '',
+      icon: '',
       parentId: null,
+      path: '',
+      component: '',
+      type: '',
       sort: null,
       status: '',
+      visible: true,
       remark: ''
     }
   }
@@ -242,11 +295,11 @@ const showEdit = (row) => {
     formRef.value.resetFields()
   })
   const params = {id: row.id || ids.value[0]}
-  getPermissionOne(params).then(res => {
+  getMenuOne(params).then(res => {
     if (res.code !== 200) return
     form.value = {
       visible: true,
-      title: '编辑权限',
+      title: '编辑菜单',
       data: {
         ...res.data
       }
@@ -257,7 +310,7 @@ const showEdit = (row) => {
 const handleSave = () => {
   formRef.value.validate(valid => {
     if (!valid) return
-    savePermission(form.value.data).then(res => {
+    saveMenu(form.value.data).then(res => {
       if (res.code !== 200) {
         ElMessage.error(res.msg)
         return
@@ -272,7 +325,7 @@ const handleSave = () => {
 
 const handleDelete = (id) => {
   const params = id || ids.value
-  removePermissionBatchByIds(params).then(res => {
+  removeMenuBatchByIds(params).then(res => {
     if (res.code !== 200) {
       ElMessage.error(res.msg)
       return
@@ -284,7 +337,18 @@ const handleDelete = (id) => {
 }
 
 const handleStatus = (id) => {
-  handleStatusPermission(id).then(res => {
+  handleStatusMenu(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
+  })
+}
+
+const handleVisible = (id) => {
+  handleVisibleMenu(id).then(res => {
     if (res.code !== 200) {
       ElMessage.error(res.msg)
     } else {
@@ -304,15 +368,17 @@ const handleReset = () => {
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.name = ''
-  queryParams.code = ''
   queryParams.parentId = null
-  queryParams.sort = null
+  queryParams.path = ''
+  queryParams.component = ''
+  queryParams.type = ''
   queryParams.status = ''
+  queryParams.visible = null
   getPage()
 }
 
 const handleExport = () => {
-  downloadFile('/permission/export', queryParams)
+  downloadFile('/menu/export', queryParams)
 }
 
 const handleSizeChange = (val) => {

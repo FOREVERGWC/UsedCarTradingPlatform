@@ -8,20 +8,24 @@ import org.example.springboot.system.common.enums.ResultCode;
 import org.example.springboot.system.common.exception.CustomException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.model.LoginBody;
-import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.domain.model.RegisterBody;
 import org.example.springboot.system.domain.model.ResetBody;
 import org.example.springboot.system.domain.vo.CaptchaVo;
+import org.example.springboot.system.domain.vo.MenuVo;
+import org.example.springboot.system.domain.vo.MetaVo;
+import org.example.springboot.system.domain.vo.RouteVo;
 import org.example.springboot.system.service.*;
 import org.example.springboot.system.service.cache.ICaptchaService;
 import org.example.springboot.system.strategy.LoginFactory;
 import org.example.springboot.system.strategy.service.ILoginService;
+import org.example.springboot.system.utils.DataUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +37,8 @@ public class AuthServiceImpl implements IAuthService {
     private ICaptchaService captchaService;
     @Resource
     private IUserService userService;
+    @Resource
+    private IMenuService menuService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
     @Resource
@@ -57,7 +63,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public LoginUser login(LoginBody body) {
+    public String login(LoginBody body) {
         ILoginService loginService = loginFactory.getFactory(body.getLoginType());
         return loginService.login(body);
     }
@@ -86,5 +92,32 @@ public class AuthServiceImpl implements IAuthService {
         User user = userService.getByEmail(body.getEmail());
         user.setPassword(bCryptPasswordEncoder.encode(body.getPassword()));
         userService.updateById(user);
+    }
+
+    @Override
+    public List<RouteVo> getRoute() {
+        List<MenuVo> menuList = menuService.getAuthList();
+        List<RouteVo> routeList = menuList.stream().map(item -> RouteVo.builder()
+                        .id(item.getId())
+                        .parentId(item.getParentId())
+                        .sort(item.getSort())
+                        .path(item.getPath())
+                        .name(item.getName())
+                        .meta(MetaVo.builder()
+                                .title(item.getTitle())
+                                .icon(item.getIcon())
+                                .hidden(!item.getVisible())
+                                .build())
+                        .component(item.getComponent())
+                        .redirect(item.getRedirect())
+                        .build())
+                .toList();
+        return DataUtils.listToTree(routeList,
+                RouteVo::getParentId,
+                RouteVo::setChildren,
+                RouteVo::getId,
+                0L,
+                RouteVo::getSort,
+                Comparator.naturalOrder());
     }
 }

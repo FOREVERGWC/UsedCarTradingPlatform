@@ -15,7 +15,7 @@
         </el-form-item>
         <el-form-item prop="email" class="email">
           <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
-          <el-button @click="handleCaptcha" :disabled="isSending">{{ isSending ? `${timer}s` : '发送' }}</el-button>
+          <CounterButton :handleClick="handleCaptcha"/>
         </el-form-item>
         <el-form-item v-if="enabled" prop="code">
           <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"
@@ -39,6 +39,7 @@ import {resetPassword} from "@/api/auth.js";
 import {ElMessage} from "element-plus";
 import {useRouter} from "vue-router";
 import {sendResetCode} from "@/api/email.js";
+import {CountDownElMessage} from "@/components/CountDownElMessage/index.js";
 
 const router = useRouter()
 
@@ -60,20 +61,24 @@ const rules = {
   code: [{required: true, message: '请输入验证码', trigger: 'blur'}]
 };
 const formRef = ref(null)
-const isSending = ref(false);
-const timer = ref(60);
 
 const handleCaptcha = () => {
-  formRef.value.validateField('email', (valid) => {
-    if (!valid) return;
-    const data = {email: form.value.email};
-    sendResetCode(data).then(res => {
-      if (res.code !== 200) {
-        ElMessage.error(res.msg);
+  return new Promise((resolve) => {
+    formRef.value.validateField('email', (valid) => {
+      if (!valid) {
+        resolve(false);
         return;
       }
-      ElMessage.success('发送成功！请注意查收');
-      startTimer();
+      const data = {email: form.value.email};
+      sendResetCode(data).then(res => {
+        if (res.code !== 200) {
+          ElMessage.error(res.msg);
+          resolve(false);
+          return;
+        }
+        ElMessage.success('发送成功！请注意查收');
+        resolve(true);
+      });
     });
   });
 }
@@ -86,25 +91,10 @@ const handleReset = () => {
         ElMessage.error(res.msg)
         return
       }
-      ElMessage.success('重置成功！3秒后跳转到登录页面')
-      setTimeout(() => {
-        router.push('/login')
-      }, 3000)
+      CountDownElMessage('success', 3, '重置成功！{}秒后跳转到登录页面', () => router.push('/login'))
     })
   });
 }
-
-const startTimer = () => {
-  isSending.value = true;
-  timer.value = 60;
-  const countdown = setInterval(() => {
-    timer.value -= 1;
-    if (timer.value <= 0) {
-      clearInterval(countdown);
-      isSending.value = false;
-    }
-  }, 1000);
-};
 </script>
 
 <style scoped lang="scss">
@@ -135,12 +125,6 @@ const startTimer = () => {
 
       .el-input {
         flex: 1;
-        margin-right: 10px;
-      }
-
-      .el-button {
-        width: 100px;
-        flex-shrink: 0;
       }
     }
 

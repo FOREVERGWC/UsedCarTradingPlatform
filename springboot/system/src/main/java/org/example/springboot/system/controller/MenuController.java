@@ -85,19 +85,6 @@ public class MenuController {
     }
 
     /**
-     * 查询用户菜单树
-     *
-     * @return 结果
-     */
-    @PreAuthorize("hasAuthority('system:menu:list')")
-    @GetMapping("/auth/tree")
-    @Operation(summary = "查询用户菜单树", description = "查询用户菜单树", method = "GET")
-    public Result<List<MenuVo>> getAuthTree() {
-        List<MenuVo> list = menuService.getAuthTree();
-        return Result.success(list);
-    }
-
-    /**
      * 查询角色菜单树
      *
      * @param roleId 角色ID

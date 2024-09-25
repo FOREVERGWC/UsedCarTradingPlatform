@@ -34,6 +34,8 @@ import Breadcrumb from '@/components/Breadcrumb/index.js'
 import AvatarUpload from "@/components/AvatarUpload/index.js";
 // 图标选择组件
 import IconPicker from "@/components/IconPicker/index.js";
+// 倒计时按钮组件
+import CounterButton from "@/components/CounterButton/index.js";
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -58,4 +60,5 @@ app.component('MenuItem', MenuItem)
 app.component('Breadcrumb', Breadcrumb)
 app.component('AvatarUpload', AvatarUpload)
 app.component('IconPicker', IconPicker)
+app.component('CounterButton', CounterButton)
 app.mount('#app')

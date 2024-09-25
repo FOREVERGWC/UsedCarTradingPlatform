@@ -47,11 +47,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <Void> Result<Void> success() {
-        return Result.<Void>builder()
-                .code(200)
-                .msg("请求成功！")
-                .data(null)
-                .build();
+        return success("请求成功！", null);
     }
 
     /**
@@ -62,11 +58,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <Void> Result<Void> success(String msg) {
-        return Result.<Void>builder()
-                .code(200)
-                .msg(msg)
-                .data(null)
-                .build();
+        return success(msg, null);
     }
 
     /**
@@ -77,11 +69,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <T> Result<T> success(T data) {
-        return Result.<T>builder()
-                .code(200)
-                .msg("请求成功！")
-                .data(data)
-                .build();
+        return success("请求成功！", data);
     }
 
     /**
@@ -107,11 +95,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <Void> Result<Void> error() {
-        return Result.<Void>builder()
-                .code(500)
-                .msg("请求失败！")
-                .data(null)
-                .build();
+        return error(500, "请求失败！");
     }
 
     /**
@@ -122,11 +106,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <Void> Result<Void> error(String msg) {
-        return Result.<Void>builder()
-                .code(500)
-                .msg(msg)
-                .data(null)
-                .build();
+        return error(500, msg);
     }
 
     /**
@@ -137,11 +117,7 @@ public class Result<T> implements Serializable {
      * @return 响应结果
      */
     public static <Void> Result<Void> error(ResultCode codeEnum) {
-        return Result.<Void>builder()
-                .code(codeEnum.getCode())
-                .msg(codeEnum.getMsg())
-                .data(null)
-                .build();
+        return error(codeEnum.getCode(), codeEnum.getMsg());
     }
 
     /**

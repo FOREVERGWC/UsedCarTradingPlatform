@@ -1,8 +1,7 @@
-import router from '@/router/index.js'
-import {getMenuAuthTree} from '@/api/menu.js'
 import {defineStore} from "pinia";
-import {constantRoutes, dynamicRoutes} from "@/router/routes.js";
+import {constantRoutes} from "@/router/routes.js";
 import _ from "lodash-es";
+import {getRoute} from "@/api/auth.js";
 
 const modules = import.meta.glob('@/views/**/*.vue')
 
@@ -16,14 +15,11 @@ const usePermissionStore = defineStore('permission', {
         },
         generateRoutes() {
             return new Promise(resolve => {
-                getMenuAuthTree().then(res => {
+                getRoute().then(res => {
                     const sdata = _.cloneDeep(res.data)
                     const rdata = _.cloneDeep(res.data)
                     const sidebarRoutes = filterAsyncRouter(sdata)
                     const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-                    dynamicRoutes.forEach(route => {
-                        router.addRoute(route)
-                    })
                     this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
                     resolve(rewriteRoutes)
                 }).catch(error => {
@@ -35,7 +31,6 @@ const usePermissionStore = defineStore('permission', {
     persist: true
 })
 
-// 遍历后台传来的路由字符串，转换为组件对象
 const filterAsyncRouter = (asyncRouterMap, lastRouter = false, type = false) => {
     return asyncRouterMap.filter(route => {
         if (type && route.children) {

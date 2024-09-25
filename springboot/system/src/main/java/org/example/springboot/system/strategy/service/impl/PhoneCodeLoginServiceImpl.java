@@ -34,7 +34,7 @@ public class PhoneCodeLoginServiceImpl implements ILoginService {
     private ITokenService tokenService;
 
     @Override
-    public LoginUser login(LoginBody body) {
+    public String login(LoginBody body) {
         Authentication authentication;
         boolean flag = false;
         Exception exception = new RuntimeException();
@@ -81,8 +81,7 @@ public class PhoneCodeLoginServiceImpl implements ILoginService {
         }
         LoginUser user = (LoginUser) authentication.getPrincipal();
         String token = tokenService.createToken(user);
-        user.setToken(token);
         AsyncManager.me().execute(AsyncFactory.updateLogin(user.getId()));
-        return user;
+        return token;
     }
 }

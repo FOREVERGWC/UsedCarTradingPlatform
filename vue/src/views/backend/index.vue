@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-aside :class="['hidden-sm-and-down', isCollapse ? 'el-aside--collapse' : '']">
-      <el-menu :default-active='menu' router :collapse="isCollapse">
+      <el-menu :default-active="menu" router :collapse="isCollapse">
         <div class="menu-header">
           <span class="title">{{ title }}</span>
           <el-icon>
@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {useRouter} from "vue-router";
 import useUserStore from "@/store/modules/user.js";
 import useBreadcrumbStore from "@/store/modules/breadcrumb.js";
@@ -105,7 +105,8 @@ const roleStore = useRoleStore();
 const permissionStore = usePermissionStore();
 
 const title = ref(import.meta.env.VITE_APP_TITLE || '后台管理系统')
-const menu = ref(navigationStore.menu)
+// const menu = ref(navigationStore.menu)
+const menu = ref(router.currentRoute.value.fullPath)
 const menuList =  computed(() => permissionStore.sidebarRouters);
 const isCollapse = ref(false)
 const username = ref(userStore.username)
@@ -158,6 +159,14 @@ router.afterEach((to, from) => {
 onMounted(() => {
   getRole()
 })
+
+watch(
+    () => router,
+    (newValue, oldValue) => {
+      menu.value = newValue.currentRoute.value.fullPath
+    },
+    { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

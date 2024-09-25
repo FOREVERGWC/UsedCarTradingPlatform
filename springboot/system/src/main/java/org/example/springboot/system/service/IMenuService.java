@@ -40,11 +40,19 @@ public interface IMenuService extends IService<Menu> {
     List<MenuVo> getTree(MenuDto dto);
 
     /**
-     * 查询用户菜单树
+     * 查询用户菜单列表
      *
      * @return 结果
      */
-    List<MenuVo> getAuthTree();
+    List<MenuVo> getAuthList();
+
+    /**
+     * 查询角色菜单列表
+     *
+     * @param roleId 角色ID
+     * @return 结果
+     */
+    List<MenuVo> getRoleList(Long roleId);
 
     /**
      * 查询角色菜单树

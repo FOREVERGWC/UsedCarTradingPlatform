@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "权限实体", description = "权限")
 public class PermissionVo extends Permission {
     @Serial

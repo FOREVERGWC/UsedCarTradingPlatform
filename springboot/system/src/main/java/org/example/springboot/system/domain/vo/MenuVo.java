@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "菜单实体", description = "菜单")
 public class MenuVo extends Menu {
     @Serial

@@ -21,7 +21,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "角色、菜单关系实体", description = "角色、菜单关系")
 public class RoleMenuLinkVo extends RoleMenuLink {
     @Serial

@@ -1,27 +1,27 @@
 <template>
   <el-sub-menu v-if="item?.children?.length > 0"
-               v-show="item.visible"
+               v-show="!item.meta.hidden"
                :index="item.path">
     <template #title>
       <el-icon>
-        <component :is="item.icon"/>
+        <component :is="item.meta.icon"/>
       </el-icon>
-      <span>{{ item.name }}</span>
+      <span>{{ item.meta.title }}</span>
     </template>
-    <menu-item v-for="(child, index) in item.children"
-               :key="index"
+    <menu-item v-for="child in item.children"
+               :key="child.path"
                :item="child"
                @click="handleClickMenu(child.path)">
     </menu-item>
   </el-sub-menu>
   <el-menu-item v-else
-                v-show="item.visible"
+                v-show="!item.meta.hidden"
                 :index="item.path"
                 @click="handleClickMenu(item.path)">
     <el-icon>
-      <component :is="item.icon"/>
+      <component :is="item.meta.icon"/>
     </el-icon>
-    <span>{{ item.name }}</span>
+    <span>{{ item.meta.title }}</span>
   </el-menu-item>
 </template>
 

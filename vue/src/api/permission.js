@@ -78,6 +78,17 @@ export const getPermissionOne = (params) => {
 }
 
 /**
+ * 导出权限
+ * @param params 权限
+ * @returns {*} 结果
+ */
+export const exportPermissionExcel = (params) => {
+    return request({
+        url: '/permission/export', method: 'GET', responseType: 'blob', params: params
+    })
+}
+
+/**
  * 恢复或停用权限
  * @param id 权限ID
  * @returns {*} 结果
@@ -98,16 +109,5 @@ export const getPermissionListByRoleId = (roleId) => {
     return request({
         url: `/permission/role/${roleId}`,
         method: 'GET'
-    })
-}
-
-/**
- * 导出权限
- * @param params 权限
- * @returns {*} 结果
- */
-export const exportPermissionExcel = (params) => {
-    return request({
-        url: '/permission/export', method: 'GET', responseType: 'blob', params: params
     })
 }

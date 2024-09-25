@@ -4,12 +4,15 @@ import jakarta.annotation.Resource;
 import org.example.springboot.system.domain.Result;
 import org.example.springboot.system.domain.model.*;
 import org.example.springboot.system.domain.vo.CaptchaVo;
+import org.example.springboot.system.domain.vo.RouteVo;
 import org.example.springboot.system.service.IAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.springboot.system.utils.UserUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,9 +33,9 @@ public class AuthController {
      */
     @PostMapping("/login")
     @Operation(summary = "登录", description = "登录", method = "POST")
-    public Result<LoginUser> login(@RequestBody LoginBody body) {
-        LoginUser user = authService.login(body);
-        return Result.success(user);
+    public Result<String> login(@RequestBody LoginBody body) {
+        String token = authService.login(body);
+        return Result.success("登录成功！", token);
     }
 
     /**
@@ -83,5 +86,17 @@ public class AuthController {
     public Result<LoginUser> getByToken() {
         LoginUser user = UserUtils.getLoginUser();
         return Result.success(user);
+    }
+
+    /**
+     * 获取当前用户路由信息
+     *
+     * @return 结果
+     */
+    @GetMapping("/route")
+    @Operation(summary = "获取当前用户路由信息", description = "获取当前用户路由信息", method = "GET")
+    public Result<List<RouteVo>> getRoute() {
+        List<RouteVo> list = authService.getRoute();
+        return Result.success(list);
     }
 }

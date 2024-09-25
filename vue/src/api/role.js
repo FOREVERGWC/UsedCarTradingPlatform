@@ -67,6 +67,17 @@ export const getRoleOne = (params) => {
 }
 
 /**
+ * 导出角色
+ * @param params 角色
+ * @returns {*} 结果
+ */
+export const exportRoleExcel = (params) => {
+    return request({
+        url: '/role/export', method: 'GET', responseType: 'blob', params: params
+    })
+}
+
+/**
  * 恢复或停用角色
  * @param id 角色ID
  * @returns {*} 结果
@@ -98,16 +109,5 @@ export const handleRoleMenu = (data) => {
 export const handleRolePermission = (data) => {
     return request({
         url: '/role/permission', method: 'POST', data: data
-    })
-}
-
-/**
- * 导出角色
- * @param params 角色
- * @returns {*} 结果
- */
-export const exportRoleExcel = (params) => {
-    return request({
-        url: '/role/export', method: 'GET', responseType: 'blob', params: params
     })
 }

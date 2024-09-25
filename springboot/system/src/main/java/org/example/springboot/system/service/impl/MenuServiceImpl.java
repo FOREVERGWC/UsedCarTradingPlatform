@@ -105,11 +105,17 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public List<MenuVo> getTree(MenuDto dto) {
         List<MenuVo> vos = getList(dto);
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
+        return DataUtils.listToTree(vos,
+                MenuVo::getParentId,
+                MenuVo::setChildren,
+                MenuVo::getId,
+                0L,
+                MenuVo::getSort,
+                Comparator.naturalOrder());
     }
 
     @Override
-    public List<MenuVo> getAuthTree() {
+    public List<MenuVo> getAuthList() {
         Long userId = UserUtils.getLoginUserId();
         List<Long> roleIdList = userRoleLinkService.listRoleIdsByUserId(userId);
         if (CollectionUtil.isEmpty(roleIdList)) {
@@ -123,23 +129,15 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (CollectionUtil.isEmpty(menuIdList)) {
             return List.of();
         }
-        List<MenuVo> vos = menuList.stream().map(item -> {
+        return menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
             return vo;
         }).toList();
-        // 树
-        return DataUtils.listToTree(vos,
-                MenuVo::getParentId,
-                MenuVo::setChildren,
-                MenuVo::getId,
-                0L,
-                MenuVo::getSort,
-                Comparator.naturalOrder());
     }
 
     @Override
-    public List<MenuVo> getRoleTree(Long roleId) {
+    public List<MenuVo> getRoleList(Long roleId) {
         List<Long> menuIdList = roleMenuLinkService.listMenuIdsByRoleId(roleId);
         if (CollectionUtil.isEmpty(menuIdList)) {
             return List.of();
@@ -148,13 +146,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         if (CollectionUtil.isEmpty(menuIdList)) {
             return List.of();
         }
-        List<MenuVo> vos = menuList.stream().map(item -> {
+        return menuList.stream().map(item -> {
             MenuVo vo = new MenuVo();
             BeanUtils.copyProperties(item, vo);
             return vo;
         }).toList();
+    }
+
+    @Override
+    public List<MenuVo> getRoleTree(Long roleId) {
+        List<MenuVo> vos = getRoleList(roleId);
         // 树
-        return DataUtils.listToTree(vos, MenuVo::getParentId, MenuVo::setChildren, MenuVo::getId, 0L, null, null);
+        return DataUtils.listToTree(vos,
+                MenuVo::getParentId,
+                MenuVo::setChildren,
+                MenuVo::getId,
+                0L,
+                MenuVo::getSort,
+                Comparator.naturalOrder());
     }
 
     @Override
@@ -252,9 +261,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         LambdaQueryChainWrapper<Menu> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, Menu::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), Menu::getName, entity.getName())
+                .like(StrUtil.isNotBlank(entity.getTitle()), Menu::getTitle, entity.getTitle())
                 .like(StrUtil.isNotBlank(entity.getIcon()), Menu::getIcon, entity.getIcon())
                 .eq(entity.getParentId() != null, Menu::getParentId, entity.getParentId())
                 .like(StrUtil.isNotBlank(entity.getPath()), Menu::getPath, entity.getPath())
+                .like(StrUtil.isNotBlank(entity.getRedirect()), Menu::getRedirect, entity.getRedirect())
                 .like(StrUtil.isNotBlank(entity.getComponent()), Menu::getComponent, entity.getComponent())
                 .eq(entity.getType() != null, Menu::getType, entity.getType())
                 .eq(entity.getSort() != null, Menu::getSort, entity.getSort())

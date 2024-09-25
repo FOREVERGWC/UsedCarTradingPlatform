@@ -24,7 +24,6 @@ router.beforeEach((to, from, next) => {
         return next({path: '/'});
     }
 
-    // 获取用户信息并加载权限路由
     if (userStore.roleIdList.length === 0) {
         userStore.getInfo().then(() => {
             loadDynamicRoutes(permissionStore, to, next);
@@ -32,10 +31,8 @@ router.beforeEach((to, from, next) => {
             next({path: '/'});
         });
     } else if (!permissionStore.routesAdded) {
-        // 如果路由还没加载，则加载动态路由
         loadDynamicRoutes(permissionStore, to, next);
     } else {
-        // 如果路由已加载，直接放行
         next();
     }
 });
@@ -46,7 +43,7 @@ const loadDynamicRoutes = (permissionStore, to, next) => {
             router.addRoute(route);
         });
         permissionStore.routesAdded = true;
-        next({...to, replace: true});
+        next({path: to.redirectedFrom?.path || to.path, replace: true})
     });
 }
 

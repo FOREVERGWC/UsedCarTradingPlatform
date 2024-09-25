@@ -21,7 +21,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Schema(name = "用户、角色关系实体", description = "用户、角色关系")
 public class UserRoleLinkVo extends UserRoleLink {
     @Serial

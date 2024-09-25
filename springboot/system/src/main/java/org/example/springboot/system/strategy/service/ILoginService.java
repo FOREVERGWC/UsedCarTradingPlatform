@@ -1,7 +1,6 @@
 package org.example.springboot.system.strategy.service;
 
 import org.example.springboot.system.domain.model.LoginBody;
-import org.example.springboot.system.domain.model.LoginUser;
 
 /**
  * <p>
@@ -10,11 +9,12 @@ import org.example.springboot.system.domain.model.LoginUser;
  */
 public interface ILoginService {
     // TODO OpenIDSessionLogin
+
     /**
      * 登录
      *
      * @param body 登录请求体
      * @return 结果
      */
-    LoginUser login(LoginBody body);
+    String login(LoginBody body);
 }
