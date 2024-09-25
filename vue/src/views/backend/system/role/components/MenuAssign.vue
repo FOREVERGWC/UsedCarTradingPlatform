@@ -25,7 +25,7 @@ const props = defineProps({
 
 const node = ref({
   value: 'id',
-  label: 'name',
+  label: 'title',
   children: 'children'
 })
 

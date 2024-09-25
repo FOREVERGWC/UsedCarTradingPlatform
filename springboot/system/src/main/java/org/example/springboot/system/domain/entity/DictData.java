@@ -1,24 +1,20 @@
 package org.example.springboot.system.domain.entity;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.alibaba.excel.annotation.ExcelProperty;
+import org.example.springboot.system.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.example.springboot.system.common.annotation.Dict;
-import org.example.springboot.system.common.converter.EnableStatusConverter;
-import org.example.springboot.system.common.enums.UserStatus;
-import org.example.springboot.system.domain.BaseEntity;
 
 import java.io.Serial;
 
 /**
  * <p>
- * 角色
+ * 字典数据
  * </p>
  */
 @Data
@@ -28,9 +24,9 @@ import java.io.Serial;
 @Accessors(chain = true)
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@TableName("sys_role")
-@Schema(name = "角色实体", description = "角色")
-public class Role extends BaseEntity {
+@TableName("sys_dict_data")
+@Schema(name = "字典数据实体", description = "字典数据")
+public class DictData extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
@@ -41,11 +37,23 @@ public class Role extends BaseEntity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     /**
-     * 角色名称
+     * 标签
      */
-    @Schema(description = "角色名称")
-    @ExcelProperty(value = "角色名称")
-    private String name;
+    @Schema(description = "标签")
+    @ExcelProperty(value = "标签")
+    private String label;
+    /**
+     * 键值
+     */
+    @Schema(description = "键值")
+    @ExcelProperty(value = "键值")
+    private String value;
+    /**
+     * 类型ID
+     */
+    @Schema(description = "类型ID")
+    @ExcelProperty(value = "类型ID")
+    private Long typeId;
     /**
      * 排序
      */
@@ -55,14 +63,7 @@ public class Role extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Schema(description = "状态")
-    @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
-    @Dict(enumClass = UserStatus.class)
+    @Schema(description = "状态(0禁用、1正常)")
+    @ExcelProperty(value = "状态(0禁用、1正常)")
     private String status;
-    /**
-     * 逻辑删除(0正常、1删除)
-     */
-    @Schema(description = "逻辑删除")
-    @ExcelIgnore
-    private Integer deleted;
 }

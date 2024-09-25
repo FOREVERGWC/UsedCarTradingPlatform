@@ -26,7 +26,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_permission")
 @Schema(name = "权限实体", description = "权限")
 public class Permission extends BaseEntity {
@@ -72,7 +72,7 @@ public class Permission extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Schema(description = "状态(0禁用、1正常)")
+    @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
     @Dict(enumClass = UserStatus.class)
     private String status;

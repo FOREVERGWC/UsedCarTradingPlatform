@@ -22,7 +22,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_role_permission_link")
 @Schema(name = "角色、权限关系实体", description = "角色、权限关系")
 public class RolePermissionLink extends BaseEntity {

@@ -27,7 +27,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_log_login")
 @Schema(name = "登录日志实体", description = "登录日志")
 public class LogLogin extends BaseEntity {
@@ -79,7 +79,7 @@ public class LogLogin extends BaseEntity {
     /**
      * 状态(0失败、1成功)
      */
-    @Schema(description = "状态(0失败、1成功)")
+    @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = BooleanStatusConverter.class)
     private Boolean status;
     /**

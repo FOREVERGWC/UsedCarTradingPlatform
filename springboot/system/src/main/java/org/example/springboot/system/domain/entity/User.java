@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
 @Schema(name = "用户信息实体", description = "用户信息")
 public class User extends BaseEntity {
@@ -77,7 +77,7 @@ public class User extends BaseEntity {
     /**
      * 性别(0女、1男、2未知)
      */
-    @Schema(description = "性别(0女、1男、2未知)")
+    @Schema(description = "性别")
     @ExcelProperty(value = "性别", converter = GenderConverter.class)
     @Dict(enumClass = Gender.class)
     private String gender;
@@ -90,7 +90,7 @@ public class User extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Schema(description = "状态(0禁用、1正常)")
+    @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
     @Dict(enumClass = UserStatus.class)
     private String status;

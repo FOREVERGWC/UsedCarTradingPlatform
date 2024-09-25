@@ -29,7 +29,7 @@ import java.io.Serial;
 @AllArgsConstructor
 @Accessors(chain = true)
 @ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @TableName("sys_menu")
 @Schema(name = "菜单实体", description = "菜单")
 public class Menu extends BaseEntity {
@@ -93,7 +93,7 @@ public class Menu extends BaseEntity {
     /**
      * 类型(1目录、2菜单、3按钮)
      */
-    @Schema(description = "类型(1目录、2菜单、3按钮)")
+    @Schema(description = "类型")
     @ExcelProperty(value = "类型", converter = MenuTypeConverter.class)
     @Dict(enumClass = MenuType.class)
     private String type;
@@ -106,14 +106,14 @@ public class Menu extends BaseEntity {
     /**
      * 状态(0禁用、1正常)
      */
-    @Schema(description = "状态(0禁用、1正常)")
+    @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
     @Dict(enumClass = UserStatus.class)
     private String status;
     /**
      * 可见(0否、1是)
      */
-    @Schema(description = "可见(0否、1是)")
+    @Schema(description = "可见")
     @ExcelProperty(value = "可见", converter = BooleanConverter.class)
     private Boolean visible;
 }

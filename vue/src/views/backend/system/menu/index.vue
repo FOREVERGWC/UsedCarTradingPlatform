@@ -8,7 +8,13 @@
               <el-input v-model="queryParams.name" clearable placeholder="请输入名称"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+              <el-input v-model="queryParams.title" clearable placeholder="请输入标题"/>
+            </el-col>
+            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.path" clearable placeholder="请输入路由地址"/>
+            </el-col>
+            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+              <el-input v-model="queryParams.redirect" clearable placeholder="请输入重定向地址"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.type" clearable filterable placeholder="请选择类型">
@@ -76,6 +82,7 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="名称" prop="name"/>
+        <el-table-column label="标题" prop="title"/>
         <el-table-column label="图标" width="55">
           <template v-slot="{ row }">
             <el-icon>
@@ -84,6 +91,7 @@
           </template>
         </el-table-column>
         <el-table-column label="路由地址" prop="path"/>
+        <el-table-column label="重定向地址" prop="redirect"/>
         <el-table-column label="组件路径" prop="component"/>
         <el-table-column label="类型" prop="typeText"/>
         <el-table-column label="排序" prop="sort" width="55"/>
@@ -130,6 +138,9 @@
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="form.data.title" autocomplete="new"/>
+        </el-form-item>
         <el-form-item label="图标">
           <IconPicker v-model="form.data.icon"/>
         </el-form-item>
@@ -152,6 +163,9 @@
         </el-form-item>
         <el-form-item label="路由地址" prop="path">
           <el-input v-model="form.data.path" autocomplete="new"/>
+        </el-form-item>
+        <el-form-item label="重定向地址">
+          <el-input v-model="form.data.redirect" autocomplete="new"/>
         </el-form-item>
         <el-form-item label="组件路径" prop="component" v-if="form.data.type === '2'">
           <el-input v-model="form.data.component" autocomplete="new"/>
@@ -199,8 +213,10 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
   name: '',
+  title: '',
   parentId: null,
   path: '',
+  redirect: '',
   component: '',
   type: '',
   status: '',
@@ -233,6 +249,7 @@ const form = ref({
 const formRef = ref(null)
 const rules = {
   name: [{required: true, message: '请输入名称', trigger: 'blur'}],
+  title: [{required: true, message: '请输入标题', trigger: 'blur'}],
   parentId: [{required: true, message: '请输入父级菜单ID', trigger: 'change'}],
   path: [{required: true, message: '请输入路由地址', trigger: 'blur'}],
   component: [{required: true, message: '请输入组件路径', trigger: 'blur'}],
@@ -244,7 +261,7 @@ const rules = {
 
 const parentProps = {
   value: 'id',
-  label: 'name',
+  label: 'title',
   children: 'children'
 }
 
@@ -252,7 +269,7 @@ const getPage = () => {
   loading.value = true
   getMenuTree({}).then(res => {
     parentList.value = res.data || []
-    parentList.value.unshift({id: '0', name: '根结点'})
+    parentList.value.unshift({id: '0', title: '根结点'})
   })
   getMenuTree(queryParams).then(res => {
     menuList.value = res.data || []
@@ -276,9 +293,11 @@ const showAdd = () => {
     title: '添加菜单',
     data: {
       name: '',
+      title: '',
       icon: '',
       parentId: null,
       path: '',
+      redirect: '',
       component: '',
       type: '',
       sort: null,
@@ -368,8 +387,10 @@ const handleReset = () => {
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.name = ''
+  queryParams.title = ''
   queryParams.parentId = null
   queryParams.path = ''
+  queryParams.redirect = ''
   queryParams.component = ''
   queryParams.type = ''
   queryParams.status = ''
