@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import org.example.springboot.system.common.annotation.Dict;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
-import org.example.springboot.system.common.enums.UserStatus;
+import org.example.springboot.system.common.enums.EnableStatus;
 import org.example.springboot.system.domain.BaseEntity;
 
 import java.io.Serial;
@@ -57,7 +57,7 @@ public class Role extends BaseEntity {
      */
     @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
-    @Dict(enumClass = UserStatus.class)
+    @Dict(enumClass = EnableStatus.class)
     private String status;
     /**
      * 逻辑删除(0正常、1删除)

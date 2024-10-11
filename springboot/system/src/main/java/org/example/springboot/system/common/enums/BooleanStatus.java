@@ -24,7 +24,7 @@ public enum BooleanStatus {
     /**
      * 未知
      */
-    UNKNOWN(false, "未知"),
+    UNKNOWN(null, "未知"),
     /**
      * 成功
      */

@@ -24,8 +24,9 @@ public class MenuTypeConverter implements Converter<String> {
 
     @Override
     public String convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        // TODO 调用枚举MenuType优化
-        return "1";
+        String code = cellData.getStringValue();
+        MenuType menuType = MenuType.getByCode(code);
+        return menuType.getCode();
     }
 
     @Override

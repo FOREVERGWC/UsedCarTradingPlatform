@@ -64,8 +64,20 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="字典名称" prop="name"/>
-        <el-table-column label="字典类型" prop="type" sortable/>
-        <el-table-column label="字典状态" prop="status"/>
+        <el-table-column label="字典类型" sortable>
+          <template v-slot="{ row }">
+            <router-link :to="{ path: '/dict/data', query: { typeId: row.id } }">
+              <el-link :underline="false">
+                <span>{{ row.type }}</span>
+              </el-link>
+            </router-link>
+          </template>
+        </el-table-column>
+        <el-table-column label="字典状态" prop="status">
+          <template v-slot="{ row }">
+            <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
@@ -117,8 +129,14 @@
 </template>
 
 <script setup>
-import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getDictTypeOne, getDictTypePage, removeDictTypeBatchByIds, saveDictType} from '@/api/dictType'
+import {nextTick, onMounted, reactive, ref, toRaw} from 'vue'
+import {
+  getDictTypeOne,
+  getDictTypePage,
+  handleStatusDictType,
+  removeDictTypeBatchByIds,
+  saveDictType
+} from '@/api/dictType'
 import {ElMessage} from 'element-plus'
 import {downloadFile} from '@/utils/common.js'
 
@@ -136,8 +154,8 @@ const multiple = ref(true)
 const dictTypeList = ref([])
 const total = ref(0)
 const statusList = [
-  { label: '禁用', value: '0' },
-  { label: '正常', value: '1' }
+  {label: '禁用', value: '0'},
+  {label: '正常', value: '1'}
 ]
 const form = ref({
   visible: false,
@@ -221,6 +239,17 @@ const handleDelete = (id) => {
     ElMessage.success('删除成功！')
   }).finally(() => {
     getPage()
+  })
+}
+
+const handleStatus = (id) => {
+  handleStatusDictType(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
   })
 }
 

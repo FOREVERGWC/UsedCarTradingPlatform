@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.DictType;
 import org.example.springboot.system.domain.dto.DictTypeDto;
 import org.example.springboot.system.domain.vo.DictTypeVo;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -32,6 +36,20 @@ import java.util.Map;
 public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> implements IDictTypeService, IBaseService<DictType> {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Override
+    public boolean save(DictType entity) {
+        entity.setStatus(EnableStatus.NORMAL.getCode());
+        return super.save(entity);
+    }
+
+    @Override
+    public boolean saveOrUpdate(DictType entity) {
+        if (entity.getId() == null) {
+            return save(entity);
+        }
+        return super.updateById(entity);
+    }
 
     @Override
     public List<DictTypeVo> getList(DictTypeDto dto) {
@@ -76,6 +94,20 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
     @Override
     public void exportExcel(DictType dictType, HttpServletResponse response) {
         ExcelUtils.exportExcel(response, this, dictType, DictType.class, threadPoolTaskExecutor);
+    }
+
+    @Override
+    public void handleStatus(Long id) {
+        DictType dictType = getById(id);
+        if (dictType == null) {
+            throw new ServiceException(ResultCode.DICT_TYPE_NOT_FOUND_ERROR);
+        }
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), dictType.getStatus())) {
+            dictType.setStatus(EnableStatus.DISABLE.getCode());
+        } else {
+            dictType.setStatus(EnableStatus.NORMAL.getCode());
+        }
+        updateById(dictType);
     }
 
     @Override

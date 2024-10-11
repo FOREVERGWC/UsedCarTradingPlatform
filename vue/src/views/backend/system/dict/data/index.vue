@@ -73,9 +73,13 @@
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="标签" prop="label"/>
         <el-table-column label="键值" prop="value"/>
-        <el-table-column label="类型ID" prop="typeId"/>
+        <el-table-column label="类型" prop="type.name"/>
         <el-table-column label="排序" prop="sort"/>
-        <el-table-column label="状态" prop="status"/>
+        <el-table-column label="状态" prop="status">
+          <template v-slot="{ row }">
+            <el-switch v-model="row.status" active-value="1" inactive-value="0" @change="() => handleStatus(row.id)"/>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180">
           <template v-slot="{ row }">
             <el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
@@ -135,11 +139,20 @@
 </template>
 
 <script setup>
-import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
-import {getDictDataOne, getDictDataPage, removeDictDataBatchByIds, saveDictData} from '@/api/dictData'
+import {nextTick, onMounted, reactive, ref, toRaw} from 'vue'
+import {useRoute} from 'vue-router'
+import {
+  getDictDataOne,
+  getDictDataPage,
+  handleStatusDictData,
+  removeDictDataBatchByIds,
+  saveDictData
+} from '@/api/dictData'
 import {getDictTypeList} from '@/api/dictType.js'
 import {ElMessage} from 'element-plus'
 import {downloadFile} from '@/utils/common.js'
+
+const route = useRoute()
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -253,6 +266,17 @@ const handleDelete = (id) => {
   })
 }
 
+const handleStatus = (id) => {
+  handleStatusDictData(id).then(res => {
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+    } else {
+      ElMessage.success('操作成功！')
+      getPage()
+    }
+  })
+}
+
 const handleSelectionChange = (selection) => {
   ids.value = selection.map(item => toRaw(item).id)
   single.value = selection.length !== 1
@@ -285,6 +309,7 @@ const handleCurrentChange = (val) => {
 }
 
 onMounted(() => {
+  queryParams.typeId = route.query.typeId || null
   getPage()
 })
 </script>

@@ -132,23 +132,31 @@ public enum ResultCode {
     /**
      * 操作失败！角色不存在
      */
-    ROLE_NOT_FOUND_ERROR(2000, "操作失败！角色不存在"),
+    ROLE_NOT_FOUND_ERROR(500, "操作失败！角色不存在"),
     /**
      * 删除失败！该角色已分配用户
      */
-    ROLE_DELETE_ERROR(2001, "删除失败！该角色已分配用户"),
+    ROLE_DELETE_ERROR(500, "删除失败！该角色已分配用户"),
     /**
      * 操作失败！菜单不存在
      */
-    MENU_NOT_FOUND_ERROR(3000, "操作失败！菜单不存在"),
+    MENU_NOT_FOUND_ERROR(500, "操作失败！菜单不存在"),
     /**
      * 操作失败！权限不存在
      */
-    PERMISSION_NOT_FOUND_ERROR(4000, "操作失败！权限不存在"),
+    PERMISSION_NOT_FOUND_ERROR(500, "操作失败！权限不存在"),
+    /**
+     * 操作失败！字典类型不存在
+     */
+    DICT_TYPE_NOT_FOUND_ERROR(500, "操作失败！字典类型不存在"),
+    /**
+     * 操作失败！字典数据不存在
+     */
+    DICT_DATA_NOT_FOUND_ERROR(500, "操作失败！字典数据不存在"),
     /**
      * 操作失败！文章不存在
      */
-    ARTICLE_NOT_FOUND_ERROR(6000, "操作失败！文章不存在");
+    ARTICLE_NOT_FOUND_ERROR(500, "操作失败！文章不存在");
 
     private final Integer code;
     private final String msg;

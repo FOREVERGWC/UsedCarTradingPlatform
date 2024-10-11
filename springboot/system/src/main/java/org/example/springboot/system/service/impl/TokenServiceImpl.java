@@ -6,7 +6,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.springboot.system.common.Constants;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.service.ITokenService;
 import org.example.springboot.system.service.cache.ILoginCacheService;
@@ -47,7 +47,7 @@ public class TokenServiceImpl implements ITokenService {
     public LoginUser getLoginUser(HttpServletRequest request) {
         String authorization = getAuthorization(request);
         if (StrUtil.isBlank(authorization)) {
-            throw new CustomException(ResultCode.TOKEN_CHECK_ERROR);
+            throw new ServiceException(ResultCode.TOKEN_CHECK_ERROR);
         }
         TokenUtils.verifyToken(authorization);
         LoginUser user = loginCacheService.getLoginUser(authorization);

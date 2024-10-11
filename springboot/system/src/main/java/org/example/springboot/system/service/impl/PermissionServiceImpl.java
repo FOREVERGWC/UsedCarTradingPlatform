@@ -10,8 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.enums.UserStatus;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.Permission;
 import org.example.springboot.system.domain.dto.PermissionDto;
 import org.example.springboot.system.domain.vo.PermissionVo;
@@ -44,7 +44,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     public boolean save(Permission entity) {
-        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setStatus(EnableStatus.NORMAL.getCode());
         return super.save(entity);
     }
 
@@ -177,12 +177,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public void handleStatus(Long id) {
         Permission permission = getById(id);
         if (permission == null) {
-            throw new CustomException(ResultCode.PERMISSION_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.PERMISSION_NOT_FOUND_ERROR);
         }
-        if (Objects.equals(UserStatus.NORMAL.getCode(), permission.getStatus())) {
-            permission.setStatus(UserStatus.DISABLE.getCode());
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), permission.getStatus())) {
+            permission.setStatus(EnableStatus.DISABLE.getCode());
         } else {
-            permission.setStatus(UserStatus.NORMAL.getCode());
+            permission.setStatus(EnableStatus.NORMAL.getCode());
         }
         updateById(permission);
     }

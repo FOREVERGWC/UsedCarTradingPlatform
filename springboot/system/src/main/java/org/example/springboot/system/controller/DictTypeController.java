@@ -34,6 +34,7 @@ public class DictTypeController {
      * @param dictType 字典类型
      * @return 结果
      */
+    @PreAuthorize("hasAnyAuthority('system:dict:type:add', 'system:dict:type:edit')")
     @PostMapping
     @Operation(summary = "添加、修改字典类型", description = "添加、修改字典类型", method = "POST")
     public Result<Void> save(@RequestBody DictType dictType) {
@@ -47,6 +48,7 @@ public class DictTypeController {
      * @param ids ID列表
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:type:delete')")
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除字典类型", description = "删除字典类型", method = "DELETE")
     public Result<Void> removeBatchByIds(@PathVariable List<Long> ids) {
@@ -60,6 +62,7 @@ public class DictTypeController {
      * @param dto 字典类型
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:type:list')")
     @GetMapping("/list")
     @Operation(summary = "查询字典类型列表", description = "查询字典类型列表", method = "GET")
     public Result<List<DictTypeVo>> getList(DictTypeDto dto) {
@@ -73,6 +76,7 @@ public class DictTypeController {
      * @param dto 字典类型
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:type:list')")
     @GetMapping("/page")
     @Operation(summary = "查询字典类型分页", description = "查询字典类型分页", method = "GET")
     public Result<IPage<DictTypeVo>> getPage(DictTypeDto dto) {
@@ -86,6 +90,7 @@ public class DictTypeController {
      * @param id 主键ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:type:query')")
     @GetMapping("/{id}")
     @Operation(summary = "查询字典类型", description = "查询字典类型", method = "GET")
     public Result<DictType> getById(@PathVariable Long id) {
@@ -99,6 +104,7 @@ public class DictTypeController {
      * @param dto 字典类型
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:type:query')")
     @GetMapping
     @Operation(summary = "查询字典类型", description = "查询字典类型", method = "GET")
     public Result<DictTypeVo> getOne(DictTypeDto dto) {
@@ -117,5 +123,19 @@ public class DictTypeController {
     @Operation(summary = "导出字典类型", description = "导出字典类型", method = "GET")
     public void exportExcel(DictType dictType, HttpServletResponse response) {
         dictTypeService.exportExcel(dictType, response);
+    }
+
+    /**
+     * 恢复或停用字典类型
+     *
+     * @param id 字典类型ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:dict:type:edit')")
+    @PutMapping("/status/{id}")
+    @Operation(summary = "恢复或停用字典类型", description = "恢复或停用字典类型", method = "PUT")
+    public Result<Void> handleStatus(@PathVariable Long id) {
+        dictTypeService.handleStatus(id);
+        return Result.success();
     }
 }

@@ -10,8 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.enums.UserStatus;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.Menu;
 import org.example.springboot.system.domain.dto.MenuDto;
 import org.example.springboot.system.domain.vo.MenuVo;
@@ -45,7 +45,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 
     @Override
     public boolean save(Menu entity) {
-        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setStatus(EnableStatus.NORMAL.getCode());
         entity.setVisible(true);
         return super.save(entity);
     }
@@ -53,7 +53,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public boolean saveBatch(Collection<Menu> entityList) {
         entityList.forEach(item -> {
-            item.setStatus(UserStatus.NORMAL.getCode());
+            item.setStatus(EnableStatus.NORMAL.getCode());
             item.setVisible(true);
         });
         return super.saveBatch(entityList);
@@ -227,12 +227,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public void handleStatus(Long id) {
         Menu menu = getById(id);
         if (menu == null) {
-            throw new CustomException(ResultCode.MENU_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.MENU_NOT_FOUND_ERROR);
         }
-        if (Objects.equals(UserStatus.NORMAL.getCode(), menu.getStatus())) {
-            menu.setStatus(UserStatus.DISABLE.getCode());
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), menu.getStatus())) {
+            menu.setStatus(EnableStatus.DISABLE.getCode());
         } else {
-            menu.setStatus(UserStatus.NORMAL.getCode());
+            menu.setStatus(EnableStatus.NORMAL.getCode());
         }
         updateById(menu);
     }
@@ -241,7 +241,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public void handleVisible(Long id) {
         Menu menu = getById(id);
         if (menu == null) {
-            throw new CustomException(ResultCode.MENU_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.MENU_NOT_FOUND_ERROR);
         }
         menu.setVisible(!menu.getVisible());
         updateById(menu);

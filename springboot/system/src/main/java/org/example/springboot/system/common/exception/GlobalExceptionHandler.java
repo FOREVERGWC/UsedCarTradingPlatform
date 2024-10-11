@@ -32,8 +32,8 @@ public class GlobalExceptionHandler {
         return Result.error(error.getDefaultMessage());
     }
 
-    @ExceptionHandler(CustomException.class)
-    public Result<Void> CustomException(CustomException e) {
+    @ExceptionHandler(ServiceException.class)
+    public Result<Void> CustomException(ServiceException e) {
         log.error(e.getMessage(), Arrays.toString(e.getStackTrace()));
         return Result.error(e.getResultCodeEnum());
     }

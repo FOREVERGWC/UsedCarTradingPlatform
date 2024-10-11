@@ -11,8 +11,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.Gender;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.enums.UserStatus;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.dto.UserDto;
 import org.example.springboot.system.domain.entity.Role;
 import org.example.springboot.system.domain.entity.User;
@@ -56,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         entity.setName(StrUtil.isNotBlank(entity.getName()) ? entity.getName() : "");
         entity.setAvatar(StrUtil.isNotBlank(entity.getAvatar()) ? entity.getAvatar() : "");
         entity.setGender(StrUtil.isNotBlank(entity.getGender()) ? entity.getGender() : Gender.UNKNOWN.getCode());
-        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setStatus(EnableStatus.NORMAL.getCode());
         entity.setPhone(StrUtil.isNotBlank(entity.getPhone()) ? entity.getPhone() : "");
         entity.setOpenId(StrUtil.isNotBlank(entity.getOpenId()) ? entity.getOpenId() : "");
         entity.setBalance(BigDecimal.ZERO);
@@ -163,12 +163,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void handleStatus(Long id) {
         User user = getById(id);
         if (user == null) {
-            throw new CustomException(ResultCode.USER_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.USER_NOT_FOUND_ERROR);
         }
-        if (Objects.equals(UserStatus.NORMAL.getCode(), user.getStatus())) {
-            user.setStatus(UserStatus.DISABLE.getCode());
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), user.getStatus())) {
+            user.setStatus(EnableStatus.DISABLE.getCode());
         } else {
-            user.setStatus(UserStatus.NORMAL.getCode());
+            user.setStatus(EnableStatus.NORMAL.getCode());
         }
         updateById(user);
     }

@@ -8,7 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.IEmailService;
 import org.example.springboot.system.service.IUserService;
@@ -46,11 +46,11 @@ public class EmailServiceServiceImpl implements IEmailService {
     public void sendRegisterCode(String email) {
         User user = userService.getByEmail(email);
         if (user != null) {
-            throw new CustomException(ResultCode.EMAIL_HAS_USED_ERROR);
+            throw new ServiceException(ResultCode.EMAIL_HAS_USED_ERROR);
         }
         String captcha = captchaService.getEmailRegisterCode(email);
         if (StrUtil.isNotBlank(captcha)) {
-            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+            throw new ServiceException(ResultCode.EMAIL_HAS_SEND_ERROR);
         }
         String subject = "注册";
         String code = RandomUtil.randomNumbers(4);
@@ -77,7 +77,7 @@ public class EmailServiceServiceImpl implements IEmailService {
     public void sendResetCode(String email) {
         String captcha = captchaService.getEmailResetCode(email);
         if (StrUtil.isNotBlank(captcha)) {
-            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+            throw new ServiceException(ResultCode.EMAIL_HAS_SEND_ERROR);
         }
         String subject = "修改密码";
         String code = RandomUtil.randomNumbers(4);
@@ -94,7 +94,7 @@ public class EmailServiceServiceImpl implements IEmailService {
     public void sendLoginCode(String email) {
         String captcha = captchaService.getEmailLoginCode(email);
         if (StrUtil.isNotBlank(captcha)) {
-            throw new CustomException(ResultCode.EMAIL_HAS_SEND_ERROR);
+            throw new ServiceException(ResultCode.EMAIL_HAS_SEND_ERROR);
         }
         String subject = "登录";
         String code = RandomUtil.randomNumbers(4);

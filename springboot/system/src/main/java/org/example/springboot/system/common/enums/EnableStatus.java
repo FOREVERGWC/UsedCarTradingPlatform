@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 用户状态
+ * 启用状态
  */
 @Getter
 @AllArgsConstructor
-public enum UserStatus {
+public enum EnableStatus {
     /**
      * 禁用
      */
@@ -25,10 +25,10 @@ public enum UserStatus {
      */
     NORMAL("1", "正常");
 
-    private static final Map<String, UserStatus> map = new HashMap<>();
+    private static final Map<String, EnableStatus> map = new HashMap<>();
 
     static {
-        for (UserStatus item : UserStatus.values()) {
+        for (EnableStatus item : EnableStatus.values()) {
             map.put(item.getCode(), item);
         }
     }
@@ -39,7 +39,7 @@ public enum UserStatus {
     private final String msg;
 
     @JsonCreator
-    private static UserStatus jacksonInstance(final JsonNode jsonNode) {
+    private static EnableStatus jacksonInstance(final JsonNode jsonNode) {
         String code = jsonNode.asText();
         return map.get(code);
     }
@@ -50,7 +50,7 @@ public enum UserStatus {
      * @param code 键
      * @return 结果
      */
-    public static UserStatus getByCode(String code) {
+    public static EnableStatus getByCode(String code) {
         return map.get(code);
     }
 }

@@ -12,8 +12,7 @@ import java.io.Serial;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomException extends RuntimeException {
-    // TODO 改名ServiceException
+public class ServiceException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 4733950199287552052L;
     /**

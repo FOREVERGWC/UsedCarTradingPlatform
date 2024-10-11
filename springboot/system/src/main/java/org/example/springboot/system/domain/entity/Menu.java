@@ -10,7 +10,7 @@ import org.example.springboot.system.common.converter.BooleanConverter;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
 import org.example.springboot.system.common.converter.MenuTypeConverter;
 import org.example.springboot.system.common.enums.MenuType;
-import org.example.springboot.system.common.enums.UserStatus;
+import org.example.springboot.system.common.enums.EnableStatus;
 import org.example.springboot.system.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.experimental.Accessors;
@@ -108,7 +108,7 @@ public class Menu extends BaseEntity {
      */
     @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
-    @Dict(enumClass = UserStatus.class)
+    @Dict(enumClass = EnableStatus.class)
     private String status;
     /**
      * 可见(0否、1是)

@@ -5,7 +5,7 @@ import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.lang.UUID;
 import jakarta.annotation.Resource;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.model.LoginBody;
 import org.example.springboot.system.domain.model.RegisterBody;
@@ -72,7 +72,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void register(RegisterBody body) {
         if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
-            throw new CustomException(ResultCode.REGISTER_CONFIRM_ERROR);
+            throw new ServiceException(ResultCode.REGISTER_CONFIRM_ERROR);
         }
         User user = User.builder().build();
         BeanUtils.copyProperties(body, user);
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public void resetPassword(ResetBody body) {
         if (!Objects.equals(body.getPassword(), body.getConfirmPwd())) {
-            throw new CustomException(ResultCode.RESET_CONFIRM_ERROR);
+            throw new ServiceException(ResultCode.RESET_CONFIRM_ERROR);
         }
         captchaService.validateEmailResetCode(body.getEmail(), body.getCode());
         User user = userService.getByEmail(body.getEmail());

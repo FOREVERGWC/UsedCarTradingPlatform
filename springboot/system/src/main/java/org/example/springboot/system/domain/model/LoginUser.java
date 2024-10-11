@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.example.springboot.system.common.enums.UserStatus;
+import org.example.springboot.system.common.enums.EnableStatus;
 import org.example.springboot.system.domain.entity.Menu;
 import org.example.springboot.system.domain.entity.Permission;
 import org.example.springboot.system.domain.entity.Role;
@@ -100,6 +100,6 @@ public class LoginUser extends User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return Objects.equals(this.getStatus(), UserStatus.NORMAL.getCode());
+        return Objects.equals(this.getStatus(), EnableStatus.NORMAL.getCode());
     }
 }

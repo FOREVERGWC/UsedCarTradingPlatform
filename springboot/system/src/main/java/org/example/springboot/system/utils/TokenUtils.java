@@ -6,7 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.exception.ServiceException;
 
 import java.util.Date;
 
@@ -42,7 +42,7 @@ public class TokenUtils {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
             verifier.verify(token);
         } catch (JWTVerificationException e) {
-            throw new CustomException(ResultCode.TOKEN_VERIFY_ERROR);
+            throw new ServiceException(ResultCode.TOKEN_VERIFY_ERROR);
         }
     }
 }

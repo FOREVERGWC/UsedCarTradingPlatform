@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.example.springboot.system.common.annotation.Dict;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
-import org.example.springboot.system.common.enums.UserStatus;
+import org.example.springboot.system.common.enums.EnableStatus;
 import org.example.springboot.system.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -74,6 +74,6 @@ public class Permission extends BaseEntity {
      */
     @Schema(description = "状态")
     @ExcelProperty(value = "状态", converter = EnableStatusConverter.class)
-    @Dict(enumClass = UserStatus.class)
+    @Dict(enumClass = EnableStatus.class)
     private String status;
 }

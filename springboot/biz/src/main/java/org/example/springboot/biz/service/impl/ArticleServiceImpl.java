@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.biz.common.enums.ArticleStatus;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.biz.domain.dto.ArticleDto;
 import org.example.springboot.biz.domain.entity.*;
 import org.example.springboot.system.domain.entity.User;
@@ -164,7 +164,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public void handleTop(Long id) {
         Article article = getById(id);
         if (article == null) {
-            throw new CustomException(ResultCode.ARTICLE_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.ARTICLE_NOT_FOUND_ERROR);
         }
         article.setTop(!article.getTop());
         updateById(article);
@@ -174,7 +174,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public void handleComment(Long id) {
         Article article = getById(id);
         if (article == null) {
-            throw new CustomException(ResultCode.ARTICLE_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.ARTICLE_NOT_FOUND_ERROR);
         }
         article.setCommentable(!article.getCommentable());
         updateById(article);

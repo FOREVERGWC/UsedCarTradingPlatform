@@ -24,8 +24,9 @@ public class LoginTypeConverter implements Converter<String> {
 
     @Override
     public String convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        // TODO 调用枚举LoginType优化
-        return "1";
+        String code = cellData.getStringValue();
+        LoginType loginType = LoginType.getByCode(code);
+        return loginType.getCode();
     }
 
     @Override

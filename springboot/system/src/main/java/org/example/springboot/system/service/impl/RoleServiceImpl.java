@@ -11,8 +11,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.DeleteEnum;
 import org.example.springboot.system.common.enums.ResultCode;
-import org.example.springboot.system.common.enums.UserStatus;
-import org.example.springboot.system.common.exception.CustomException;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.dto.RoleDto;
 import org.example.springboot.system.domain.entity.Role;
 import org.example.springboot.system.domain.entity.UserRoleLink;
@@ -44,7 +44,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public boolean save(Role entity) {
-        entity.setStatus(UserStatus.NORMAL.getCode());
+        entity.setStatus(EnableStatus.NORMAL.getCode());
         entity.setDeleted(DeleteEnum.NORMAL.getCode());
         return super.save(entity);
     }
@@ -52,7 +52,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public boolean saveBatch(Collection<Role> entityList) {
         entityList.forEach(item -> {
-            item.setStatus(UserStatus.NORMAL.getCode());
+            item.setStatus(EnableStatus.NORMAL.getCode());
             item.setDeleted(DeleteEnum.NORMAL.getCode());
         });
         return super.saveBatch(entityList);
@@ -74,7 +74,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
                 .collect(Collectors.groupingBy(UserRoleLink::getRoleId, Collectors.summingInt(e -> 1)));
         boolean flag = linkMap.values().stream().anyMatch(count -> count > 0);
         if (flag) {
-            throw new CustomException(ResultCode.ROLE_DELETE_ERROR);
+            throw new ServiceException(ResultCode.ROLE_DELETE_ERROR);
         }
         return super.removeBatchByIds(list);
     }
@@ -168,12 +168,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     public void handleStatus(Long id) {
         Role role = getById(id);
         if (role == null) {
-            throw new CustomException(ResultCode.ROLE_NOT_FOUND_ERROR);
+            throw new ServiceException(ResultCode.ROLE_NOT_FOUND_ERROR);
         }
-        if (Objects.equals(UserStatus.NORMAL.getCode(), role.getStatus())) {
-            role.setStatus(UserStatus.DISABLE.getCode());
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), role.getStatus())) {
+            role.setStatus(EnableStatus.DISABLE.getCode());
         } else {
-            role.setStatus(UserStatus.NORMAL.getCode());
+            role.setStatus(EnableStatus.NORMAL.getCode());
         }
         updateById(role);
     }

@@ -8,8 +8,6 @@ import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import org.example.springboot.system.common.enums.BooleanStatus;
 
-import java.util.Objects;
-
 /**
  * 状态转换器
  */
@@ -26,8 +24,9 @@ public class BooleanStatusConverter implements Converter<Boolean> {
 
     @Override
     public Boolean convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        // TODO 调用枚举BooleanStatus优化
-        return Objects.equals(cellData.getStringValue(), "成功");
+        Boolean code = cellData.getBooleanValue();
+        BooleanStatus booleanStatus = BooleanStatus.getByCode(code);
+        return booleanStatus.getCode();
     }
 
     @Override

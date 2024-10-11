@@ -46,4 +46,11 @@ public interface IDictTypeService extends IService<DictType> {
      * @param response 响应对象
      */
     void exportExcel(DictType dictType, HttpServletResponse response);
+
+    /**
+     * 恢复或停用字典类型
+     *
+     * @param id 字典类型ID
+     */
+    void handleStatus(Long id);
 }

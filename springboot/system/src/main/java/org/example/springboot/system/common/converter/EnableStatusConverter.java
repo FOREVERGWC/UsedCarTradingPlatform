@@ -6,7 +6,7 @@ import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
-import org.example.springboot.system.common.enums.UserStatus;
+import org.example.springboot.system.common.enums.EnableStatus;
 
 /**
  * 启用状态转换器
@@ -24,13 +24,14 @@ public class EnableStatusConverter implements Converter<String> {
 
     @Override
     public String convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        // TODO 调用枚举UserStatus优化
-        return "1";
+        String code = cellData.getStringValue();
+        EnableStatus status = EnableStatus.getByCode(code);
+        return status.getCode();
     }
 
     @Override
     public WriteCellData<?> convertToExcelData(String value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        String msg = UserStatus.getByCode(value).getMsg();
+        String msg = EnableStatus.getByCode(value).getMsg();
         return new WriteCellData<>(msg);
     }
 }

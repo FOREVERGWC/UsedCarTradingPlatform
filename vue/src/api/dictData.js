@@ -76,3 +76,15 @@ export const exportDictDataExcel = (params) => {
         url: '/dict/data/export', method: 'GET', responseType: 'blob', params: params
     })
 }
+
+/**
+ * 恢复或停用字典数据
+ * @param id 字典数据ID
+ * @returns {*} 结果
+ */
+export const handleStatusDictData = (id) => {
+    return request({
+        url: `/dict/data/status/${id}`,
+        method: 'PUT'
+    })
+}

@@ -24,8 +24,9 @@ public class GenderConverter implements Converter<String> {
 
     @Override
     public String convertToJavaData(ReadCellData<?> cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-        // TODO 调用枚举Gender优化
-        return "1";
+        String code = cellData.getStringValue();
+        Gender gender = Gender.getByCode(code);
+        return gender.getCode();
     }
 
     @Override

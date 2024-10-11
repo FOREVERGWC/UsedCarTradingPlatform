@@ -8,6 +8,9 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.system.common.enums.EnableStatus;
+import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.DictData;
 import org.example.springboot.system.domain.entity.DictType;
 import org.example.springboot.system.domain.dto.DictDataDto;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -38,6 +42,20 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     private IDictTypeService dictTypeService;
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Override
+    public boolean save(DictData entity) {
+        entity.setStatus(EnableStatus.NORMAL.getCode());
+        return super.save(entity);
+    }
+
+    @Override
+    public boolean saveOrUpdate(DictData entity) {
+        if (entity.getId() == null) {
+            return save(entity);
+        }
+        return super.updateById(entity);
+    }
 
     @Override
     public List<DictDataVo> getList(DictDataDto dto) {
@@ -95,6 +113,20 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     @Override
     public void exportExcel(DictData dictData, HttpServletResponse response) {
         ExcelUtils.exportExcel(response, this, dictData, DictData.class, threadPoolTaskExecutor);
+    }
+
+    @Override
+    public void handleStatus(Long id) {
+        DictData dictData = getById(id);
+        if (dictData == null) {
+            throw new ServiceException(ResultCode.DICT_DATA_NOT_FOUND_ERROR);
+        }
+        if (Objects.equals(EnableStatus.NORMAL.getCode(), dictData.getStatus())) {
+            dictData.setStatus(EnableStatus.DISABLE.getCode());
+        } else {
+            dictData.setStatus(EnableStatus.NORMAL.getCode());
+        }
+        updateById(dictData);
     }
 
     @Override

@@ -34,6 +34,7 @@ public class DictDataController {
      * @param dictData 字典数据
      * @return 结果
      */
+    @PreAuthorize("hasAnyAuthority('system:dict:data:add', 'system:dict:data:edit')")
     @PostMapping
     @Operation(summary = "添加、修改字典数据", description = "添加、修改字典数据", method = "POST")
     public Result<Void> save(@RequestBody DictData dictData) {
@@ -47,6 +48,7 @@ public class DictDataController {
      * @param ids ID列表
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:data:delete')")
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除字典数据", description = "删除字典数据", method = "DELETE")
     public Result<Void> removeBatchByIds(@PathVariable List<Long> ids) {
@@ -60,6 +62,7 @@ public class DictDataController {
      * @param dto 字典数据
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:data:list')")
     @GetMapping("/list")
     @Operation(summary = "查询字典数据列表", description = "查询字典数据列表", method = "GET")
     public Result<List<DictDataVo>> getList(DictDataDto dto) {
@@ -73,6 +76,7 @@ public class DictDataController {
      * @param dto 字典数据
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:data:list')")
     @GetMapping("/page")
     @Operation(summary = "查询字典数据分页", description = "查询字典数据分页", method = "GET")
     public Result<IPage<DictDataVo>> getPage(DictDataDto dto) {
@@ -86,6 +90,7 @@ public class DictDataController {
      * @param id 主键ID
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:data:query')")
     @GetMapping("/{id}")
     @Operation(summary = "查询字典数据", description = "查询字典数据", method = "GET")
     public Result<DictData> getById(@PathVariable Long id) {
@@ -99,6 +104,7 @@ public class DictDataController {
      * @param dto 字典数据
      * @return 结果
      */
+    @PreAuthorize("hasAuthority('system:dict:data:query')")
     @GetMapping
     @Operation(summary = "查询字典数据", description = "查询字典数据", method = "GET")
     public Result<DictDataVo> getOne(DictDataDto dto) {
@@ -117,5 +123,19 @@ public class DictDataController {
     @Operation(summary = "导出字典数据", description = "导出字典数据", method = "GET")
     public void exportExcel(DictData dictData, HttpServletResponse response) {
         dictDataService.exportExcel(dictData, response);
+    }
+
+    /**
+     * 恢复或停用字典数据
+     *
+     * @param id 字典数据ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:dict:data:edit')")
+    @PutMapping("/status/{id}")
+    @Operation(summary = "恢复或停用字典数据", description = "恢复或停用字典数据", method = "PUT")
+    public Result<Void> handleStatus(@PathVariable Long id) {
+        dictDataService.handleStatus(id);
+        return Result.success();
     }
 }
