@@ -13,7 +13,7 @@
             {{ genderMap[field.value] || '未知' }}
           </span>
           <span v-else-if="field.key === 'birthday'">
-            {{ formatDate(field.value) }}
+            {{ field.value }}
           </span>
           <span v-else>
             {{ field.value || '未填写' }}
@@ -44,7 +44,7 @@
               v-model="field.value"
               type="date"
               placeholder="请选择生日"
-              value-format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD"
               @blur="handleFieldSave(field)"
           />
         </el-form-item>

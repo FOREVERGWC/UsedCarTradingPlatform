@@ -11,9 +11,10 @@
               <el-input v-model="queryParams.name" clearable placeholder="请输入姓名"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-date-picker v-model='queryParams.birthday' clearable
-                              placeholder='请选择生日' type='date'
-                              value-format='YYYY-MM-DD HH:mm:ss'/>
+              <el-date-picker v-model="queryParams.birthday" placeholder="请选择生日" clearable
+                              type="date"
+                              value-format="YYYY-MM-DD"
+                              :disabled-date="disabledAfterToday"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model='queryParams.status' clearable filterable placeholder="请选择状态">
@@ -35,9 +36,20 @@
               <el-input v-model="queryParams.loginIp" clearable placeholder="请输入最后登录IP"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-date-picker v-model='queryParams.loginTime' clearable
-                              placeholder='请选择最后登录时间' type='date'
-                              value-format='YYYY-MM-DD HH:mm:ss'/>
+              <el-date-picker v-model="loginTimeRange" clearable
+                              type="datetimerange"
+                              start-placeholder="最后登录开始时间" end-placeholder="最后登录结束时间"
+                              value-format="YYYY-MM-DD HH:mm:ss"
+                              unlink-panels
+              />
+            </el-col>
+            <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+              <el-date-picker v-model="createTimeRange" clearable
+                              type="datetimerange"
+                              start-placeholder="注册开始时间" end-placeholder="注册结束时间"
+                              value-format="YYYY-MM-DD HH:mm:ss"
+                              unlink-panels
+              />
             </el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
               <el-button icon="Search" plain type="info" @click="getPage">查询</el-button>
@@ -95,10 +107,32 @@
                     <el-icon>
                       <male/>
                     </el-icon>
+                    姓名
+                  </span>
+                </template>
+                <span>{{ row.name }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <span>
+                    <el-icon>
+                      <male/>
+                    </el-icon>
                     性别
                   </span>
                 </template>
                 <span>{{ row.genderText }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template #label>
+                  <span>
+                    <el-icon>
+                      <male/>
+                    </el-icon>
+                    生日
+                  </span>
+                </template>
+                <span>{{ row.birthday }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
@@ -128,7 +162,6 @@
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="用户名" prop="username"/>
         <el-table-column label="昵称" prop="nickname"/>
-        <el-table-column label="姓名" prop="name"/>
         <el-table-column label="头像">
           <template v-slot="{ row }">
             <div style="display: flex; align-items: center; justify-content: center">
@@ -139,11 +172,6 @@
                 </template>
               </el-image>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="生日" width="90">
-          <template v-slot="{ row }">
-            {{ formatDate(row.birthday) }}
           </template>
         </el-table-column>
         <el-table-column label="状态" width="100">
@@ -162,6 +190,7 @@
         <el-table-column label="邮箱" prop="email"/>
         <el-table-column label="最后登录IP" prop="loginIp"/>
         <el-table-column label="最后登录时间" prop="loginTime" width="150"/>
+        <el-table-column label="注册时间" prop="createTime" width="150"/>
         <el-table-column label="操作" width="280">
           <template v-slot="{ row }">
             <el-button icon="EditPen" @click="showAssign(row)">分配</el-button>
@@ -193,9 +222,6 @@
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.data.username" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.data.password" autocomplete="new"/>
-        </el-form-item>
         <el-form-item label="姓名">
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
@@ -208,9 +234,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="生日">
-          <el-date-picker v-model='form.data.birthday' placeholder='请选择生日'
-                          type='date'
-                          value-format='YYYY-MM-DD HH:mm:ss'/>
+          <el-date-picker v-model="form.data.birthday" placeholder="请选择生日" clearable
+                          type="date"
+                          value-format="YYYY-MM-DD"
+                          :disabled-date="disabledAfterToday"/>
         </el-form-item>
         <el-form-item v-if="form.data.id" label="状态" prop="status">
           <el-select v-model="form.data.status" clearable filterable placeholder="请选择状态">
@@ -249,19 +276,27 @@ import RoleAssign from './components/RoleAssign.vue';
 import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getUserOne, getUserPage, handleStatusUser, removeUserBatchByIds, saveUser} from '@/api/user.js'
 import {ElMessage} from "element-plus"
-import {downloadFile, formatDate, genderList, statusList} from "@/utils/common.js";
+import {
+  addDataRange,
+  disabledAfterToday,
+  downloadFile,
+  genderList,
+  statusList
+} from "@/utils/common.js";
 import useRoleStore from "@/store/modules/role.js";
 
 const roleStore = useRoleStore();
 
 const loading = ref(true)
+const loginTimeRange = ref([])
+const createTimeRange = ref([])
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
   username: '',
   name: '',
   gender: '',
-  birthday: '',
+  birthday: null,
   status: '',
   role: '',
   phone: '',
@@ -269,7 +304,8 @@ const queryParams = reactive({
   openId: '',
   balance: null,
   loginIp: '',
-  loginTime: ''
+  loginTime: '',
+  params: {}
 })
 const ids = ref([])
 const single = ref(true)
@@ -298,6 +334,8 @@ const rules = {
 
 const getPage = () => {
   loading.value = true
+  addDataRange(queryParams, loginTimeRange.value, 'LoginTime');
+  addDataRange(queryParams, createTimeRange.value, 'CreateTime');
   getUserPage(queryParams).then(res => {
     userList.value = res.data?.records || []
     total.value = res.data?.total || 0
@@ -399,10 +437,13 @@ const handleSelectionChange = (selection) => {
 }
 
 const resetQuery = () => {
+  loginTimeRange.value = []
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.username = ''
   queryParams.name = ''
+  queryParams.gender = ''
+  queryParams.birthday = null
   queryParams.status = ''
   queryParams.role = ''
   queryParams.phone = ''

@@ -18,6 +18,7 @@ import org.example.springboot.system.domain.BaseEntity;
 
 import java.io.Serial;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -86,7 +87,7 @@ public class User extends BaseEntity {
      */
     @Schema(description = "生日")
     @ExcelProperty(value = "生日")
-    private LocalDateTime birthday;
+    private LocalDate birthday;
     /**
      * 状态(0禁用、1正常)
      */
@@ -131,7 +132,7 @@ public class User extends BaseEntity {
     @ExcelProperty(value = "最后登录时间")
     private LocalDateTime loginTime;
 
-    public User(Long id, String username, String password, String nickname, String name, String avatar, String gender, LocalDateTime birthday, String status, String phone, String email, String openId, BigDecimal balance, String loginIp, LocalDateTime loginTime, String createBy, LocalDateTime createTime, String updateBy, LocalDateTime updateTime, String remark) {
+    public User(Long id, String username, String password, String nickname, String name, String avatar, String gender, LocalDate birthday, String status, String phone, String email, String openId, BigDecimal balance, String loginIp, LocalDateTime loginTime, String createBy, LocalDateTime createTime, String updateBy, LocalDateTime updateTime, String remark) {
         super(createBy, createTime, updateBy, updateTime, remark);
         this.id = id;
         this.username = username;

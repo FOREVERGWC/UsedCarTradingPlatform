@@ -199,10 +199,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                 .like(StrUtil.isNotBlank(entity.getLoginIp()), User::getLoginIp, entity.getLoginIp());
         if (entity instanceof UserDto dto) {
             Map<String, Object> params = dto.getParams();
+            // 最后登录时间
+            Object startLoginTime = params == null ? null : params.get("startLoginTime");
+            Object endLoginTime = params == null ? null : params.get("endLoginTime");
             // 创建时间
             Object startCreateTime = params == null ? null : params.get("startCreateTime");
             Object endCreateTime = params == null ? null : params.get("endCreateTime");
 
+            wrapper.between(ObjectUtil.isAllNotEmpty(startLoginTime, endLoginTime),
+                    User::getLoginTime,
+                    startLoginTime, endLoginTime
+            );
             wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
                     User::getCreateTime,
                     startCreateTime, endCreateTime);

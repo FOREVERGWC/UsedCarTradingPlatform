@@ -30,6 +30,37 @@ export const formatTimestamp = (timestamp) => {
 };
 
 /**
+ * 禁用今天之后的日期
+ * @param date 日期
+ * @returns {boolean} 结果
+ */
+export const disabledAfterToday = (date) => {
+    const today = new Date();
+    return date.getTime() > today.getTime();
+};
+
+/**
+ * 添加范围查询
+ * @param object 查询参数
+ * @param dataRange 数据范围
+ * @param propName 属性名称
+ * @returns {*} 结果
+ */
+export const addDataRange = (object, dataRange, propName) => {
+    console.log(object, dataRange)
+    object.params = typeof (object.params) === 'object' && object.params !== null && !Array.isArray(object.params) ? object.params : {};
+    dataRange = Array.isArray(dataRange) ? dataRange : [];
+    if (typeof (propName) === 'undefined') {
+        object.params['start'] = dataRange[0];
+        object.params['end'] = dataRange[1];
+    } else {
+        console.log(dataRange[0])
+        object.params[`start${propName}`] = dataRange[0];
+        object.params[`end${propName}`] = dataRange[1];
+    }
+}
+
+/**
  * 获取需要展开的节点ID
  * @param data 数据
  * @returns {*[]} 结果
