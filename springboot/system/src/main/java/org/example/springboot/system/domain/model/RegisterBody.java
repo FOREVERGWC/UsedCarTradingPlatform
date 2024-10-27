@@ -3,6 +3,7 @@ package org.example.springboot.system.domain.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -30,18 +31,21 @@ public class RegisterBody implements Serializable {
      */
     @Schema(description = "用户名")
     @NotBlank(message = "{username.NotBlank}")
+    @Size(min = 1, max = 20, message = "{username.Size}")
     private String username;
     /**
      * 密码
      */
     @Schema(description = "密码")
     @NotBlank(message = "{password.NotBlank}")
+    @Size(min = 1, max = 20, message = "{password.Size}")
     private String password;
     /**
      * 确认密码
      */
     @Schema(description = "确认密码")
     @NotBlank(message = "{confirmPwd.NotBlank}")
+    @Size(min = 1, max = 20, message = "{password.Size}")
     private String confirmPwd;
     /**
      * 邮箱

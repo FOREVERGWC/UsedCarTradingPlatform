@@ -47,6 +47,7 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "注册用户", description = "注册用户", method = "POST")
     public Result<Void> register(@Validated @RequestBody RegisterBody body) {
+        // TODO @Validated失效，不校验入参
         authService.register(body);
         return Result.success();
     }
