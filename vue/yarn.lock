@@ -1222,11 +1222,6 @@ dompurify@^3.0.5:
   resolved "https://registry.npmmirror.com/dompurify/-/dompurify-3.1.6.tgz"
   integrity sha512-cTOAhc36AalkjtBpfG6O8JimdTMWNXjiePT2xQH/ppBGi/4uIpmj8eKyIkMJErXWARyINV/sB38yf8JCLF5pbQ==
 
-downloadjs@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.npmmirror.com/downloadjs/-/downloadjs-1.4.7.tgz"
-  integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
-
 echarts@^5.5.1:
   version "5.5.1"
   resolved "https://registry.npmmirror.com/echarts/-/echarts-5.5.1.tgz"
@@ -2775,13 +2770,6 @@ vue-router@^4.4.3:
   integrity sha512-4fKZygS8cH1yCyuabAXGUAsyi1b2/o/OKgu/RUb+znIYOxPRxdkytJEx+0wGcpBE1pX6vUgh5jwWOKRGvuA/7Q==
   dependencies:
     "@vue/devtools-api" "^6.6.4"
-
-vue3-json-excel@^1.0.10-alpha:
-  version "1.0.10-alpha"
-  resolved "https://registry.npmmirror.com/vue3-json-excel/-/vue3-json-excel-1.0.10-alpha.tgz"
-  integrity sha512-wTcHSWdGQ5hFjpYbw2KOoLNQKVMFqDPfMPKuRpisxAACMk/E483/RLP3GT6HGMxocSO61wGKrAzYymYhKjo1Ew==
-  dependencies:
-    downloadjs "^1.4.7"
 
 vue@^3.4.37:
   version "3.5.4"

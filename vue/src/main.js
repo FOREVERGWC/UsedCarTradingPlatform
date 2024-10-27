@@ -12,8 +12,6 @@ import 'element-plus/theme-chalk/display.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 字体图标
 import '@/assets/icons/iconfont.css'
-// Excel导出
-import vue3JsonExcel from "vue3-json-excel"
 // MD文档编辑
 import VueMarkdownEditor from '@kangc/v-md-editor'
 import '@kangc/v-md-editor/lib/style/base-editor.css'
@@ -53,7 +51,6 @@ app._context.components.ElDialog.props.closeOnClickModal.default = false
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-app.use(vue3JsonExcel)
 app.use(VueMarkdownEditor)
 app.use(VMdPreview)
 app.component('MenuItem', MenuItem)
