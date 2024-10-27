@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.example.springboot.system.common.Constants;
+import org.example.springboot.common.common.Constants;
 import org.example.springboot.system.service.IBaseService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 

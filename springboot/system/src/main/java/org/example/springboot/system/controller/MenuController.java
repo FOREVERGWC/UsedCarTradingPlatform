@@ -3,7 +3,7 @@ package org.example.springboot.system.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.domain.vo.MenuVo;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.entity.Menu;
 import org.example.springboot.system.domain.dto.MenuDto;
 import org.example.springboot.system.service.IMenuService;

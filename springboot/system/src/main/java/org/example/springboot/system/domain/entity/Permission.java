@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import org.example.springboot.system.common.annotation.Dict;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.domain.BaseEntity;
+import org.example.springboot.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

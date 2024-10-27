@@ -8,7 +8,7 @@ import org.example.springboot.system.common.annotation.Dict;
 import org.example.springboot.system.common.converter.BooleanStatusConverter;
 import org.example.springboot.system.common.converter.LoginTypeConverter;
 import org.example.springboot.system.common.enums.LoginType;
-import org.example.springboot.system.domain.BaseEntity;
+import org.example.springboot.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;

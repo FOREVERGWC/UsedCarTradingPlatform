@@ -1,6 +1,6 @@
 package org.example.springboot.system.common.exception;
 
-import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.common.common.enums.ResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

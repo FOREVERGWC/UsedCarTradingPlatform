@@ -30,8 +30,9 @@
     </scm>
 
     <modules>
-        <module>biz</module>
+        <module>common</module>
         <module>system</module>
+        <module>biz</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -173,6 +174,12 @@
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>4.3.0</version>
+            </dependency>
+            <!-- 通用模块 -->
+            <dependency>
+                <groupId>org.example</groupId>
+                <artifactId>common</artifactId>
+                <version>${main.version}</version>
             </dependency>
             <!-- 系统模块 -->
             <dependency>

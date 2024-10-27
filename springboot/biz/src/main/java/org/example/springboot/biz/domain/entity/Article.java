@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.example.springboot.system.common.annotation.Dict;
 import org.example.springboot.biz.common.enums.ArticleStatus;
 import org.example.springboot.biz.common.enums.ArticleVisible;
-import org.example.springboot.system.domain.BaseEntity;
+import org.example.springboot.common.domain.BaseEntity;
 
 import java.io.Serial;
 import java.time.LocalDateTime;

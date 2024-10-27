@@ -3,7 +3,7 @@ package org.example.springboot.system.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.model.EmailBody;
 import org.example.springboot.system.service.IEmailService;
 import org.springframework.validation.annotation.Validated;

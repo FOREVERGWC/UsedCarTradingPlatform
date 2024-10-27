@@ -1,4 +1,4 @@
-package org.example.springboot.system.common.enums;
+package org.example.springboot.common.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

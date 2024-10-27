@@ -1,4 +1,4 @@
-package org.example.springboot.system.common;
+package org.example.springboot.common.common;
 
 public interface Constants {
     /**
@@ -49,7 +49,6 @@ public interface Constants {
      * 每张工作簿最大行数
      */
     Integer PER_SHEET_ROW_COUNT = 200000;
-    //    Integer PER_SHEET_ROW_COUNT = 1000000;
     /**
      * 每个文件最大数据量
      */

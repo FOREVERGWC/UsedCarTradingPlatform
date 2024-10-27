@@ -1,4 +1,4 @@
-package org.example.springboot.system.utils;
+package org.example.springboot.common.utils;
 
 import cn.hutool.extra.servlet.JakartaServletUtil;
 import cn.hutool.http.Header;
@@ -6,7 +6,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.springboot.system.common.Constants;
+import org.example.springboot.common.common.Constants;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

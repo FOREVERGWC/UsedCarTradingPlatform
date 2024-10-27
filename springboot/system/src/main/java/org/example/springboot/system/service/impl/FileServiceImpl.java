@@ -2,6 +2,8 @@ package org.example.springboot.system.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.BizType;
 import org.example.springboot.system.domain.dto.FileChunkDto;
 import org.example.springboot.system.domain.entity.Attachment;
@@ -15,10 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +33,7 @@ import java.util.stream.IntStream;
  */
 @Service
 public class FileServiceImpl implements IFileService {
+    // TODO 整合MinIO
     @Value("${upload.path}")
     private String basePath;
 
@@ -75,6 +75,17 @@ public class FileServiceImpl implements IFileService {
         String filePath = File.separator + "file" + File.separator + dto.getHashCode() + "." + FileUtil.extName(dto.getFileName());
         saveAttachment(filePath, dto);
         return filePath;
+    }
+
+    @Override
+    public void getFileByName(String name, HttpServletResponse response) {
+        if (StrUtil.isNotBlank(name)) {
+            try (OutputStream outputStream = response.getOutputStream(); FileInputStream fileInputStream = new FileInputStream(Paths.get(basePath, name).toFile())) {
+                IoUtil.copy(fileInputStream, outputStream, IoUtil.DEFAULT_BUFFER_SIZE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**

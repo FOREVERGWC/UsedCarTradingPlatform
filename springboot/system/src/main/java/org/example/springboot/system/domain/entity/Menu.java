@@ -11,7 +11,7 @@ import org.example.springboot.system.common.converter.EnableStatusConverter;
 import org.example.springboot.system.common.converter.MenuTypeConverter;
 import org.example.springboot.system.common.enums.MenuType;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.domain.BaseEntity;
+import org.example.springboot.common.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;

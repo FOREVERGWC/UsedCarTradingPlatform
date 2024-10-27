@@ -1,7 +1,7 @@
 package org.example.springboot.system.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.validation.BindingResult;

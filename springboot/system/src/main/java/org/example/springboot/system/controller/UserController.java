@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.dto.UserDto;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.model.AssignRoleBody;

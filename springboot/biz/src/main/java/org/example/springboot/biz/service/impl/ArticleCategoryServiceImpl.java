@@ -16,7 +16,7 @@ import org.example.springboot.biz.domain.vo.ArticleCategoryVo;
 import org.example.springboot.biz.mapper.ArticleCategoryMapper;
 import org.example.springboot.biz.service.IArticleCategoryService;
 import org.example.springboot.system.service.IUserService;
-import org.example.springboot.system.utils.DataUtils;
+import org.example.springboot.common.utils.DataUtils;
 import org.example.springboot.system.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package org.example.springboot.system.common.config.security;
 
-import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.service.impl.UserDetailsServiceImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

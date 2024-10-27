@@ -1,4 +1,4 @@
-package org.example.springboot.system.domain;
+package org.example.springboot.common.domain;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.FieldFill;

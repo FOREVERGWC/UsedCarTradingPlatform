@@ -1,4 +1,4 @@
-package org.example.springboot.system.utils;
+package org.example.springboot.common.utils;
 
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.net.NetUtil;

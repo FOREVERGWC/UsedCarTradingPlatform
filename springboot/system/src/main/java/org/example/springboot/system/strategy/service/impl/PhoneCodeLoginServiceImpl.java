@@ -5,7 +5,7 @@ import org.example.springboot.system.common.config.security.PhoneCodeAuthenticat
 import org.example.springboot.system.common.enums.LoginType;
 import org.example.springboot.system.common.manager.AsyncManager;
 import org.example.springboot.system.common.manager.factory.AsyncFactory;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.model.LoginBody;
 import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.service.ITokenService;

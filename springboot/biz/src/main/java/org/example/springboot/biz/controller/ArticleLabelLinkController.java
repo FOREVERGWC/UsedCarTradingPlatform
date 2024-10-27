@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.biz.domain.dto.ArticleLabelLinkDto;
 import org.example.springboot.biz.domain.entity.ArticleLabelLink;
 import org.example.springboot.biz.domain.vo.ArticleLabelLinkVo;

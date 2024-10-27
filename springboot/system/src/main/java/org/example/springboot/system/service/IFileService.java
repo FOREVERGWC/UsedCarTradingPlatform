@@ -1,5 +1,6 @@
 package org.example.springboot.system.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.domain.dto.FileChunkDto;
 import org.example.springboot.system.domain.vo.AttachmentCheckVo;
 
@@ -25,4 +26,12 @@ public interface IFileService {
      * @return 结果
      */
     String uploadFile(FileChunkDto dto);
+
+    /**
+     * 获取文件
+     *
+     * @param name     文件名称
+     * @param response 响应对象
+     */
+    void getFileByName(String name, HttpServletResponse response);
 }

@@ -1,9 +1,9 @@
-package org.example.springboot.system.domain;
+package org.example.springboot.common.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
-import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.common.common.enums.ResultCode;
 
 import java.io.Serial;
 import java.io.Serializable;

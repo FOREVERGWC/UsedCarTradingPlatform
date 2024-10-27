@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.springboot.system.common.enums.ResultCode;
+import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.common.enums.EnableStatus;
 import org.example.springboot.system.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.DictData;

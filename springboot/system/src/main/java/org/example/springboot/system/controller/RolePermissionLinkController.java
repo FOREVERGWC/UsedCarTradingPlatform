@@ -2,7 +2,7 @@ package org.example.springboot.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.system.domain.vo.RolePermissionLinkVo;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.entity.RolePermissionLink;
 import org.example.springboot.system.domain.dto.RolePermissionLinkDto;
 import org.example.springboot.system.service.IRolePermissionLinkService;

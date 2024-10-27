@@ -2,7 +2,7 @@ package org.example.springboot.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.system.domain.vo.RoleMenuLinkVo;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.entity.RoleMenuLink;
 import org.example.springboot.system.domain.dto.RoleMenuLinkDto;
 import org.example.springboot.system.service.IRoleMenuLinkService;

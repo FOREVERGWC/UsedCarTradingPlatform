@@ -2,7 +2,7 @@ package org.example.springboot.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.springboot.system.domain.vo.UserRoleLinkVo;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.entity.UserRoleLink;
 import org.example.springboot.system.domain.dto.UserRoleLinkDto;
 import org.example.springboot.system.service.IUserRoleLinkService;

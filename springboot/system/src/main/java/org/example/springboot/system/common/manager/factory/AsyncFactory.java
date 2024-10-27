@@ -9,8 +9,8 @@ import org.example.springboot.system.domain.entity.LogLogin;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.impl.LogLoginServiceImpl;
 import org.example.springboot.system.service.impl.UserServiceImpl;
-import org.example.springboot.system.utils.AddressUtils;
-import org.example.springboot.system.utils.ServletUtils;
+import org.example.springboot.common.utils.AddressUtils;
+import org.example.springboot.common.utils.ServletUtils;
 
 import java.time.LocalDateTime;
 import java.util.TimerTask;

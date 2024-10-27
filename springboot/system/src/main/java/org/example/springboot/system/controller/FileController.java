@@ -2,9 +2,7 @@ package org.example.springboot.system.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.StrUtil;
-import org.example.springboot.system.domain.Result;
+import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.dto.FileChunkDto;
 import org.example.springboot.system.domain.vo.AttachmentCheckVo;
 import org.example.springboot.system.service.IFileService;
@@ -17,14 +15,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,7 +79,7 @@ public class FileController {
         if (CollectionUtil.isEmpty(fileList)) {
             return Result.error("禁止上传空文件列表！");
         }
-        List<String> pathList = new ArrayList<>();
+        List<String> pathList = new LinkedList<>();
         for (MultipartFile file : fileList) {
             if (file.isEmpty()) {
                 continue;
@@ -112,13 +108,7 @@ public class FileController {
      */
     @GetMapping("/{name}")
     @Operation(summary = "获取文件", description = "获取文件", method = "GET")
-    public void avatarPath(@PathVariable String name, HttpServletResponse response) {
-        if (StrUtil.isNotBlank(name)) {
-            try (OutputStream outputStream = response.getOutputStream(); FileInputStream fileInputStream = new FileInputStream(Paths.get(basePath, name).toFile())) {
-                IoUtil.copy(fileInputStream, outputStream, IoUtil.DEFAULT_BUFFER_SIZE);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void getFileByName(@PathVariable String name, HttpServletResponse response) {
+        fileService.getFileByName(name, response);
     }
 }

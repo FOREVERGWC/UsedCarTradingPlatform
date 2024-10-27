@@ -3,6 +3,7 @@ package org.example.springboot.system.utils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.validation.*;
+import org.example.springboot.common.utils.MessageUtils;
 import org.example.springboot.system.domain.model.LoginBody;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 
