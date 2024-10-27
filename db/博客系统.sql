@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 27/10/2024 15:07:54
+ Date: 27/10/2024 19:00:32
 */
 
 SET NAMES utf8mb4;
@@ -328,7 +328,7 @@ DROP TABLE IF EXISTS `sys_dict_type`;
 CREATE TABLE `sys_dict_type` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   `name` varchar(20) NOT NULL COMMENT '字典名称',
-  `type` varchar(20) NOT NULL COMMENT '字典类型',
+  `code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典标识',
   `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字典状态(0禁用、1正常)',
   `create_by` varchar(20) NOT NULL COMMENT '创建者',
   `create_time` datetime NOT NULL COMMENT '创建时间',
@@ -336,15 +336,15 @@ CREATE TABLE `sys_dict_type` (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `type` (`type`)
+  UNIQUE KEY `type` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='字典类型表';
 
 -- ----------------------------
 -- Records of sys_dict_type
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_dict_type` (`id`, `name`, `type`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (1, '性别', 'gender', '1', '1', '2024-09-25 22:56:38', '1', '2024-10-10 22:04:48', '');
-INSERT INTO `sys_dict_type` (`id`, `name`, `type`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2, '启用状态', 'enable_status', '1', '1', '2024-10-10 22:36:51', '1', '2024-10-10 22:40:29', '');
+INSERT INTO `sys_dict_type` (`id`, `name`, `code`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (1, '性别', 'gender', '1', '1', '2024-09-25 22:56:38', '1', '2024-10-10 22:04:48', '');
+INSERT INTO `sys_dict_type` (`id`, `name`, `code`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2, '启用状态', 'enable_status', '1', '1', '2024-10-10 22:36:51', '1', '2024-10-10 22:40:29', '');
 COMMIT;
 
 -- ----------------------------
@@ -367,12 +367,14 @@ CREATE TABLE `sys_log_login` (
   `remark` varchar(255) NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   KEY `create_time` (`create_time` DESC) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5000161 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='登录日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=5000163 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='登录日志表';
 
 -- ----------------------------
 -- Records of sys_log_login
 -- ----------------------------
 BEGIN;
+INSERT INTO `sys_log_login` (`id`, `login_type`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (5000161, '1', 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-10-27 15:19:00', '1', '2024-10-27 15:19:00', '');
+INSERT INTO `sys_log_login` (`id`, `login_type`, `os`, `browser`, `ip`, `location`, `status`, `msg`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (5000162, '1', 'OSX', 'MSEdge', '0:0:0:0:0:0:0:1', '未知 未知 未知', 1, '请求成功！', '1', '2024-10-27 17:30:45', '1', '2024-10-27 17:30:45', '');
 COMMIT;
 
 -- ----------------------------
@@ -709,7 +711,7 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-10-27 13:35:56', '', '2024-08-16 01:26:41', '1', '2024-10-27 14:47:48', '');
+INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-10-27 17:30:45', '', '2024-08-16 01:26:41', '', '2024-10-27 17:30:45', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (4, '2', '$2a$10$elhEi/ohemfnXateL1BLZ.lLi.fJ31tDVKdSpr3xnr40pdMjAlqlG', '', '张三', '1', '2', '2024-08-22', '1', '13037503390', '1@qq.com', '1', 0.00, '1', '2024-08-28 00:00:00', '', '2024-08-16 09:00:11', '', '2024-09-14 06:58:03', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (5, '3', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/c3f7a394-7b91-43b3-b924-5d1592426f06.jpg', '2', '2024-08-27', '1', '13037503391', '2@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user` (`id`, `username`, `password`, `nickname`, `name`, `avatar`, `gender`, `birthday`, `status`, `phone`, `email`, `open_id`, `balance`, `login_ip`, `login_time`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (6, '4', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/a3336d6e-4ef8-46f0-99e6-a104122b9f88.jpg', '2', '2024-08-17', '0', '13037503392', '3@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:34:13', '1', '2024-08-21 15:13:15', '1');

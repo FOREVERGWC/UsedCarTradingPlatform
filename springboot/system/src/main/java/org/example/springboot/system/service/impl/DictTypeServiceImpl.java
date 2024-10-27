@@ -92,6 +92,13 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
     }
 
     @Override
+    public DictType getByCode(String code) {
+        return lambdaQuery()
+                .eq(DictType::getCode, code)
+                .one();
+    }
+
+    @Override
     public void exportExcel(DictType dictType, HttpServletResponse response) {
         ExcelUtils.exportExcel(response, this, dictType, DictType.class, threadPoolTaskExecutor);
     }
@@ -124,7 +131,7 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
         LambdaQueryChainWrapper<DictType> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, DictType::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getName()), DictType::getName, entity.getName())
-                .like(StrUtil.isNotBlank(entity.getType()), DictType::getType, entity.getType())
+                .eq(StrUtil.isNotBlank(entity.getCode()), DictType::getCode, entity.getCode())
                 .eq(entity.getStatus() != null, DictType::getStatus, entity.getStatus());
         if (entity instanceof DictTypeDto dto) {
             Map<String, Object> params = dto.getParams();

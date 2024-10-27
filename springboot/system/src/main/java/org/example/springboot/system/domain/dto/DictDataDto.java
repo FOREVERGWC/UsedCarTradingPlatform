@@ -28,6 +28,11 @@ public class DictDataDto extends DictData {
     @Serial
     private static final long serialVersionUID = 1L;
     /**
+     * 字典标识
+     */
+    @Schema(description = "字典标识")
+    private String code;
+    /**
      * 页码
      */
     @JsonIgnore

@@ -43,11 +43,11 @@ public class DictType extends BaseEntity {
     @ExcelProperty(value = "字典名称")
     private String name;
     /**
-     * 字典类型
+     * 字典标识
      */
-    @Schema(description = "字典类型")
-    @ExcelProperty(value = "字典类型")
-    private String type;
+    @Schema(description = "字典标识")
+    @ExcelProperty(value = "字典标识")
+    private String code;
     /**
      * 字典状态(0禁用、1正常)
      */

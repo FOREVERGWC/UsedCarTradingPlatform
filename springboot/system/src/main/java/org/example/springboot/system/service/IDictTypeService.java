@@ -40,6 +40,14 @@ public interface IDictTypeService extends IService<DictType> {
     DictTypeVo getOne(DictTypeDto dto);
 
     /**
+     * 根据字典标识查询字典类型
+     *
+     * @param code 字典标识
+     * @return 结果
+     */
+    DictType getByCode(String code);
+
+    /**
      * 导出字典类型
      *
      * @param dictType 字典类型

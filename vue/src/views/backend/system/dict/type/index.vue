@@ -8,7 +8,7 @@
               <el-input v-model="queryParams.name" clearable placeholder="请输入字典名称"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.type" clearable placeholder="请输入字典类型"/>
+              <el-input v-model="queryParams.code" clearable placeholder="请输入字典标识"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.status" clearable filterable placeholder="请选择字典状态">
@@ -64,11 +64,11 @@
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
         <el-table-column label="字典名称" prop="name"/>
-        <el-table-column label="字典类型" sortable>
+        <el-table-column label="字典标识" sortable>
           <template v-slot="{ row }">
             <router-link :to="{ path: '/dict/data', query: { typeId: row.id } }">
               <el-link :underline="false">
-                <span>{{ row.type }}</span>
+                <span>{{ row.code }}</span>
               </el-link>
             </router-link>
           </template>
@@ -108,8 +108,8 @@
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="form.data.name" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="字典类型" prop="type">
-          <el-input v-model="form.data.type" autocomplete="new"/>
+        <el-form-item label="字典标识" prop="code">
+          <el-input v-model="form.data.code" autocomplete="new"/>
         </el-form-item>
         <el-form-item v-if="form.data.id" label="状态" prop="status">
           <el-select v-model="form.data.status" clearable filterable placeholder="请选择状态">
@@ -145,7 +145,7 @@ const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
   name: '',
-  type: '',
+	code: '',
   status: ''
 })
 const ids = ref([])
@@ -165,7 +165,7 @@ const form = ref({
 const formRef = ref(null)
 const rules = {
   name: [{required: true, message: '请输入字典名称', trigger: 'blur'}],
-  type: [{required: true, message: '请输入字典类型', trigger: 'blur'}],
+	code: [{required: true, message: '请输入字典标识', trigger: 'blur'}],
   status: [{required: true, message: '请选择字典状态', trigger: 'change'}]
 }
 
@@ -185,10 +185,10 @@ const showAdd = () => {
   })
   form.value = {
     visible: true,
-    title: '添加字典类型',
+    title: '添加字典标识',
     data: {
       name: '',
-      type: '',
+			code: '',
       status: '',
       remark: ''
     }
@@ -205,7 +205,7 @@ const showEdit = (row) => {
     if (res.code !== 200) return
     form.value = {
       visible: true,
-      title: '编辑字典类型',
+      title: '编辑字典标识',
       data: {
         ...res.data
       }
@@ -263,7 +263,7 @@ const handleReset = () => {
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.name = ''
-  queryParams.type = ''
+  queryParams.code = ''
   queryParams.status = ''
   getPage()
 }

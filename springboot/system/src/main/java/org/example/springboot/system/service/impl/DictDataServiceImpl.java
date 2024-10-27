@@ -140,6 +140,13 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
 
     @Override
     public LambdaQueryChainWrapper<DictData> getWrapper(DictData entity) {
+        if (entity instanceof DictDataDto dto) {
+            String code = dto.getCode();
+            DictType dictType = dictTypeService.getByCode(code);
+            if (dictType != null) {
+                entity.setTypeId(dictType.getId());
+            }
+        }
         LambdaQueryChainWrapper<DictData> wrapper = lambdaQuery()
                 .eq(entity.getId() != null, DictData::getId, entity.getId())
                 .like(StrUtil.isNotBlank(entity.getLabel()), DictData::getLabel, entity.getLabel())
