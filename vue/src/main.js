@@ -36,6 +36,8 @@ import IconPicker from "@/components/IconPicker/index.js";
 import CounterButton from "@/components/CounterButton/index.js";
 // 字典组件
 import DictItem from "@/components/DictItem/index.js";
+// 版权备案组件
+import CopyrightIcp from "@/components/CopyrightIcp/index.js";
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -61,4 +63,5 @@ app.component('AvatarUpload', AvatarUpload)
 app.component('IconPicker', IconPicker)
 app.component('CounterButton', CounterButton)
 app.component('DictItem', DictItem)
+app.component('CopyrightIcp', CopyrightIcp)
 app.mount('#app')
