@@ -9,6 +9,7 @@ import org.example.springboot.biz.domain.dto.FollowDto;
 import org.example.springboot.biz.domain.entity.Follow;
 import org.example.springboot.biz.domain.vo.FollowVo;
 import org.example.springboot.biz.service.IFollowService;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class FollowController {
      */
     @PostMapping
     @Operation(summary = "添加、修改关注", description = "添加、修改关注", method = "POST")
-    public Result<Void> save(@RequestBody Follow follow) {
+    public Result<Void> save(@Validated @RequestBody Follow follow) {
         followService.saveOrUpdate(follow);
         return Result.success();
     }

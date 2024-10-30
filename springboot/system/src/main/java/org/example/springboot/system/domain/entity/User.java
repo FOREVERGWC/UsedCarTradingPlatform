@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.example.springboot.system.common.annotation.Dict;
+import org.example.springboot.common.common.annotation.Dict;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
 import org.example.springboot.system.common.converter.GenderConverter;
 import org.example.springboot.system.common.enums.Gender;

@@ -1,7 +1,7 @@
-package org.example.springboot.system.common.config;
+package org.example.springboot.common.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.springboot.system.common.instance.ObjectMapperInstance;
+import org.example.springboot.common.common.instance.ObjectMapperInstance;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;

@@ -23,9 +23,10 @@ public class AsyncFactory {
     /**
      * 记录登录日志
      *
-     * @param username 用户名
-     * @param status   状态
-     * @param msg      消息
+     * @param username  用户名
+     * @param loginType 登录类型
+     * @param status    状态
+     * @param msg       消息
      * @return 结果
      */
     public static TimerTask recordLogin(String username, LoginType loginType, Boolean status, String msg) {
@@ -49,6 +50,24 @@ public class AsyncFactory {
                         .updateBy(username)
                         .build();
                 SpringUtil.getBean(LogLoginServiceImpl.class).save(logLogin);
+            }
+        };
+    }
+
+    /**
+     * 记录退出日志
+     *
+     * @param username  用户名
+     * @param loginType 登录类型
+     * @param status    状态
+     * @param msg       消息
+     * @return 结果
+     */
+    public static TimerTask recordLogout(String username, LoginType loginType, Boolean status, String msg) {
+        return new TimerTask() {
+            @Override
+            public void run() {
+                log.info("记录退出登录：{}，{}", username, LocalDateTime.now());
             }
         };
     }

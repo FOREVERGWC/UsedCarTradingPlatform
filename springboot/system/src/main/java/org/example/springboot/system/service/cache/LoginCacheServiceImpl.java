@@ -39,6 +39,12 @@ public class LoginCacheServiceImpl implements ILoginCacheService {
     }
 
     @Override
+    public void removeLoginUser(String uuid) {
+        String key = "login:user:" + uuid;
+        redisTemplate.delete(key);
+    }
+
+    @Override
     public LoginUser getLoginUser(String token) {
         String uuid = JWT.decode(token).getAudience().getFirst();
         String key = "login:user:" + uuid;

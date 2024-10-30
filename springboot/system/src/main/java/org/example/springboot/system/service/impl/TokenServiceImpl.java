@@ -6,7 +6,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.springboot.common.common.Constants;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.service.ITokenService;
 import org.example.springboot.system.service.cache.ILoginCacheService;

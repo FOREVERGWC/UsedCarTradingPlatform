@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.instance.ObjectMapperInstance;
+import org.example.springboot.common.common.instance.ObjectMapperInstance;
 import org.example.springboot.common.domain.Result;
 import org.example.springboot.common.utils.ServletUtils;
 import org.springframework.security.core.AuthenticationException;

@@ -6,7 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 
 import java.util.Date;
 

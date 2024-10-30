@@ -1,6 +1,7 @@
 package org.example.springboot.system.service;
 
 import org.example.springboot.system.domain.model.LoginBody;
+import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.domain.model.RegisterBody;
 import org.example.springboot.system.domain.model.ResetBody;
 import org.example.springboot.system.domain.vo.CaptchaVo;
@@ -23,6 +24,13 @@ public interface IAuthService {
      * @return 结果
      */
     String login(LoginBody body);
+
+    /**
+     * 退出
+     *
+     * @param user 登录用户
+     */
+    void logout(LoginUser user);
 
     /**
      * 注册用户

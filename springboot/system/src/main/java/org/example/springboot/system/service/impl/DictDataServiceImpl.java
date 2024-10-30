@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.DictData;
 import org.example.springboot.system.domain.entity.DictType;
 import org.example.springboot.system.domain.dto.DictDataDto;

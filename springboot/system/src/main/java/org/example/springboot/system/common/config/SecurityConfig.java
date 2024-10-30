@@ -1,6 +1,8 @@
 package org.example.springboot.system.common.config;
 
+import cn.hutool.extra.spring.SpringUtil;
 import jakarta.annotation.Resource;
+import org.example.springboot.common.common.annotation.Anonymous;
 import org.example.springboot.system.common.config.security.*;
 import org.example.springboot.system.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.pattern.PathPattern;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Spring Security配置类
@@ -26,7 +37,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
-//    @Resource
+    //    @Resource
 //    private CorsFilter corsFilter;
     @Resource
     private CheckTokenFilter checkTokenFilter;
@@ -34,6 +45,8 @@ public class SecurityConfig {
     private LoginAuthenticationHandler loginAuthenticationHandler;
     @Resource
     private LoginAccessDefineHandler loginAccessDefineHandler;
+    @Resource
+    private LogoutSuccessHandler logoutSuccessHandlerImpl;
     @Resource
     private UserDetailsServiceImpl userDetailsService;
 
@@ -71,6 +84,7 @@ public class SecurityConfig {
         authBuilder.authenticationProvider(phoneCodeAuthenticationProvider());
         http
                 .formLogin(AbstractHttpConfigurer::disable)
+                .logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandlerImpl))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 

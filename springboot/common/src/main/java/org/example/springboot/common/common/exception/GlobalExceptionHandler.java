@@ -1,17 +1,19 @@
-package org.example.springboot.system.common.exception;
+package org.example.springboot.common.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.common.domain.Result;
 import org.mybatis.spring.MyBatisSystemException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
+import java.sql.SQLException;
 
 /**
  * 全局处理异常
@@ -20,18 +22,6 @@ import java.util.Arrays;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     /**
-     * 通用异常
-     *
-     * @param e 通用异常
-     * @return 结果
-     */
-    @ExceptionHandler(Exception.class)
-    public Result<Void> handleException(Exception e) {
-        log.error("异常：Exception，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
-        return Result.error(e.getMessage());
-    }
-
-    /**
      * 业务异常
      *
      * @param e 业务异常
@@ -39,8 +29,22 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public Result<Void> handleServiceException(ServiceException e) {
-        log.error("异常：ServiceException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：ServiceException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(e.getResultCodeEnum());
+    }
+
+    /**
+     * 凭证错误异常
+     *
+     * @param e 凭证错误异常
+     * @return 结果
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public Result<Void> handleBadCredentialsException(BadCredentialsException e) {
+        log.error("异常：BadCredentialsException");
+        log.error("信息：{}", e.getMessage());
+        return Result.error(e.getMessage());
     }
 
     /**
@@ -51,7 +55,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("异常：MethodArgumentNotValidException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：MethodArgumentNotValidException");
+        log.error("信息：{}", e.getMessage());
         BindingResult bindingResult = e.getBindingResult();
         ObjectError error = bindingResult.getAllErrors().getFirst();
         return Result.error(error.getDefaultMessage());
@@ -65,7 +70,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = NullPointerException.class)
     public Result<Void> handleNullPointerException(NullPointerException e) {
-        log.error("异常：NullPointerException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：NullPointerException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -77,7 +83,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ArrayIndexOutOfBoundsException.class)
     public Result<Void> handleArrayIndexOutOfBoundsException(ArrayIndexOutOfBoundsException e) {
-        log.error("异常：ArrayIndexOutOfBoundsException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：ArrayIndexOutOfBoundsException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -89,7 +96,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ArithmeticException.class)
     public Result<Void> handleArithmeticException(ArithmeticException e) {
-        log.error("异常：ArithmeticException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：ArithmeticException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -101,7 +109,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ClassCastException.class)
     public Result<Void> handleClassCastException(ClassCastException e) {
-        log.error("异常：ClassCastException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：ClassCastException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -113,7 +122,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = IllegalArgumentException.class)
     public Result<Void> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.error("异常：IllegalArgumentException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：IllegalArgumentException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -125,7 +135,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = MyBatisSystemException.class)
     public Result<Void> handleMyBatisSystemException(MyBatisSystemException e) {
-        log.error("异常：MyBatisSystemException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：MyBatisSystemException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
     }
 
@@ -137,7 +148,47 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = BadSqlGrammarException.class)
     public Result<Void> handleBadSqlGrammarException(BadSqlGrammarException e) {
-        log.error("异常：BadSqlGrammarException，信息：{}，堆栈：{}", e.getMessage(), Arrays.toString(e.getStackTrace()));
+        log.error("异常：BadSqlGrammarException");
+        log.error("信息：{}", e.getMessage());
         return Result.error(ResultCode.SYSTEM_ERROR);
+    }
+
+    /**
+     * SQL异常
+     *
+     * @param e SQL异常
+     * @return 结果
+     */
+    @ExceptionHandler(value = SQLException.class)
+    public Result<Void> handleSQLException(SQLException e) {
+        log.error("异常：SQLException");
+        log.error("信息：{}", e.getMessage());
+        return Result.error(ResultCode.SYSTEM_ERROR);
+    }
+
+    /**
+     * 数据约束违规异常
+     *
+     * @param e 数据约束违规异常
+     * @return 结果
+     */
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public Result<Void> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
+        log.error("异常：DataIntegrityViolationException");
+        log.error("信息：{}", e.getMessage());
+        return Result.error(ResultCode.SYSTEM_ERROR);
+    }
+
+    /**
+     * 通用异常
+     *
+     * @param e 通用异常
+     * @return 结果
+     */
+    @ExceptionHandler(Exception.class)
+    public Result<Void> handleException(Exception e) {
+        log.error("异常：Exception");
+        log.error("信息：{}", e.getMessage());
+        return Result.error(e.getMessage());
     }
 }

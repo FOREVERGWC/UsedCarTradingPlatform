@@ -1,4 +1,4 @@
-package org.example.springboot.system.common.instance;
+package org.example.springboot.common.common.instance;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -25,6 +25,13 @@ public interface ILoginCacheService {
     void setLoginUser(LoginUser user);
 
     /**
+     * 移除登录用户
+     *
+     * @param uuid 唯一标识符
+     */
+    void removeLoginUser(String uuid);
+
+    /**
      * 通过令牌获取登录用户
      *
      * @param token 令牌

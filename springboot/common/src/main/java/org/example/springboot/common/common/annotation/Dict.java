@@ -1,4 +1,4 @@
-package org.example.springboot.system.common.annotation;
+package org.example.springboot.common.common.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

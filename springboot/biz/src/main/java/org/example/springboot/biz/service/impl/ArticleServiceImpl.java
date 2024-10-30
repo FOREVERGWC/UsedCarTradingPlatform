@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.example.springboot.biz.common.enums.ArticleStatus;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.biz.domain.dto.ArticleDto;
 import org.example.springboot.biz.domain.entity.*;
 import org.example.springboot.system.domain.entity.User;

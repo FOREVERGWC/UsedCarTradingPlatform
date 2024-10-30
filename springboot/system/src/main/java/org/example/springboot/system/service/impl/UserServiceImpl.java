@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.system.common.enums.Gender;
 import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.dto.UserDto;
 import org.example.springboot.system.domain.entity.Role;
 import org.example.springboot.system.domain.entity.User;

@@ -4,7 +4,7 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.example.springboot.system.common.annotation.Dict;
+import org.example.springboot.common.common.annotation.Dict;
 import org.example.springboot.system.common.converter.BooleanStatusConverter;
 import org.example.springboot.system.common.converter.LoginTypeConverter;
 import org.example.springboot.system.common.enums.LoginType;

@@ -5,9 +5,10 @@ import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.lang.UUID;
 import jakarta.annotation.Resource;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.model.LoginBody;
+import org.example.springboot.system.domain.model.LoginUser;
 import org.example.springboot.system.domain.model.RegisterBody;
 import org.example.springboot.system.domain.model.ResetBody;
 import org.example.springboot.system.domain.vo.CaptchaVo;
@@ -16,6 +17,7 @@ import org.example.springboot.system.domain.vo.MetaVo;
 import org.example.springboot.system.domain.vo.RouteVo;
 import org.example.springboot.system.service.*;
 import org.example.springboot.system.service.cache.ICaptchaService;
+import org.example.springboot.system.service.cache.ILoginCacheService;
 import org.example.springboot.system.strategy.LoginFactory;
 import org.example.springboot.system.strategy.service.ILoginService;
 import org.example.springboot.common.utils.DataUtils;
@@ -66,6 +68,11 @@ public class AuthServiceImpl implements IAuthService {
     public String login(LoginBody body) {
         ILoginService loginService = loginFactory.getFactory(body.getLoginType());
         return loginService.login(body);
+    }
+
+    @Override
+    public void logout(LoginUser user) {
+        // TODO 把LogoutSuccessHandlerImpl逻辑移过来
     }
 
     @Transactional

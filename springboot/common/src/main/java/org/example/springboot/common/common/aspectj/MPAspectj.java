@@ -1,4 +1,4 @@
-package org.example.springboot.system.common.aspectj;
+package org.example.springboot.common.common.aspectj;
 
 import com.baomidou.mybatisplus.core.conditions.AbstractWrapper;
 import org.aspectj.lang.JoinPoint;

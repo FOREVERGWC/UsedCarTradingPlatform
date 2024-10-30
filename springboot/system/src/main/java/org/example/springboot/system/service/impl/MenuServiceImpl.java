@@ -11,7 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.Menu;
 import org.example.springboot.system.domain.dto.MenuDto;
 import org.example.springboot.system.domain.vo.MenuVo;

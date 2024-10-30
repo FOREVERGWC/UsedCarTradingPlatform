@@ -2,7 +2,7 @@
 	<el-container>
 		<el-footer>
 			<div class="copyright-container">
-				<div>{{ `Copyright © 2024-${year} ${author} All Rights Reserved 版权所有` }}</div>
+				<div>{{ `Copyright © 2024 - ${year} ${author} All Rights Reserved 版权所有` }}</div>
 				<el-link type="primary" href="http://beian.miit.gov.cn/" :underline="false" target="_blank">{{ icp }}</el-link>
 			</div>
 		</el-footer>

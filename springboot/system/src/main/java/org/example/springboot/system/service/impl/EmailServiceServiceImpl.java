@@ -8,7 +8,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.common.common.enums.ResultCode;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.IEmailService;
 import org.example.springboot.system.service.IUserService;

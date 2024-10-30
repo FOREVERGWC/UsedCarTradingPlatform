@@ -10,9 +10,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.springboot.common.common.enums.ResultCode;
 import org.example.springboot.system.common.enums.EnableStatus;
-import org.example.springboot.system.common.exception.ServiceException;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.DictType;
 import org.example.springboot.system.domain.dto.DictTypeDto;
+import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.vo.DictTypeVo;
 import org.example.springboot.system.mapper.DictTypeMapper;
 import org.example.springboot.system.service.IBaseService;
@@ -39,6 +40,7 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
 
     @Override
     public boolean save(DictType entity) {
+        validateCodeAvailable(entity.getId(), entity.getCode());
         entity.setStatus(EnableStatus.NORMAL.getCode());
         return super.save(entity);
     }
@@ -48,6 +50,7 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
         if (entity.getId() == null) {
             return save(entity);
         }
+        validateCodeAvailable(entity.getId(), entity.getCode());
         return super.updateById(entity);
     }
 
@@ -144,5 +147,27 @@ public class DictTypeServiceImpl extends ServiceImpl<DictTypeMapper, DictType> i
                     startCreateTime, endCreateTime);
         }
         return wrapper;
+    }
+
+    /**
+     * 校验字典标识是否重复
+     *
+     * @param id   主键ID
+     * @param code 字典标识
+     */
+    private void validateCodeAvailable(Long id, String code) {
+        if (StrUtil.isBlank(code)) {
+            return;
+        }
+        DictType dictType = getByCode(code);
+        if (dictType == null) {
+            return;
+        }
+        if (id == null) {
+            throw new RuntimeException("创建失败！字典标识已存在");
+        }
+        if (!Objects.equals(id, dictType.getId())) {
+            throw new RuntimeException("修改失败！字典标识已存在");
+        }
     }
 }

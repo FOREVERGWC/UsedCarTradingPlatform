@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
-import org.example.springboot.system.common.annotation.Dict;
+import org.example.springboot.common.common.annotation.Dict;
 import org.example.springboot.system.common.converter.BooleanConverter;
 import org.example.springboot.system.common.converter.EnableStatusConverter;
 import org.example.springboot.system.common.converter.MenuTypeConverter;

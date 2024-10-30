@@ -1,4 +1,4 @@
-package org.example.springboot.system.common.config;
+package org.example.springboot.common.common.config;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
