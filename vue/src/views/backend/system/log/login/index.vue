@@ -24,6 +24,14 @@
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.msg" clearable placeholder="请输入消息"/>
             </el-col>
+						<el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
+							<el-date-picker v-model="createTimeRange" clearable
+															type="datetimerange"
+															start-placeholder="登录开始时间" end-placeholder="登录结束时间"
+															value-format="YYYY-MM-DD HH:mm:ss"
+															unlink-panels
+							/>
+						</el-col>
             <el-col :lg="2" :md="2" :sm="12" :xl="2" :xs="12">
               <el-button icon="Search" plain type="info" @click="getPage">查询</el-button>
             </el-col>
@@ -108,9 +116,10 @@ import {onMounted, reactive, ref, toRaw} from 'vue'
 import {getLogLoginPage, removeLogLoginBatchByIds} from '@/api/logLogin.js'
 import {getUserList} from '@/api/user.js'
 import {ElMessage} from "element-plus"
-import {downloadFile} from "@/utils/common.js";
+import { addDataRange, downloadFile } from '@/utils/common.js'
 
 const loading = ref(true)
+const createTimeRange = ref([])
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 20,
@@ -134,6 +143,7 @@ const statusList = [
 
 const getPage = () => {
   loading.value = true
+	addDataRange(queryParams, createTimeRange.value, 'CreateTime')
   getUserList({}).then(res => {
     userList.value = res.data || []
   })
@@ -164,6 +174,7 @@ const handleSelectionChange = (selection) => {
 }
 
 const handleReset = () => {
+	createTimeRange.value = []
   queryParams.pageNo = 1
   queryParams.pageSize = 20
   queryParams.os = ''

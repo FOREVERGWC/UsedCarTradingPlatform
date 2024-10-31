@@ -440,6 +440,7 @@ const handleSelectionChange = (selection) => {
 
 const resetQuery = () => {
 	loginTimeRange.value = []
+	createTimeRange.value = []
 	queryParams.pageNo = 1
 	queryParams.pageSize = 20
 	queryParams.username = ''
