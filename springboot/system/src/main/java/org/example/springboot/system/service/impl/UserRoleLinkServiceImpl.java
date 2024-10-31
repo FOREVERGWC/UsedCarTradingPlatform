@@ -161,6 +161,38 @@ public class UserRoleLinkServiceImpl extends ServiceImpl<UserRoleLinkMapper, Use
     }
 
     @Override
+    public Long countByUserId(Long userId) {
+        return lambdaQuery()
+                .eq(UserRoleLink::getUserId, userId)
+                .count();
+    }
+
+    @Override
+    public Map<Long, Long> countByUserIds(List<Long> userIds) {
+        if (CollectionUtil.isEmpty(userIds)) {
+            return Map.of();
+        }
+        List<UserRoleLink> linkList = listByUserIds(userIds);
+        return linkList.stream().collect(Collectors.groupingBy(UserRoleLink::getUserId, Collectors.counting()));
+    }
+
+    @Override
+    public Long countByRoleId(Long roleId) {
+        return lambdaQuery()
+                .eq(UserRoleLink::getRoleId, roleId)
+                .count();
+    }
+
+    @Override
+    public Map<Long, Long> countByRoleIds(List<Long> roleIds) {
+        if (CollectionUtil.isEmpty(roleIds)) {
+            return Map.of();
+        }
+        List<UserRoleLink> linkList = listByRoleIds(roleIds);
+        return linkList.stream().collect(Collectors.groupingBy(UserRoleLink::getRoleId, Collectors.counting()));
+    }
+
+    @Override
     public List<UserRoleLinkVo> getList(UserRoleLinkDto dto) {
         List<UserRoleLink> userRoleLinkList = getWrapper(dto).list();
         if (CollectionUtil.isEmpty(userRoleLinkList)) {

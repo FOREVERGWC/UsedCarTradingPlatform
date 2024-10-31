@@ -29,4 +29,9 @@ public class RoleVo extends Role {
      */
     @Schema(description = "状态")
     private String statusText;
+    /**
+     * 用户数量
+     */
+    @Schema(description = "用户数量")
+    private Long count;
 }

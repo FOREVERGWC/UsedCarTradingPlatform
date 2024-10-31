@@ -9,6 +9,7 @@ import org.example.springboot.system.domain.vo.UserRoleLinkVo;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -115,6 +116,38 @@ public interface IUserRoleLinkService extends IService<UserRoleLink> {
      * @return 结果
      */
     List<Long> listUserIdsByRoleIds(List<Long> roleIds);
+
+    /**
+     * 根据用户ID计数角色ID数量
+     *
+     * @param userId 用户ID
+     * @return 结果
+     */
+    Long countByUserId(Long userId);
+
+    /**
+     * 根据用户ID列表批量计数角色ID数量列表
+     *
+     * @param userIds 用户ID列表
+     * @return 结果
+     */
+    Map<Long, Long> countByUserIds(List<Long> userIds);
+
+    /**
+     * 根据角色ID计数用户ID数量
+     *
+     * @param roleId 角色ID
+     * @return 结果
+     */
+    Long countByRoleId(Long roleId);
+
+    /**
+     * 根据角色ID列表批量计数用户ID数量列表
+     *
+     * @param roleIds 角色ID列表
+     * @return 结果
+     */
+    Map<Long, Long> countByRoleIds(List<Long> roleIds);
 
     /**
      * 查询用户、角色关系列表

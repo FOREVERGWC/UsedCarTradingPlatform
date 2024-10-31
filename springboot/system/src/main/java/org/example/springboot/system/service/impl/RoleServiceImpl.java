@@ -125,10 +125,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         if (CollectionUtil.isEmpty(roleList)) {
             return List.of();
         }
+        // 用户数量
+        List<Long> roleIdList = roleList.stream().map(Role::getId).toList();
+        Map<Long, Long> countMap = userRoleLinkService.countByRoleIds(roleIdList);
         // 组装VO
         return roleList.stream().map(item -> {
             RoleVo vo = new RoleVo();
             BeanUtils.copyProperties(item, vo);
+            vo.setCount(countMap.getOrDefault(item.getId(), 0L));
             return vo;
         }).toList();
     }
@@ -139,10 +143,14 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         if (CollectionUtil.isEmpty(info.getRecords())) {
             return new Page<>(dto.getPageNo(), dto.getPageSize(), 0);
         }
+        // 用户数量
+        List<Long> roleIdList = info.getRecords().stream().map(Role::getId).toList();
+        Map<Long, Long> countMap = userRoleLinkService.countByRoleIds(roleIdList);
         // 组装VO
         return info.convert(item -> {
             RoleVo vo = new RoleVo();
             BeanUtils.copyProperties(item, vo);
+            vo.setCount(countMap.getOrDefault(item.getId(), 0L));
             return vo;
         });
     }
@@ -153,9 +161,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         if (one == null) {
             return null;
         }
+        // 用户数量
+        Long count = userRoleLinkService.countByRoleId(one.getId());
         // 组装VO
         RoleVo vo = new RoleVo();
         BeanUtils.copyProperties(one, vo);
+        vo.setCount(count);
         return vo;
     }
 
