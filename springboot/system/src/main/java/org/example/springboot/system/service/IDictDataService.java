@@ -42,10 +42,10 @@ public interface IDictDataService extends IService<DictData> {
     /**
      * 导出字典数据
      *
-     * @param dictData 字典数据
+     * @param entity   字典数据
      * @param response 响应对象
      */
-    void exportExcel(DictData dictData, HttpServletResponse response);
+    void exportExcel(DictData entity, HttpServletResponse response);
 
     /**
      * 恢复或停用字典数据

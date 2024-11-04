@@ -42,10 +42,10 @@ public interface IAttachmentService extends IService<Attachment> {
     /**
      * 导出附件
      *
-     * @param attachment 附件
-     * @param response   响应对象
+     * @param entity   附件
+     * @param response 响应对象
      */
-    void exportExcel(Attachment attachment, HttpServletResponse response);
+    void exportExcel(Attachment entity, HttpServletResponse response);
 
     /**
      * 根据散列值查询附件

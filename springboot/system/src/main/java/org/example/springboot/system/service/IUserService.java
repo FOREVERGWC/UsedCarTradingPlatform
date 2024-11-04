@@ -42,10 +42,10 @@ public interface IUserService extends IService<User> {
     /**
      * 导出用户
      *
-     * @param user     用户
+     * @param entity   用户
      * @param response 响应对象
      */
-    void exportExcel(User user, HttpServletResponse response);
+    void exportExcel(User entity, HttpServletResponse response);
 
     /**
      * 根据用户名查询用户信息
@@ -77,4 +77,11 @@ public interface IUserService extends IService<User> {
      * @param id 用户ID
      */
     void handleStatus(Long id);
+
+    /**
+     * 重置密码
+     *
+     * @param id 用户ID
+     */
+    void resetPassword(Long id);
 }

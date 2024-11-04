@@ -10,6 +10,10 @@ public interface Constants {
      */
     String TOKEN_PREFIX = "Bearer ";
     /**
+     * 重置后密码
+     */
+    String RESET_PASSWORD = "123456";
+    /**
      * Redis邮箱注册验证码键值前缀
      */
     String CAPTCHA_EMAIL_REGISTER_KEY = "captcha:email:register:";

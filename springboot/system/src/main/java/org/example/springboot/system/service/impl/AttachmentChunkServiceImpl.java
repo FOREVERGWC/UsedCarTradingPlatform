@@ -14,8 +14,8 @@ import org.example.springboot.system.domain.entity.AttachmentChunk;
 import org.example.springboot.system.domain.vo.AttachmentChunkVo;
 import org.example.springboot.system.mapper.AttachmentChunkMapper;
 import org.example.springboot.system.service.IAttachmentChunkService;
-import org.example.springboot.system.service.IBaseService;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.service.IBaseService;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -75,8 +75,8 @@ public class AttachmentChunkServiceImpl extends ServiceImpl<AttachmentChunkMappe
     }
 
     @Override
-    public void exportExcel(AttachmentChunk attachmentChunk, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, attachmentChunk, AttachmentChunk.class, threadPoolTaskExecutor);
+    public void exportExcel(AttachmentChunk entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, AttachmentChunk.class, threadPoolTaskExecutor);
     }
 
     @Override

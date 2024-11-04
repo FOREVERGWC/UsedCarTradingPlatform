@@ -67,10 +67,10 @@ public interface IRoleService extends IService<Role> {
     /**
      * 导出角色
      *
-     * @param role     角色
+     * @param entity   角色
      * @param response 响应对象
      */
-    void exportExcel(Role role, HttpServletResponse response);
+    void exportExcel(Role entity, HttpServletResponse response);
 
     /**
      * 恢复或停用角色

@@ -14,8 +14,8 @@ import org.example.springboot.system.domain.entity.Attachment;
 import org.example.springboot.system.domain.vo.AttachmentVo;
 import org.example.springboot.system.mapper.AttachmentMapper;
 import org.example.springboot.system.service.IAttachmentService;
-import org.example.springboot.system.service.IBaseService;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.service.IBaseService;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -74,8 +74,8 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
     }
 
     @Override
-    public void exportExcel(Attachment attachment, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, attachment, Attachment.class, threadPoolTaskExecutor);
+    public void exportExcel(Attachment entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, Attachment.class, threadPoolTaskExecutor);
     }
 
     @Override

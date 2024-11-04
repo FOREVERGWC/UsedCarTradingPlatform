@@ -43,10 +43,10 @@ public interface IAttachmentChunkService extends IService<AttachmentChunk> {
     /**
      * 导出附件分片
      *
-     * @param attachmentChunk 附件分片
-     * @param response        响应对象
+     * @param entity   附件分片
+     * @param response 响应对象
      */
-    void exportExcel(AttachmentChunk attachmentChunk, HttpServletResponse response);
+    void exportExcel(AttachmentChunk entity, HttpServletResponse response);
 
     /**
      * 根据散列值查询附件分片列表

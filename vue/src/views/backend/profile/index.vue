@@ -29,6 +29,10 @@
             <el-button type="primary" @click="handleUpdatePassword">修改密码</el-button>
           </el-form>
         </el-tab-pane>
+				<el-tab-pane label="修改邮箱" name="email">
+				</el-tab-pane>
+				<el-tab-pane label="修改手机" name="phone">
+				</el-tab-pane>
       </el-tabs>
     </el-col>
   </el-row>

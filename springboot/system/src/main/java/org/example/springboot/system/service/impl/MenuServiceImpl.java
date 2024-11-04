@@ -16,12 +16,12 @@ import org.example.springboot.system.domain.entity.Menu;
 import org.example.springboot.system.domain.dto.MenuDto;
 import org.example.springboot.system.domain.vo.MenuVo;
 import org.example.springboot.system.mapper.MenuMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.IMenuService;
 import org.example.springboot.system.service.IRoleMenuLinkService;
 import org.example.springboot.system.service.IUserRoleLinkService;
 import org.example.springboot.common.utils.DataUtils;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.example.springboot.system.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -219,8 +219,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     }
 
     @Override
-    public void exportExcel(Menu menu, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, menu, Menu.class, threadPoolTaskExecutor);
+    public void exportExcel(Menu entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, Menu.class, threadPoolTaskExecutor);
     }
 
     @Override

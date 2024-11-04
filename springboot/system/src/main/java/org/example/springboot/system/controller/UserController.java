@@ -9,6 +9,7 @@ import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.dto.UserDto;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.model.AssignRoleBody;
+import org.example.springboot.system.domain.model.ResetBody;
 import org.example.springboot.system.domain.vo.UserVo;
 import org.example.springboot.system.service.IUserRoleLinkService;
 import org.example.springboot.system.service.IUserService;
@@ -154,6 +155,20 @@ public class UserController {
     @Operation(summary = "用户分配角色", description = "用户分配角色", method = "POST")
     public Result<Void> handleRole(@Validated @RequestBody AssignRoleBody body) {
         userRoleLinkService.saveBatchByUserIdAndRoleIds(body.getUserId(), body.getRoleIdList());
+        return Result.success();
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param id 用户ID
+     * @return 结果
+     */
+    @PreAuthorize("hasAuthority('system:user:reset')")
+    @PutMapping("/password/reset/{id}")
+    @Operation(summary = "重置密码", description = "重置密码", method = "PUT")
+    public Result<Void> resetPassword(@PathVariable Long id) {
+        userService.resetPassword(id);
         return Result.success();
     }
 }

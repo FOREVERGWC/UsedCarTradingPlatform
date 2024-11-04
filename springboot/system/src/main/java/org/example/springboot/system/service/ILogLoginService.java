@@ -42,8 +42,8 @@ public interface ILogLoginService extends IService<LogLogin> {
     /**
      * 导出登录日志
      *
-     * @param logLogin 登录日志
+     * @param entity   登录日志
      * @param response 响应对象
      */
-    void exportExcel(LogLogin logLogin, HttpServletResponse response);
+    void exportExcel(LogLogin entity, HttpServletResponse response);
 }

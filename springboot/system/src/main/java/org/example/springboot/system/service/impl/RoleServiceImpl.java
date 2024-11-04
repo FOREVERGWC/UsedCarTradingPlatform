@@ -18,10 +18,10 @@ import org.example.springboot.system.domain.entity.Role;
 import org.example.springboot.system.domain.entity.UserRoleLink;
 import org.example.springboot.system.domain.vo.RoleVo;
 import org.example.springboot.system.mapper.RoleMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.IRoleService;
 import org.example.springboot.system.service.IUserRoleLinkService;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -171,8 +171,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public void exportExcel(Role role, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, role, Role.class, threadPoolTaskExecutor);
+    public void exportExcel(Role entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, Role.class, threadPoolTaskExecutor);
     }
 
     @Override

@@ -33,6 +33,7 @@
         <module>common</module>
         <module>system</module>
         <module>biz</module>
+        <module>generator</module>
     </modules>
     <packaging>pom</packaging>
 

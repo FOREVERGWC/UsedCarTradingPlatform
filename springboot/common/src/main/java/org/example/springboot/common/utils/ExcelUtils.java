@@ -1,4 +1,4 @@
-package org.example.springboot.system.utils;
+package org.example.springboot.common.utils;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.example.springboot.common.common.Constants;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.File;

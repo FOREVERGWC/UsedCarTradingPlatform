@@ -50,10 +50,10 @@ public interface IDictTypeService extends IService<DictType> {
     /**
      * 导出字典类型
      *
-     * @param dictType 字典类型
+     * @param entity   字典类型
      * @param response 响应对象
      */
-    void exportExcel(DictType dictType, HttpServletResponse response);
+    void exportExcel(DictType entity, HttpServletResponse response);
 
     /**
      * 恢复或停用字典类型

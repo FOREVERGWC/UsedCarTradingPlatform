@@ -16,11 +16,11 @@ import org.example.springboot.system.domain.entity.DictType;
 import org.example.springboot.system.domain.dto.DictDataDto;
 import org.example.springboot.system.domain.vo.DictDataVo;
 import org.example.springboot.system.mapper.DictDataMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.IDictDataService;
 import org.example.springboot.system.service.IDictTypeService;
 import jakarta.annotation.Resource;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -111,8 +111,8 @@ public class DictDataServiceImpl extends ServiceImpl<DictDataMapper, DictData> i
     }
 
     @Override
-    public void exportExcel(DictData dictData, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, dictData, DictData.class, threadPoolTaskExecutor);
+    public void exportExcel(DictData entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, DictData.class, threadPoolTaskExecutor);
     }
 
     @Override

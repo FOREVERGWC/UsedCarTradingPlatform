@@ -16,12 +16,12 @@ import org.example.springboot.system.domain.entity.Permission;
 import org.example.springboot.system.domain.dto.PermissionDto;
 import org.example.springboot.system.domain.vo.PermissionVo;
 import org.example.springboot.system.mapper.PermissionMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.IPermissionService;
 import org.example.springboot.system.service.IRolePermissionLinkService;
 import org.example.springboot.system.service.IUserRoleLinkService;
 import org.example.springboot.common.utils.DataUtils;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -169,8 +169,8 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public void exportExcel(Permission permission, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, permission, Permission.class, threadPoolTaskExecutor);
+    public void exportExcel(Permission entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, Permission.class, threadPoolTaskExecutor);
     }
 
     @Override

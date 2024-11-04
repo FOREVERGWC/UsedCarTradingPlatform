@@ -1,4 +1,4 @@
-package org.example.springboot.system.service;
+package org.example.springboot.common.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;

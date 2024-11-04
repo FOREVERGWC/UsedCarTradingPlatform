@@ -81,10 +81,10 @@ public interface IMenuService extends IService<Menu> {
     /**
      * 导出菜单
      *
-     * @param menu     菜单
+     * @param entity   菜单
      * @param response 响应对象
      */
-    void exportExcel(Menu menu, HttpServletResponse response);
+    void exportExcel(Menu entity, HttpServletResponse response);
 
     /**
      * 恢复或停用菜单

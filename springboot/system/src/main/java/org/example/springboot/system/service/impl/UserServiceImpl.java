@@ -18,11 +18,11 @@ import org.example.springboot.system.domain.entity.Role;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.vo.UserVo;
 import org.example.springboot.system.mapper.UserMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.IRoleService;
 import org.example.springboot.system.service.IUserRoleLinkService;
 import org.example.springboot.system.service.IUserService;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -44,6 +44,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private IRoleService roleService;
     @Resource
     private IUserRoleLinkService userRoleLinkService;
+    //    @Resource
+//    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
@@ -134,8 +136,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void exportExcel(User user, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, user, User.class, threadPoolTaskExecutor);
+    public void exportExcel(User entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, User.class, threadPoolTaskExecutor);
     }
 
     @Override
@@ -170,6 +172,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         } else {
             user.setStatus(EnableStatus.NORMAL.getCode());
         }
+        updateById(user);
+    }
+
+    @Override
+    public void resetPassword(Long id) {
+        User user = getById(id);
+        if (user == null) {
+            throw new ServiceException(ResultCode.USER_NOT_FOUND_ERROR);
+        }
+        // TODO 整理逻辑解决循环依赖
+//        user.setPassword(bCryptPasswordEncoder.encode(Constants.RESET_PASSWORD));
         updateById(user);
     }
 

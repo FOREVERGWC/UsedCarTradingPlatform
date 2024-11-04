@@ -66,10 +66,10 @@ public interface IPermissionService extends IService<Permission> {
     /**
      * 导出权限
      *
-     * @param permission 权限
-     * @param response   响应对象
+     * @param entity   权限
+     * @param response 响应对象
      */
-    void exportExcel(Permission permission, HttpServletResponse response);
+    void exportExcel(Permission entity, HttpServletResponse response);
 
     /**
      * 恢复或停用权限

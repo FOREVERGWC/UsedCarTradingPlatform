@@ -193,9 +193,10 @@
 				<el-table-column label="最后登录IP" prop="loginIp" />
 				<el-table-column label="最后登录时间" prop="loginTime" width="150" />
 				<el-table-column label="注册时间" prop="createTime" width="150" />
-				<el-table-column label="操作" width="280">
+				<el-table-column label="操作" width="380">
 					<template v-slot="{ row }">
 						<el-button icon="EditPen" @click="showAssign(row)">分配</el-button>
+						<el-button icon="EditPen" @click="showAssign(row)">重置</el-button>
 						<el-button icon="Edit" plain type="primary" @click="showEdit(row)">编辑</el-button>
 						<el-popconfirm title="确认删除该行吗？" @confirm="handleDelete(row.id)">
 							<template #reference>

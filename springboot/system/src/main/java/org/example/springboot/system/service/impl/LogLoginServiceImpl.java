@@ -13,9 +13,9 @@ import org.example.springboot.system.domain.entity.LogLogin;
 import org.example.springboot.system.domain.dto.LogLoginDto;
 import org.example.springboot.system.domain.vo.LogLoginVo;
 import org.example.springboot.system.mapper.LogLoginMapper;
-import org.example.springboot.system.service.IBaseService;
+import org.example.springboot.common.service.IBaseService;
 import org.example.springboot.system.service.ILogLoginService;
-import org.example.springboot.system.utils.ExcelUtils;
+import org.example.springboot.common.utils.ExcelUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -74,8 +74,8 @@ public class LogLoginServiceImpl extends ServiceImpl<LogLoginMapper, LogLogin> i
     }
 
     @Override
-    public void exportExcel(LogLogin logLogin, HttpServletResponse response) {
-        ExcelUtils.exportExcel(response, this, logLogin, LogLogin.class, threadPoolTaskExecutor);
+    public void exportExcel(LogLogin entity, HttpServletResponse response) {
+        ExcelUtils.exportExcel(response, this, entity, LogLogin.class, threadPoolTaskExecutor);
     }
 
     @Override
