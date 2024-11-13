@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item class="email" prop="email">
           <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
-          <CounterButton :handleClick="handleCaptcha"/>
+          <CountDownButton :handleClick="handleCaptcha"/>
         </el-form-item>
         <el-form-item v-if="enabled" prop="code">
           <el-input v-model="form.code" placeholder="验证码" prefix-icon="Message" autocomplete="new"
@@ -42,7 +42,7 @@ import {register} from "@/api/auth.js";
 import {ElMessage} from "element-plus";
 import {useRouter} from "vue-router";
 import {sendRegisterCode} from "@/api/email.js";
-import {CountDownElMessage} from "@/components/CountDownElMessage/index.js";
+import {CountDownMessage} from "@/components/CountDownMessage/index.js";
 
 const router = useRouter()
 
@@ -96,7 +96,7 @@ const handleRegister = () => {
         ElMessage.error(res.msg);
         return;
       }
-      CountDownElMessage('success', 3, `注册成功！{}秒后跳转到登录页面`, () => router.push('/login'))
+      CountDownMessage('success', 3, `注册成功！{}秒后跳转到登录页面`, () => router.push('/login'))
     });
   });
 };

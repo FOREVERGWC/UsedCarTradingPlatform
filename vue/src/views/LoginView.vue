@@ -13,11 +13,11 @@
         </el-form-item>
         <el-form-item class="email" prop="email" v-if="form.loginType === '2'">
           <el-input v-model="form.email" placeholder="邮箱" prefix-icon="Message" autocomplete="new"/>
-          <CounterButton :handleClick="handleEmailCaptcha"/>
+          <CountDownButton :handleClick="handleEmailCaptcha"/>
         </el-form-item>
         <el-form-item class="phone" prop="phone" v-if="form.loginType === '3'">
           <el-input v-model="form.phone" placeholder="手机" prefix-icon="Iphone" autocomplete="new"/>
-          <CounterButton :handleClick="handlePhoneCaptcha"/>
+          <CountDownButton :handleClick="handlePhoneCaptcha"/>
         </el-form-item>
         <el-form-item prop="password" v-if="form.loginType === '1'">
           <el-input v-model="form.password" type="password" placeholder="密码" prefix-icon="Lock" show-password

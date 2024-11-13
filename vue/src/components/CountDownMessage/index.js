@@ -1,6 +1,6 @@
 import {ElMessage} from "element-plus";
 
-export const CountDownElMessage = (type, timer = 3, message, onClose) => {
+export const CountDownMessage = (type, timer = 3, message, onClose) => {
     const random = Math.floor(Math.random() * 10000)
     const customClass = `custom_${random}`
     const item = ElMessage({

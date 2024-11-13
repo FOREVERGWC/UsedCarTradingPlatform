@@ -33,7 +33,7 @@ import AvatarUpload from "@/components/AvatarUpload/index.js";
 // 图标选择组件
 import IconPicker from "@/components/IconPicker/index.js";
 // 倒计时按钮组件
-import CounterButton from "@/components/CounterButton/index.js";
+import CountDownButton from "@/components/CountDownButton/index.js";
 // 字典组件
 import DictItem from "@/components/DictItem/index.js";
 // 版权备案组件
@@ -61,7 +61,7 @@ app.component('MenuItem', MenuItem)
 app.component('Breadcrumb', Breadcrumb)
 app.component('AvatarUpload', AvatarUpload)
 app.component('IconPicker', IconPicker)
-app.component('CounterButton', CounterButton)
+app.component('CountDownButton', CountDownButton)
 app.component('DictItem', DictItem)
 app.component('CopyrightIcp', CopyrightIcp)
 app.mount('#app')
