@@ -1,5 +1,5 @@
 server:
-  port: 9090
+  port: 9091
   servlet:
     context-path: /
     encoding:
@@ -16,7 +16,7 @@ server:
 
 spring:
   application:
-    name: 博客系统
+    name: 二手车交易平台
   profiles:
     active: @profiles.active@
   datasource:
