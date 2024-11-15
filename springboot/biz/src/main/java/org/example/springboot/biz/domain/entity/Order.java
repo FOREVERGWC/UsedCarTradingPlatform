@@ -75,7 +75,7 @@ public class Order extends BaseEntity {
      * 付款状态(0未付款、1已付款)
      */
     @Schema(description = "付款状态(0未付款、1已付款)")
-    private Byte payStatus;
+    private Integer payStatus;
     /**
      * 退款时间
      */
@@ -90,5 +90,5 @@ public class Order extends BaseEntity {
      * 退款状态(0未退款、1已退款)
      */
     @Schema(description = "退款状态(0未退款、1已退款)")
-    private Byte refundStatus;
+    private Integer refundStatus;
 }

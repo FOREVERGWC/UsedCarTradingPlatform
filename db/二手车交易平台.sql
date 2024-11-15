@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 15/11/2024 11:29:17
+ Date: 15/11/2024 14:02:39
 */
 
 SET NAMES utf8mb4;
@@ -105,10 +105,10 @@ CREATE TABLE `biz_order`  (
   `address_id` bigint NOT NULL COMMENT '送货地址ID',
   `pay_time` datetime NOT NULL COMMENT '付款时间',
   `pay_price` decimal(10, 2) NOT NULL COMMENT '付款金额',
-  `pay_status` tinyint NOT NULL COMMENT '付款状态(0未付款、1已付款)',
+  `pay_status` tinyint(1) NOT NULL COMMENT '付款状态(0未付款、1已付款)',
   `refund_time` datetime NOT NULL COMMENT '退款时间',
   `refund_reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '退款原因',
-  `refund_status` tinyint NOT NULL COMMENT '退款状态(0未退款、1已退款)',
+  `refund_status` tinyint(1) NOT NULL COMMENT '退款状态(0未退款、1已退款)',
   `create_by` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建者',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_by` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '修改者',

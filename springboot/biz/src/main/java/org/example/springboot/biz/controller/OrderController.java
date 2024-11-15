@@ -89,4 +89,30 @@ public class OrderController {
         OrderVo vo = orderService.getOne(dto);
         return Result.success(vo);
     }
+
+    /**
+     * 付款
+     *
+     * @param dto 订单
+     * @return 结果
+     */
+    @PostMapping
+    @Operation(summary = "付款", description = "付款", method = "POST")
+    public Result<Void> pay(OrderDto dto) {
+        orderService.pay(dto);
+        return Result.success();
+    }
+
+    /**
+     * 退款
+     *
+     * @param dto 订单
+     * @return 结果
+     */
+    @PostMapping
+    @Operation(summary = "退款", description = "退款", method = "POST")
+    public Result<Void> refund(OrderDto dto) {
+        orderService.refund(dto);
+        return Result.success();
+    }
 }

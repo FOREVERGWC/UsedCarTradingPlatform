@@ -1,5 +1,6 @@
 package org.example.springboot.biz.common.enums;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,36 +12,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 文章可见性
+ * 退款状态
  */
 @Getter
 @AllArgsConstructor
-public enum ArticleVisible {
+public enum RefundStatus {
     /**
-     * 私有
+     * 未退款
      */
-    PRIVATE("0", "私有"),
+    NO_REFUND(0, "未退款"),
     /**
-     * 公开
+     * 已退款
      */
-    PUBLIC("1", "公开");
+    HAS_REFUND(1, "已退款");
 
-    private static final Map<String, ArticleVisible> map = new HashMap<>();
+    private static final Map<Integer, RefundStatus> map = new HashMap<>();
 
     static {
-        for (ArticleVisible item : ArticleVisible.values()) {
+        for (RefundStatus item : RefundStatus.values()) {
             map.put(item.getCode(), item);
         }
     }
 
     @EnumValue
-    private final String code;
+    private final Integer code;
     @JsonValue
     private final String msg;
 
     @JsonCreator
-    private static ArticleVisible jacksonInstance(final JsonNode jsonNode) {
-        String code = jsonNode.asText();
+    private static RefundStatus jacksonInstance(final JsonNode jsonNode) {
+        Integer code = Convert.toInt(jsonNode.asText());
         return map.get(code);
     }
 
@@ -50,7 +51,7 @@ public enum ArticleVisible {
      * @param code 键
      * @return 结果
      */
-    public static ArticleVisible getByCode(String code) {
+    public static RefundStatus getByCode(Integer code) {
         return map.get(code);
     }
 }

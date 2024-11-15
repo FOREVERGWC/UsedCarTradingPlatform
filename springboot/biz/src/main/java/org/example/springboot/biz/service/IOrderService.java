@@ -37,4 +37,18 @@ public interface IOrderService extends IService<Order> {
      * @return 结果
      */
     OrderVo getOne(OrderDto dto);
+
+    /**
+     * 付款
+     *
+     * @param dto 订单
+     */
+    void pay(OrderDto dto);
+
+    /**
+     * 退款
+     *
+     * @param dto 订单
+     */
+    void refund(OrderDto dto);
 }

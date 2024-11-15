@@ -7,25 +7,32 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.example.springboot.biz.domain.entity.Order;
+import jakarta.annotation.Resource;
+import org.example.springboot.biz.common.enums.PayStatus;
+import org.example.springboot.biz.common.enums.RefundStatus;
+import org.example.springboot.biz.domain.dto.OrderDto;
+import org.example.springboot.biz.domain.entity.Address;
 import org.example.springboot.biz.domain.entity.Car;
 import org.example.springboot.biz.domain.entity.CarAudite;
-import org.example.springboot.biz.domain.entity.Address;
-import org.example.springboot.biz.domain.dto.OrderDto;
+import org.example.springboot.biz.domain.entity.Order;
 import org.example.springboot.biz.domain.vo.OrderVo;
 import org.example.springboot.biz.mapper.OrderMapper;
-import org.example.springboot.biz.service.IOrderService;
-import org.example.springboot.biz.service.ICarService;
-import org.example.springboot.biz.service.ICarAuditeService;
 import org.example.springboot.biz.service.IAddressService;
-import jakarta.annotation.Resource;
+import org.example.springboot.biz.service.ICarAuditeService;
+import org.example.springboot.biz.service.ICarService;
+import org.example.springboot.biz.service.IOrderService;
+import org.example.springboot.common.common.enums.ResultCode;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -44,6 +51,25 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private IUserService userService;
     @Resource
     private IAddressService addressService;
+
+    @Transactional
+    @Override
+    public boolean save(Order entity) {
+        Car car = carService.getById(entity.getCarId());
+        car.setHasSold(true);
+        carService.updateById(car);
+        return super.save(entity);
+    }
+
+    @Transactional
+    @Override
+    public boolean saveOrUpdate(Order entity) {
+        if (entity.getId() == null) {
+            return save(entity);
+        }
+        return super.updateById(entity);
+    }
+
     @Override
     public List<OrderVo> getList(OrderDto dto) {
         List<Order> orderList = getWrapper(dto).list();
@@ -149,6 +175,37 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return vo;
     }
 
+    @Override
+    public void pay(OrderDto dto) {
+        Order order = getById(dto.getId());
+        if (order == null) {
+            throw new ServiceException(ResultCode.ORDER_NOT_FOUND_ERROR);
+        }
+        if (!Objects.equals(order.getPayStatus(), PayStatus.NO_PAY.getCode())) {
+            throw new ServiceException(ResultCode.ORDER_PAY_STATUS_ERROR);
+        }
+        order.setPayTime(LocalDateTime.now());
+        order.setPayStatus(PayStatus.HAS_PAY.getCode());
+        updateById(order);
+        // TODO 添加工作流审批节点
+    }
+
+    @Override
+    public void refund(OrderDto dto) {
+        Order order = getById(dto.getId());
+        if (order == null) {
+            throw new ServiceException(ResultCode.ORDER_NOT_FOUND_ERROR);
+        }
+        if (!Objects.equals(order.getPayStatus(), PayStatus.NO_PAY.getCode())) {
+            throw new ServiceException(ResultCode.ORDER_REFUND_STATUS_ERROR);
+        }
+        order.setRefundReason(dto.getRefundReason());
+        order.setRefundTime(LocalDateTime.now());
+        order.setRefundStatus(RefundStatus.HAS_REFUND.getCode());
+        updateById(order);
+        // TODO 添加工作流审批节点
+    }
+
     /**
      * 组装查询包装器
      *
@@ -174,8 +231,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Object endCreateTime = params == null ? null : params.get("endCreateTime");
 
             wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
-                Order::getCreateTime,
-                startCreateTime, endCreateTime);
+                    Order::getCreateTime,
+                    startCreateTime, endCreateTime);
         }
         return wrapper;
     }

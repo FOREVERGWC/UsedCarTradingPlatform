@@ -19,6 +19,7 @@ import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,24 @@ public class CarAuditeServiceImpl extends ServiceImpl<CarAuditeMapper, CarAudite
     private ICarService carService;
     @Resource
     private IUserService userService;
+
+    @Transactional
+    @Override
+    public boolean save(CarAudite entity) {
+        Car car = carService.getById(entity.getCarId());
+        car.setHasCheck(true);
+        carService.updateById(car);
+        return super.save(entity);
+    }
+
+    @Transactional
+    @Override
+    public boolean saveOrUpdate(CarAudite entity) {
+        if (entity.getId() == null) {
+            return save(entity);
+        }
+        return super.updateById(entity);
+    }
 
     @Override
     public List<CarAuditeVo> getList(CarAuditeDto dto) {

@@ -1,5 +1,6 @@
 package org.example.springboot.biz.common.enums;
 
+import cn.hutool.core.convert.Convert;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -11,40 +12,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 文章状态
+ * 付款状态
  */
 @Getter
 @AllArgsConstructor
-public enum ArticleStatus {
+public enum PayStatus {
     /**
-     * 未发布
+     * 未付款
      */
-    UNPUBLISHED("0", "未发布"),
+    NO_PAY(0, "未付款"),
     /**
-     * 已发布
+     * 已付款
      */
-    PUBLISHED("1", "已发布"),
-    /**
-     * 定时发布
-     */
-    SCHEDULED("2", "定时发布");
+    HAS_PAY(1, "已付款");
 
-    private static final Map<String, ArticleStatus> map = new HashMap<>();
+    private static final Map<Integer, PayStatus> map = new HashMap<>();
 
     static {
-        for (ArticleStatus item : ArticleStatus.values()) {
+        for (PayStatus item : PayStatus.values()) {
             map.put(item.getCode(), item);
         }
     }
 
     @EnumValue
-    private final String code;
+    private final Integer code;
     @JsonValue
     private final String msg;
 
     @JsonCreator
-    private static ArticleStatus jacksonInstance(final JsonNode jsonNode) {
-        String code = jsonNode.asText();
+    private static PayStatus jacksonInstance(final JsonNode jsonNode) {
+        Integer code = Convert.toInt(jsonNode.asText());
         return map.get(code);
     }
 
@@ -54,7 +51,7 @@ public enum ArticleStatus {
      * @param code 键
      * @return 结果
      */
-    public static ArticleStatus getByCode(String code) {
+    public static PayStatus getByCode(Integer code) {
         return map.get(code);
     }
 }
