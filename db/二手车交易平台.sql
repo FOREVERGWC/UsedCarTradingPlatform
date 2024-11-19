@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 15/11/2024 14:02:39
+ Date: 19/11/2024 15:07:37
 */
 
 SET NAMES utf8mb4;
@@ -191,7 +191,7 @@ CREATE TABLE `sys_dict_data`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '字典数据表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dict_data
@@ -201,6 +201,18 @@ INSERT INTO `sys_dict_data` VALUES (2, '男', '1', 1, 2, '1', '1', '2024-09-25 2
 INSERT INTO `sys_dict_data` VALUES (3, '未知', '2', 1, 3, '1', '1', '2024-09-25 22:57:14', '1', '2024-10-10 22:05:00', '');
 INSERT INTO `sys_dict_data` VALUES (4, '禁用', '0', 2, 1, '1', '1', '2024-10-10 22:37:46', '1', '2024-10-10 22:37:46', '');
 INSERT INTO `sys_dict_data` VALUES (5, '正常', '1', 2, 2, '1', '1', '2024-10-10 22:38:05', '1', '2024-10-10 22:38:05', '');
+INSERT INTO `sys_dict_data` VALUES (6, '汽油', '1', 3, 1, '1', '1', '2024-11-19 14:24:16', '1', '2024-11-19 14:24:16', '');
+INSERT INTO `sys_dict_data` VALUES (7, '柴油', '2', 3, 2, '1', '1', '2024-11-19 14:24:29', '1', '2024-11-19 14:24:29', '');
+INSERT INTO `sys_dict_data` VALUES (8, '电动', '3', 3, 3, '1', '1', '2024-11-19 14:24:43', '1', '2024-11-19 14:24:43', '');
+INSERT INTO `sys_dict_data` VALUES (9, '混动', '4', 3, 4, '1', '1', '2024-11-19 14:25:00', '1', '2024-11-19 14:25:00', '');
+INSERT INTO `sys_dict_data` VALUES (10, '其他', '5', 3, 5, '1', '1', '2024-11-19 14:25:10', '1', '2024-11-19 14:25:10', '');
+INSERT INTO `sys_dict_data` VALUES (11, '自动档', '1', 4, 1, '1', '1', '2024-11-19 14:32:52', '1', '2024-11-19 14:32:52', '');
+INSERT INTO `sys_dict_data` VALUES (12, '手动档', '2', 4, 2, '1', '1', '2024-11-19 14:33:02', '1', '2024-11-19 14:33:02', '');
+INSERT INTO `sys_dict_data` VALUES (13, '九成新女生自用', '1', 5, 1, '1', '1', '2024-11-19 14:52:42', '1', '2024-11-19 14:52:42', '');
+INSERT INTO `sys_dict_data` VALUES (14, '良好', '2', 5, 2, '1', '1', '2024-11-19 14:53:00', '1', '2024-11-19 14:53:00', '');
+INSERT INTO `sys_dict_data` VALUES (15, '完好', '3', 5, 3, '1', '1', '2024-11-19 14:53:14', '1', '2024-11-19 14:53:14', '');
+INSERT INTO `sys_dict_data` VALUES (16, '轻微刮擦', '4', 5, 4, '1', '1', '2024-11-19 14:53:26', '1', '2024-11-19 14:53:26', '');
+INSERT INTO `sys_dict_data` VALUES (17, '叙利亚成色', '5', 5, 5, '1', '1', '2024-11-19 14:53:37', '1', '2024-11-19 14:53:37', '');
 
 -- ----------------------------
 -- Table structure for sys_dict_type
@@ -218,13 +230,16 @@ CREATE TABLE `sys_dict_type`  (
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `type`(`code` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '字典类型表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_dict_type
 -- ----------------------------
 INSERT INTO `sys_dict_type` VALUES (1, '性别', 'gender', '1', '1', '2024-09-25 22:56:38', '1', '2024-10-10 22:04:48', '');
 INSERT INTO `sys_dict_type` VALUES (2, '启用状态', 'enable_status', '1', '1', '2024-10-10 22:36:51', '1', '2024-10-10 22:40:29', '');
+INSERT INTO `sys_dict_type` VALUES (3, '燃料类型', 'fuel_type', '1', '1', '2024-11-19 14:23:41', '1', '2024-11-19 14:23:41', '');
+INSERT INTO `sys_dict_type` VALUES (4, '变速器类型', 'transmission_type', '1', '1', '2024-11-19 14:32:22', '1', '2024-11-19 14:32:22', '');
+INSERT INTO `sys_dict_type` VALUES (5, '车况', 'car_condition', '1', '1', '2024-11-19 14:43:38', '1', '2024-11-19 14:43:38', '');
 
 -- ----------------------------
 -- Table structure for sys_log_login
@@ -414,15 +429,16 @@ CREATE TABLE `sys_role`  (
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   `deleted` tinyint(1) NOT NULL COMMENT '逻辑删除(0正常、1删除)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
 INSERT INTO `sys_role` VALUES (1, '管理员', 1, '1', '1', '2024-08-19 20:29:06', '1', '2024-08-19 20:39:39', '', 0);
-INSERT INTO `sys_role` VALUES (2, '用户', 2, '1', '1', '2024-08-19 20:29:28', '1', '2024-09-05 22:17:28', '', 0);
+INSERT INTO `sys_role` VALUES (2, '用户', 3, '1', '1', '2024-08-19 20:29:28', '1', '2024-11-19 14:08:26', '', 0);
 INSERT INTO `sys_role` VALUES (3, '游客', 3, '1', '1', '2024-08-19 20:29:38', '1', '2024-09-25 00:11:45', '', 0);
 INSERT INTO `sys_role` VALUES (4, '测试1', 1, '1', '1', '2024-08-19 20:35:04', '1', '2024-08-21 11:32:50', '', 1);
+INSERT INTO `sys_role` VALUES (5, '员工', 2, '1', '1', '2024-11-19 14:08:18', '1', '2024-11-19 14:08:18', '', 0);
 
 -- ----------------------------
 -- Table structure for sys_role_menu_link
@@ -597,7 +613,7 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-11-15 10:29:07', '', '2024-08-16 01:26:41', '', '2024-11-15 10:29:07', '');
+INSERT INTO `sys_user` VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-11-19 14:07:33', '', '2024-08-16 01:26:41', '', '2024-11-19 14:07:33', '');
 INSERT INTO `sys_user` VALUES (4, '2', '$2a$10$elhEi/ohemfnXateL1BLZ.lLi.fJ31tDVKdSpr3xnr40pdMjAlqlG', '', '张三', '1', '2', '2024-08-22', '1', '13037503390', '1@qq.com', '1', 0.00, '1', '2024-08-28 00:00:00', '', '2024-08-16 09:00:11', '', '2024-09-14 06:58:03', '');
 INSERT INTO `sys_user` VALUES (5, '3', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/c3f7a394-7b91-43b3-b924-5d1592426f06.jpg', '2', '2024-08-27', '1', '13037503391', '2@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user` VALUES (6, '4', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/a3336d6e-4ef8-46f0-99e6-a104122b9f88.jpg', '2', '2024-08-17', '0', '13037503392', '3@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:34:13', '1', '2024-08-21 15:13:15', '1');
