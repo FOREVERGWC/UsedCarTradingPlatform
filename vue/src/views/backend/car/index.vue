@@ -28,24 +28,31 @@
               <el-input v-model="queryParams.color" clearable placeholder="请输入颜色"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.fuelType" clearable placeholder="请输入燃料类型(1汽油、2柴油、3电动、4混动、5其他)"/>
+              <el-select v-model="queryParams.fuelType" clearable filterable placeholder="请选择燃料类型">
+                <el-option v-for="item in fuelTypeList" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.transmissionType" clearable placeholder="请输入变速器类型(1自动档、2手动档)"/>
+              <el-select v-model="queryParams.transmissionType" clearable filterable placeholder="请选择变速器类型">
+                <el-option v-for="item in transmissionTypeList" :key="item.value" :label="item.label"
+                           :value="item.value"/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.condition" clearable placeholder="请输入车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)"/>
+              <el-select v-model="queryParams.condition" clearable filterable placeholder="请选择车况">
+                <el-option v-for="item in conditionList" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-input v-model="queryParams.licenseDate" clearable placeholder="请输入上牌日期"/>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-select v-model="queryParams.hasSold" clearable filterable placeholder="请选择是否是否售出">
+              <el-select v-model="queryParams.hasSold" clearable filterable placeholder="请选择是否售出">
                 <el-option v-for="item in hasSoldList" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-select v-model="queryParams.hasCheck" clearable filterable placeholder="请选择是否是否验车">
+              <el-select v-model="queryParams.hasCheck" clearable filterable placeholder="请选择是否验车">
                 <el-option v-for="item in hasCheckList" :key="item.value" :label="item.label" :value="item.value"/>
               </el-select>
             </el-col>
@@ -99,7 +106,6 @@
                 @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"/>
         <el-table-column label="序号" type="index" width="70"/>
-        <el-table-column label="用户ID" prop="userId"/>
         <el-table-column label="品牌" prop="brand"/>
         <el-table-column label="型号" prop="model"/>
         <el-table-column label="生产年份" prop="year"/>
@@ -162,14 +168,21 @@
         <el-form-item label="颜色" prop="color">
           <el-input v-model="form.data.color" autocomplete="new"/>
         </el-form-item>
-        <el-form-item label="燃料类型(1汽油、2柴油、3电动、4混动、5其他)" prop="fuelType">
-          <el-input v-model="form.data.fuelType" autocomplete="new"/>
+        <el-form-item label="燃料类型" prop="fuelType">
+          <el-select v-model="form.data.fuelType" clearable filterable placeholder="请选择燃料类型">
+            <el-option v-for="item in fuelTypeList" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
         </el-form-item>
-        <el-form-item label="变速器类型(1自动档、2手动档)" prop="transmissionType">
-          <el-input v-model="form.data.transmissionType" autocomplete="new"/>
+        <el-form-item label="变速器" prop="transmissionType">
+          <el-select v-model="form.data.transmissionType" clearable filterable placeholder="请选择变速器类型">
+            <el-option v-for="item in transmissionTypeList" :key="item.value" :label="item.label"
+                       :value="item.value"/>
+          </el-select>
         </el-form-item>
-        <el-form-item label="车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)" prop="condition">
-          <el-input v-model="form.data.condition" autocomplete="new"/>
+        <el-form-item label="车况" prop="condition">
+          <el-select v-model="form.data.condition" clearable filterable placeholder="请选择车况">
+            <el-option v-for="item in conditionList" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否售出" prop="hasSold">
           <el-select v-model="form.data.hasSold" clearable filterable placeholder="请选择是否是否售出">
@@ -198,6 +211,7 @@ import {computed, nextTick, onMounted, reactive, ref, toRaw} from 'vue'
 import {getCarOne, getCarPage, removeCarBatchByIds, saveCar} from '@/api/car'
 import {getUserList} from '@/api/user'
 import {ElMessage} from "element-plus"
+import {getDictDataList} from "@/api/dictData.js";
 
 const loading = ref(true)
 const queryParams = reactive({
@@ -246,13 +260,16 @@ const carFields = {
   '是否售出': 'hasSold',
   '是否验车': 'hasCheck'
 }
+const fuelTypeList = ref([])
+const transmissionTypeList = ref([])
+const conditionList = ref([])
 const hasSoldList = [
-  { label: '是', value: true },
-  { label: '否', value: false }
+  {label: '是', value: true},
+  {label: '否', value: false}
 ]
 const hasCheckList = [
-  { label: '是', value: true },
-  { label: '否', value: false }
+  {label: '是', value: true},
+  {label: '否', value: false}
 ]
 const form = ref({
   visible: false,
@@ -270,7 +287,11 @@ const rules = {
   color: [{required: true, message: '请输入颜色', trigger: 'blur'}],
   fuelType: [{required: true, message: '请输入燃料类型(1汽油、2柴油、3电动、4混动、5其他)', trigger: 'blur'}],
   transmissionType: [{required: true, message: '请输入变速器类型(1自动档、2手动档)', trigger: 'blur'}],
-  condition: [{required: true, message: '请输入车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)', trigger: 'blur'}],
+  condition: [{
+    required: true,
+    message: '请输入车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)',
+    trigger: 'blur'
+  }],
   licenseDate: [{required: true, message: '请输入上牌日期', trigger: 'blur'}],
   hasSold: [{required: true, message: '请输入是否售出', trigger: 'blur'}],
   hasCheck: [{required: true, message: '请输入是否验车', trigger: 'blur'}]
@@ -280,6 +301,18 @@ const getPage = () => {
   loading.value = true
   getUserList({}).then(res => {
     userList.value = res.data || []
+  })
+  const fuelTypeParams = {code: 'fuel_type'}
+  getDictDataList(fuelTypeParams).then(res => {
+    fuelTypeList.value = res.data || []
+  })
+  const transmissionTypeParams = {code: 'transmission_type'}
+  getDictDataList(transmissionTypeParams).then(res => {
+    transmissionTypeList.value = res.data || []
+  })
+  const conditionParams = {code: 'car_condition'}
+  getDictDataList(conditionParams).then(res => {
+    conditionList.value = res.data || []
   })
   getCarPage(queryParams).then(res => {
     carList.value = res.data?.records || []
