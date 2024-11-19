@@ -1,5 +1,6 @@
 package org.example.springboot.biz.domain.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -30,4 +31,19 @@ public class CarVo extends Car {
      */
     @Schema(description = "用户")
     private User user;
+    /**
+     * 燃料类型
+     */
+    @Schema(description = "燃料类型")
+    private String fuelTypeText;
+    /**
+     * 变速器类型
+     */
+    @Schema(description = "变速器类型")
+    private String transmissionTypeText;
+    /**
+     * 车况
+     */
+    @Schema(description = "车况")
+    private String conditionText;
 }

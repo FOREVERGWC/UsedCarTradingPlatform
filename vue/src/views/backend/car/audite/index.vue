@@ -108,12 +108,13 @@
             <el-option v-for="item in carList" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="卖方" prop="userId">
+        <el-form-item label="卖方" prop="userId" v-if="userStore.isAdmin">
+          {{ userStore.isAdmin }}
           <el-select v-model="form.data.userId" clearable filterable placeholder="请选择卖方">
             <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="审核员" prop="auditorId">
+        <el-form-item label="审核员" prop="auditorId" v-if="userStore.isAdmin">
           <el-select v-model="form.data.auditorId" clearable filterable placeholder="请选择审核员">
             <el-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.id"/>
           </el-select>
@@ -139,6 +140,9 @@ import {getCarAuditeOne, getCarAuditePage, removeCarAuditeBatchByIds, saveCarAud
 import {getCarList} from '@/api/car.js'
 import {getUserList} from '@/api/user.js'
 import {ElMessage} from "element-plus"
+import useUserStore from "@/store/modules/user.js";
+
+const userStore = useUserStore();
 
 const loading = ref(true)
 const queryParams = reactive({

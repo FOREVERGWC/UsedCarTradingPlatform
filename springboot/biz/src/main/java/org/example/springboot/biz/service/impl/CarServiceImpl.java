@@ -7,14 +7,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.example.springboot.biz.domain.entity.Car;
-import org.example.springboot.system.domain.entity.User;
+import jakarta.annotation.Resource;
 import org.example.springboot.biz.domain.dto.CarDto;
+import org.example.springboot.biz.domain.entity.Car;
 import org.example.springboot.biz.domain.vo.CarVo;
 import org.example.springboot.biz.mapper.CarMapper;
 import org.example.springboot.biz.service.ICarService;
+import org.example.springboot.system.domain.dto.DictDataDto;
+import org.example.springboot.system.domain.entity.DictData;
+import org.example.springboot.system.domain.entity.User;
+import org.example.springboot.system.domain.vo.DictDataVo;
+import org.example.springboot.system.service.IDictDataService;
 import org.example.springboot.system.service.IUserService;
-import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,8 @@ import java.util.stream.Collectors;
 public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements ICarService {
     @Resource
     private IUserService userService;
+    @Resource
+    private IDictDataService dictDataService;
 
     @Override
     public List<CarVo> getList(CarDto dto) {
@@ -62,11 +68,26 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements ICarS
         List<Long> userIdList = info.getRecords().stream().map(Car::getUserId).toList();
         List<User> userList = userService.listByIds(userIdList);
         Map<Long, User> userMap = userList.stream().collect(Collectors.toMap(User::getId, item -> item));
+        // 字典
+        List<DictData> dictDataList = dictDataService.list();
+        Map<Long, List<DictData>> dictDataMap = dictDataList.stream().collect(Collectors.groupingBy(DictData::getTypeId));
+        // 燃料类型
+        List<DictDataVo> fuelTypeList = dictDataService.getList(DictDataDto.builder().code("fuel_type").build());
+        Map<String, String> fuelTypeMap = fuelTypeList.stream().collect(Collectors.toMap(DictData::getValue, DictData::getLabel));
+        // 变速器类型
+        List<DictDataVo> transmissionTypeList = dictDataService.getList(DictDataDto.builder().code("transmission_type").build());
+        Map<String, String> transmissionTypeMap = transmissionTypeList.stream().collect(Collectors.toMap(DictData::getValue, DictData::getLabel));
+        // 车况
+        List<DictDataVo> conditionList = dictDataService.getList(DictDataDto.builder().code("car_condition").build());
+        Map<String, String> conditionMap = conditionList.stream().collect(Collectors.toMap(DictData::getValue, DictData::getLabel));
         // 组装VO
         return info.convert(item -> {
             CarVo vo = new CarVo();
             BeanUtils.copyProperties(item, vo);
             vo.setUser(userMap.getOrDefault(item.getUserId(), User.builder().name("已删除").build()));
+            vo.setFuelTypeText(fuelTypeMap.getOrDefault(item.getFuelType(), "已删除"));
+            vo.setTransmissionTypeText(transmissionTypeMap.getOrDefault(item.getFuelType(), "已删除"));
+            vo.setConditionText(conditionMap.getOrDefault(item.getFuelType(), "已删除"));
             return vo;
         });
     }
@@ -114,8 +135,8 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements ICarS
             Object endCreateTime = params == null ? null : params.get("endCreateTime");
 
             wrapper.between(ObjectUtil.isAllNotEmpty(startCreateTime, endCreateTime),
-                Car::getCreateTime,
-                startCreateTime, endCreateTime);
+                    Car::getCreateTime,
+                    startCreateTime, endCreateTime);
         }
         return wrapper;
     }

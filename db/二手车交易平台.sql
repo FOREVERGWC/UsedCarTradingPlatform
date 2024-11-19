@@ -11,7 +11,7 @@
  Target Server Version : 80038 (8.0.38)
  File Encoding         : 65001
 
- Date: 19/11/2024 15:07:37
+ Date: 19/11/2024 17:07:54
 */
 
 SET NAMES utf8mb4;
@@ -53,7 +53,7 @@ CREATE TABLE `biz_car`  (
   `color` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '颜色',
   `fuel_type` tinyint NOT NULL COMMENT '燃料类型(1汽油、2柴油、3电动、4混动、5其他)',
   `transmission_type` tinyint NOT NULL COMMENT '变速器类型(1自动档、2手动档)',
-  `condition` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)',
+  `condition` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)',
   `license_date` date NULL DEFAULT NULL COMMENT '上牌日期',
   `has_sold` tinyint(1) NOT NULL COMMENT '是否售出',
   `has_check` tinyint(1) NOT NULL COMMENT '是否验车',
@@ -63,11 +63,12 @@ CREATE TABLE `biz_car`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '二手车表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '二手车表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of biz_car
 -- ----------------------------
+INSERT INTO `biz_car` VALUES (1, 3, '奥迪', 'A', 2021, 2000, 190000.00, '红色', 1, 1, '2', NULL, 0, 0, '1', '2024-11-19 15:28:29', '1', '2024-11-19 15:28:29', '');
 
 -- ----------------------------
 -- Table structure for biz_car_audite
@@ -454,7 +455,7 @@ CREATE TABLE `sys_role_menu_link`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 165 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色、菜单关系表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 170 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色、菜单关系表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role_menu_link
@@ -492,6 +493,11 @@ INSERT INTO `sys_role_menu_link` VALUES (161, 1, 24, '1', '2024-09-25 22:53:26',
 INSERT INTO `sys_role_menu_link` VALUES (162, 1, 25, '1', '2024-09-25 22:53:26', '1', '2024-09-25 22:53:26', '');
 INSERT INTO `sys_role_menu_link` VALUES (163, 1, 26, '1', '2024-09-25 22:53:26', '1', '2024-09-25 22:53:26', '');
 INSERT INTO `sys_role_menu_link` VALUES (164, 1, 27, '1', '2024-09-25 22:53:26', '1', '2024-09-25 22:53:26', '');
+INSERT INTO `sys_role_menu_link` VALUES (165, 5, 17, '1', '2024-11-19 16:09:13', '1', '2024-11-19 16:09:13', '');
+INSERT INTO `sys_role_menu_link` VALUES (166, 5, 12, '1', '2024-11-19 16:09:13', '1', '2024-11-19 16:09:13', '');
+INSERT INTO `sys_role_menu_link` VALUES (167, 5, 22, '1', '2024-11-19 16:09:13', '1', '2024-11-19 16:09:13', '');
+INSERT INTO `sys_role_menu_link` VALUES (168, 5, 18, '1', '2024-11-19 16:09:13', '1', '2024-11-19 16:09:13', '');
+INSERT INTO `sys_role_menu_link` VALUES (169, 5, 19, '1', '2024-11-19 16:09:13', '1', '2024-11-19 16:09:13', '');
 
 -- ----------------------------
 -- Table structure for sys_role_permission_link
@@ -613,8 +619,8 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-11-19 14:07:33', '', '2024-08-16 01:26:41', '', '2024-11-19 14:07:33', '');
-INSERT INTO `sys_user` VALUES (4, '2', '$2a$10$elhEi/ohemfnXateL1BLZ.lLi.fJ31tDVKdSpr3xnr40pdMjAlqlG', '', '张三', '1', '2', '2024-08-22', '1', '13037503390', '1@qq.com', '1', 0.00, '1', '2024-08-28 00:00:00', '', '2024-08-16 09:00:11', '', '2024-09-14 06:58:03', '');
+INSERT INTO `sys_user` VALUES (3, '1', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '', '管理员', '/file/5d08ced39910341325c102af785beb54.jpg', '2', '2024-08-01', '1', '13037503398', '916586595@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-11-19 16:07:59', '', '2024-08-16 01:26:41', '', '2024-11-19 16:07:59', '');
+INSERT INTO `sys_user` VALUES (4, '2', '$2a$10$elhEi/ohemfnXateL1BLZ.lLi.fJ31tDVKdSpr3xnr40pdMjAlqlG', '', '张三', '1', '2', '2024-08-22', '1', '13037503390', '1@qq.com', '1', 0.00, '0:0:0:0:0:0:0:1', '2024-11-19 16:21:42', '', '2024-08-16 09:00:11', '', '2024-11-19 16:21:42', '');
 INSERT INTO `sys_user` VALUES (5, '3', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/c3f7a394-7b91-43b3-b924-5d1592426f06.jpg', '2', '2024-08-27', '1', '13037503391', '2@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user` VALUES (6, '4', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '1', '1', '/file/a3336d6e-4ef8-46f0-99e6-a104122b9f88.jpg', '2', '2024-08-17', '0', '13037503392', '3@qq.com', '1', 0.00, '', NULL, '1', '2024-08-21 14:34:13', '1', '2024-08-21 15:13:15', '1');
 INSERT INTO `sys_user` VALUES (10, '11', '$2a$10$3alyCOMoZZt39BASQUwwTOrGodFCjiwMgHurikWrqAhINrIvDbfqG', '11', '', '', '2', '2024-10-04', '1', '13037503314', '4@qq.com', '', 0.00, '', NULL, '', '2024-09-13 23:42:22', '', '2024-10-11 13:46:24', '');
@@ -634,12 +640,11 @@ CREATE TABLE `sys_user_role_link`  (
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `user_id`(`user_id` ASC, `role_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户、角色关系表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户、角色关系表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user_role_link
 -- ----------------------------
-INSERT INTO `sys_user_role_link` VALUES (12, 4, 2, '1', '2024-08-21 12:10:42', '1', '2024-08-21 12:10:42', '');
 INSERT INTO `sys_user_role_link` VALUES (13, 5, 2, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user_role_link` VALUES (14, 5, 3, '1', '2024-08-21 14:25:56', '1', '2024-08-21 14:25:56', '');
 INSERT INTO `sys_user_role_link` VALUES (21, 6, 2, '1', '2024-08-21 14:58:22', '1', '2024-08-21 14:58:22', '');
@@ -647,34 +652,6 @@ INSERT INTO `sys_user_role_link` VALUES (22, 3, 1, '1', '2024-08-21 15:13:59', '
 INSERT INTO `sys_user_role_link` VALUES (23, 7, 2, '', '2024-09-02 15:48:49', '', '2024-09-02 15:48:49', '');
 INSERT INTO `sys_user_role_link` VALUES (24, 8, 2, '', '2024-09-02 15:48:55', '', '2024-09-02 15:48:55', '');
 INSERT INTO `sys_user_role_link` VALUES (26, 10, 2, '', '2024-09-13 23:42:22', '', '2024-09-13 23:42:22', '');
-
--- ----------------------------
--- Table structure for user
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-  `uid` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `username` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '用户名  用户的唯一标识',
-  `upassword` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '用户的登录密码',
-  `uname` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '用户的真实姓名',
-  `uage` int NULL DEFAULT NULL COMMENT '用户年龄，选填',
-  `usex` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT '用户性别，选填',
-  `uemail` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '用户电子邮箱，必填，验证',
-  `uphone` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '用户联系方式，必填，与买家（卖家）交流的渠道',
-  `uregistertime` datetime NOT NULL COMMENT '注册（指填写完信息）的时间',
-  `ustatus` tinyint NOT NULL COMMENT '激活状态',
-  `uvalidatecode` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL COMMENT '激活码',
-  PRIMARY KEY (`uid`) USING BTREE,
-  UNIQUE INDEX `username`(`username` ASC) USING BTREE,
-  UNIQUE INDEX `uemail`(`uemail` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of user
--- ----------------------------
-INSERT INTO `user` VALUES ('12345', 'AA', 'e10adc3949ba59abbe56e057f20f883e', '张三', 41, '男', '3434343434@qq.com', '15528018201', '2017-07-19 14:39:16', 1, '2045e11029fdc24a48beff8fd2217d9a');
-INSERT INTO `user` VALUES ('32832', 'xxxxx13827', '959da49e0a7b53b21dde0044d592f1a5', '吴彦祖', 21, '男', '343853259@qq.com', '13827414920', '2017-07-21 14:08:17', 1, '94259dc277a7070b847a1aec992c635c');
-INSERT INTO `user` VALUES ('36331', 'zhangsan123', 'e10adc3949ba59abbe56e057f20f883e', '张三', 41, '男', '864465133@qq.com', '13094488699', '2017-07-19 14:39:16', 1, '2045e11029fdc24a48beff8fd2217d9a');
-INSERT INTO `user` VALUES ('51293', 'admin123456', 'a66abb5684c45962d887564f08346e8d', NULL, NULL, NULL, '916586595@qq.com', '13037503398', '2024-11-05 18:59:49', 1, '0aefb6cef9ecbf91e41d4b6b0701fcc6');
+INSERT INTO `sys_user_role_link` VALUES (27, 4, 5, '1', '2024-11-19 16:08:39', '1', '2024-11-19 16:08:39', '');
 
 SET FOREIGN_KEY_CHECKS = 1;

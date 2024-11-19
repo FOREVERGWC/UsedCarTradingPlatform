@@ -44,7 +44,12 @@
               </el-select>
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
-              <el-input v-model="queryParams.licenseDate" clearable placeholder="请输入上牌日期"/>
+              <el-date-picker
+                  v-model="queryParams.licenseDate"
+                  placeholder="请选择上牌日期"
+                  type="date"
+                  value-format="YYYY-MM-DD"
+              />
             </el-col>
             <el-col :lg="4" :md="4" :sm="12" :xl="4" :xs="12">
               <el-select v-model="queryParams.hasSold" clearable filterable placeholder="请选择是否售出">
@@ -112,9 +117,9 @@
         <el-table-column label="行驶里程" prop="mileage"/>
         <el-table-column label="价格" prop="price"/>
         <el-table-column label="颜色" prop="color"/>
-        <el-table-column label="燃料类型" prop="fuelType"/>
-        <el-table-column label="变速器类型" prop="transmissionType"/>
-        <el-table-column label="车况" prop="condition"/>
+        <el-table-column label="燃料类型" prop="fuelTypeText"/>
+        <el-table-column label="变速器类型" prop="transmissionTypeText"/>
+        <el-table-column label="车况" prop="conditionText"/>
         <el-table-column label="上牌日期" prop="licenseDate"/>
         <el-table-column label="是否售出" prop="hasSold"/>
         <el-table-column label="是否验车" prop="hasCheck"/>
@@ -183,6 +188,14 @@
           <el-select v-model="form.data.condition" clearable filterable placeholder="请选择车况">
             <el-option v-for="item in conditionList" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
+        </el-form-item>
+        <el-form-item label="上牌日期">
+          <el-date-picker
+              v-model="form.data.licenseDate"
+              placeholder="请选择上牌日期"
+              type="date"
+              value-format="YYYY-MM-DD"
+          />
         </el-form-item>
         <el-form-item label="是否售出" prop="hasSold">
           <el-select v-model="form.data.hasSold" clearable filterable placeholder="请选择是否是否售出">

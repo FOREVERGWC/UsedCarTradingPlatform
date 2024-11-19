@@ -168,7 +168,11 @@ public enum ResultCode {
     /**
      * 操作失败！订单退款状态异常
      */
-    ORDER_REFUND_STATUS_ERROR(500, "操作失败！订单退款状态异常");
+    ORDER_REFUND_STATUS_ERROR(500, "操作失败！订单退款状态异常"),
+    /**
+     * 操作失败！验车状态异常
+     */
+    CAR_AUDITE_STATUS_ERROR(500, "操作失败！验车状态异常");
 
     private final Integer code;
     private final String msg;

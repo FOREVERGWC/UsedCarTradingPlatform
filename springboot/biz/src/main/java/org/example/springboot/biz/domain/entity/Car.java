@@ -1,6 +1,7 @@
 package org.example.springboot.biz.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
@@ -75,16 +76,17 @@ public class Car extends BaseEntity {
      * 燃料类型(1汽油、2柴油、3电动、4混动、5其他)
      */
     @Schema(description = "燃料类型(1汽油、2柴油、3电动、4混动、5其他)")
-    private Byte fuelType;
+    private String fuelType;
     /**
      * 变速器类型(1自动档、2手动档)
      */
     @Schema(description = "变速器类型(1自动档、2手动档)")
-    private Byte transmissionType;
+    private String transmissionType;
     /**
      * 车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)
      */
     @Schema(description = "车况(1九成新女生自用、2良好、3完好、4轻微刮擦、5叙利亚成色)")
+    @TableField(value = "`condition`")
     private String condition;
     /**
      * 上牌日期

@@ -15,8 +15,11 @@ import org.example.springboot.biz.domain.vo.CarAuditeVo;
 import org.example.springboot.biz.mapper.CarAuditeMapper;
 import org.example.springboot.biz.service.ICarAuditeService;
 import org.example.springboot.biz.service.ICarService;
+import org.example.springboot.common.common.enums.ResultCode;
+import org.example.springboot.common.common.exception.ServiceException;
 import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.service.IUserService;
+import org.example.springboot.system.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +45,13 @@ public class CarAuditeServiceImpl extends ServiceImpl<CarAuditeMapper, CarAudite
     @Override
     public boolean save(CarAudite entity) {
         Car car = carService.getById(entity.getCarId());
+        if (car.getHasCheck()) {
+            throw new ServiceException(ResultCode.CAR_AUDITE_STATUS_ERROR);
+        }
         car.setHasCheck(true);
         carService.updateById(car);
+        entity.setUserId(entity.getUserId() == null ? car.getUserId() : entity.getUserId());
+        entity.setAuditorId(entity.getAuditorId() == null ? UserUtils.getLoginUserId() : entity.getAuditorId());
         return super.save(entity);
     }
 
