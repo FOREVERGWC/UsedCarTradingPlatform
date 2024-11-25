@@ -19,6 +19,7 @@ import org.example.springboot.system.domain.entity.User;
 import org.example.springboot.system.domain.vo.DictDataVo;
 import org.example.springboot.system.service.IDictDataService;
 import org.example.springboot.system.service.IUserService;
+import org.example.springboot.system.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,22 @@ public class CarServiceImpl extends ServiceImpl<CarMapper, Car> implements ICarS
     private IUserService userService;
     @Resource
     private IDictDataService dictDataService;
+
+    @Override
+    public boolean save(Car entity) {
+        entity.setUserId(UserUtils.getLoginUserId());
+        entity.setHasSold(false);
+        entity.setHasCheck(false);
+        return super.save(entity);
+    }
+
+    @Override
+    public boolean saveOrUpdate(Car entity) {
+        if (entity.getId() == null) {
+            return save(entity);
+        }
+        return super.updateById(entity);
+    }
 
     @Override
     public List<CarVo> getList(CarDto dto) {

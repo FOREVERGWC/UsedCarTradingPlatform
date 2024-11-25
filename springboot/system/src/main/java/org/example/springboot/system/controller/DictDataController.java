@@ -2,6 +2,7 @@ package org.example.springboot.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.springboot.common.common.annotation.Anonymous;
 import org.example.springboot.system.domain.vo.DictDataVo;
 import org.example.springboot.common.domain.Result;
 import org.example.springboot.system.domain.entity.DictData;
@@ -62,7 +63,8 @@ public class DictDataController {
      * @param dto 字典数据
      * @return 结果
      */
-    @PreAuthorize("hasAuthority('system:dict:data:list')")
+//    @PreAuthorize("hasAuthority('system:dict:data:list')")
+    @Anonymous
     @GetMapping("/list")
     @Operation(summary = "查询字典数据列表", description = "查询字典数据列表", method = "GET")
     public Result<List<DictDataVo>> getList(DictDataDto dto) {

@@ -1,8 +1,6 @@
 package org.example.springboot.system.common.config;
 
-import cn.hutool.extra.spring.SpringUtil;
 import jakarta.annotation.Resource;
-import org.example.springboot.common.common.annotation.Anonymous;
 import org.example.springboot.system.common.config.security.*;
 import org.example.springboot.system.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -21,14 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.util.pattern.PathPattern;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Spring Security配置类
@@ -95,6 +85,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .requestMatchers("/captcha", "/email/**").permitAll()
                                 .requestMatchers("/login", "/login/wechat", "/register", "/password/reset").permitAll()
+                                .requestMatchers("/dict/data/list").permitAll()
                                 .requestMatchers("/static/**", "/file/**").permitAll()
                                 .requestMatchers("/doc.html", "/favicon.ico", "/webjars/**", "/swagger-resources", "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()

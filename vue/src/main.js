@@ -36,10 +36,13 @@ import IconPicker from "@/components/IconPicker/index.js";
 import CountDownButton from "@/components/CountDownButton/index.js";
 // 字典组件
 import DictItem from "@/components/DictItem/index.js";
+import DictSelect from "@/components/DictSelect/index.js";
 // 版权备案组件
 import CopyrightIcp from "@/components/CopyrightIcp/index.js";
 // 导航栏
 import Navbar from '@/components/Navbar/index.js'
+// 自定义样式表
+import '@/assets/css/index.scss'
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -65,6 +68,7 @@ app.component('AvatarUpload', AvatarUpload)
 app.component('IconPicker', IconPicker)
 app.component('CountDownButton', CountDownButton)
 app.component('DictItem', DictItem)
+app.component('DictSelect', DictSelect)
 app.component('CopyrightIcp', CopyrightIcp)
 app.component('Navbar', Navbar)
 app.mount('#app')
