@@ -2,7 +2,8 @@ import router from './index.js'
 import useUserStore from '@/store/modules/user'
 import usePermissionStore from '@/store/modules/permission'
 
-const whiteList = ['/login', '/register', '/reset'];
+// TODO 引入路径匹配库，通配符匹配
+const whiteList = ['/login', '/register', '/reset', '/', '/home', '/buy', '/sell', '/change', '/query', '/profile'];
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore();

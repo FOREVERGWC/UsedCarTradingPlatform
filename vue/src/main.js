@@ -38,6 +38,8 @@ import CountDownButton from "@/components/CountDownButton/index.js";
 import DictItem from "@/components/DictItem/index.js";
 // 版权备案组件
 import CopyrightIcp from "@/components/CopyrightIcp/index.js";
+// 导航栏
+import Navbar from '@/components/Navbar/index.js'
 
 VueMarkdownEditor.use(vuepressTheme, {
     Prism
@@ -64,4 +66,5 @@ app.component('IconPicker', IconPicker)
 app.component('CountDownButton', CountDownButton)
 app.component('DictItem', DictItem)
 app.component('CopyrightIcp', CopyrightIcp)
+app.component('Navbar', Navbar)
 app.mount('#app')
